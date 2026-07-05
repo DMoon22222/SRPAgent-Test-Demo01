@@ -1,0 +1,27 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: srp-ai-demo
+
+  ai:
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY}
+        chat:
+          # 推荐使用最新的轻量极速模型，适合日常开发和测试
+          model: gemini-2.5-flash
+          temperature: 0.1
+
+logging:
+  level:
+    org.springframework.ai: INFO
+sandbox:
+  mode: docker
+  timeout-ms: 5000
+  docker:
+    image: srp-code-sandbox:latest
+    memory: 256m
+    cpus: "1"
+    pids-limit: 64

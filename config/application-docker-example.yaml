@@ -1,0 +1,14 @@
+# 将这段配置合并到 src/main/resources/application.yaml
+sandbox:
+  # local：使用你现在的本地执行模块
+  # docker：使用 Docker 沙箱执行模块
+  mode: docker
+
+  # Java/Python 单次编译或运行的超时时间，单位毫秒
+  timeout-ms: 5000
+
+  docker:
+    image: srp-code-sandbox:latest
+    memory: 256m
+    cpus: "1"
+    pids-limit: 64
