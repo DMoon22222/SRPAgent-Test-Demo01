@@ -1,0 +1,7 @@
+{
+  "problem": "测试 Python 超时",
+  "language": "python",
+  "code": "while True:\n    pass",
+  "stdin": "",
+  "expectedOutput": ""
+}

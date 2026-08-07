@@ -1,0 +1,7 @@
+{
+  "problem": "测试 Python 语法错误",
+  "language": "python",
+  "code": "print('Hello'",
+  "stdin": "",
+  "expectedOutput": "Hello"
+}

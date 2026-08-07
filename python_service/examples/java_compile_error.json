@@ -1,0 +1,7 @@
+{
+  "problem": "测试 Java 编译错误",
+  "language": "java",
+  "code": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(value);\n    }\n}",
+  "stdin": "",
+  "expectedOutput": ""
+}

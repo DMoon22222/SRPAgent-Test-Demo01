@@ -1,0 +1,22 @@
+{
+  "problem": "读取两个整数输出和",
+  "language": "python",
+  "code": "a,b=map(int,input().split())\nprint(a+b)",
+  "testCases": [
+    {
+      "caseId": "case-1",
+      "stdin": "1 2",
+      "expectedOutput": "3"
+    },
+    {
+      "caseId": "case-2",
+      "stdin": "10 20",
+      "expectedOutput": "30"
+    },
+    {
+      "caseId": "case-3",
+      "stdin": "-1 1",
+      "expectedOutput": "0"
+    }
+  ]
+}

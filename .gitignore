@@ -32,5 +32,15 @@ build/
 *.zip
 docker-test/*.class
 
+### Python service ###
+python_service/.env
+python_service/.venv/
+python_service/.pytest_cache/
+python_service/.sandbox_tmp/
+python_service/**/__pycache__/
+python_service/**/*.pyc
+python_service/evaluation/humaneval_error_agent/results/*
+!python_service/evaluation/humaneval_error_agent/results/.gitkeep
+
 ### VS Code ###
 .vscode/

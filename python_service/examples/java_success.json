@@ -1,0 +1,7 @@
+{
+  "problem": "输出 2 和 3 的和",
+  "language": "java",
+  "code": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(2 + 3);\n    }\n}",
+  "stdin": "",
+  "expectedOutput": "5"
+}

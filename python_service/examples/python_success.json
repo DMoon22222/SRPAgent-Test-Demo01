@@ -1,0 +1,7 @@
+{
+  "problem": "输出 2 和 3 的和",
+  "language": "python",
+  "code": "a = 2\nb = 3\nprint(a + b)",
+  "stdin": "",
+  "expectedOutput": "5"
+}

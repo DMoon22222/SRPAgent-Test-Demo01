@@ -1,0 +1,7 @@
+{
+  "problem": "测试 Java 运行时错误",
+  "language": "java",
+  "code": "public class Main {\n    public static void main(String[] args) {\n        int x = 10 / 0;\n        System.out.println(x);\n    }\n}",
+  "stdin": "",
+  "expectedOutput": ""
+}

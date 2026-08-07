@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+pydantic
+pydantic-settings
+python-dotenv
+openai
+pytest
+# Optional report/runtime helpers. Current evaluation code uses only the
+# standard library for HTTP, CSV, JSONL, and Markdown output.
+# requests
+# pandas
+# tabulate
+# HumanEval is optional for this project. Prefer local install when available:
+#   python -m pip install -e D:\human-eval
+# The evaluation adapter also auto-detects HUMANEVAL_REPO_DIR or D:\human-eval.

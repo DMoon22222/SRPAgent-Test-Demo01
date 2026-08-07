@@ -1,0 +1,7 @@
+{
+  "problem": "测试当前代码是否运行在 Docker 容器中",
+  "language": "python",
+  "code": "import os\nprint(os.getcwd())",
+  "stdin": "",
+  "expectedOutput": "/workspace"
+}

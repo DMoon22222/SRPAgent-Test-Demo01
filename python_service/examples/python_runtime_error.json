@@ -1,0 +1,7 @@
+{
+  "problem": "测试 Python 运行时错误",
+  "language": "python",
+  "code": "a = 10 / 0\nprint(a)",
+  "stdin": "",
+  "expectedOutput": ""
+}

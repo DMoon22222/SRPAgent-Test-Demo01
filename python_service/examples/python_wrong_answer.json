@@ -1,0 +1,7 @@
+{
+  "problem": "输出 2 和 3 的和，但代码输出错误答案",
+  "language": "python",
+  "code": "print(2 + 4)",
+  "stdin": "",
+  "expectedOutput": "5"
+}
