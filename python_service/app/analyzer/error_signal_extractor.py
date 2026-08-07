@@ -1,5 +1,7 @@
 import re
 
+from app.schemas import RuleDecision
+
 
 SIGNAL_RULES: list[tuple[str, str, str]] = [
     ("SyntaxError", "SYNTAX_ERROR", "检测到 Python SyntaxError，倾向 COMPILE_ERROR / SYNTAX_ERROR。"),
@@ -34,6 +36,7 @@ SIGNAL_RULES: list[tuple[str, str, str]] = [
 JAVA_LOCATION = re.compile(r"(\b\w+\.java):(\d+):")
 PYTHON_LOCATION = re.compile(r'File "([^"]+)", line (\d+)')
 SIMPLE_LOCATION = re.compile(r"\b(Main\.(?:py|java)):(\d+)")
+MODULE_NAME = re.compile(r"No module named ['\"]([^'\"]+)['\"]")
 
 
 def extract_signals(error_log: str) -> list[str]:
@@ -75,12 +78,123 @@ def summarize_error_signal(error_log: str) -> str:
     return "【规则信号摘要】\n" + "\n".join(f"- {hint}" for hint in _dedupe(hints))
 
 
+def make_rule_decision(execution: dict | None = None, error_log: str = "", stderr: str = "") -> RuleDecision:
+    execution = execution or {}
+    combined = "\n".join(
+        [
+            str(execution.get("status") or ""),
+            str(execution.get("failedStage") or ""),
+            str(execution.get("errorLog") or ""),
+            str(execution.get("stderr") or ""),
+            str(execution.get("stdout") or ""),
+            error_log or "",
+            stderr or "",
+        ]
+    )
+    lowered = combined.lower()
+    evidence = extract_signals(combined)
+
+    if _contains(lowered, ["docker 不可用", "environment_error", "docker: command not found", "cannot connect to docker daemon"]):
+        return _decision("PRE_CHECK", "ENVIRONMENT_ERROR", "SANDBOX_INTERNAL_ERROR", False, evidence, 0.95, "规则层检测到运行环境或 Docker 不可用。")
+
+    if "sandbox_error" in lowered:
+        return _decision("SANDBOX", "SANDBOX_ERROR", "SANDBOX_INTERNAL_ERROR", False, evidence, 0.9, "规则层检测到沙箱内部错误。")
+
+    if execution.get("timeout") is True or _contains(lowered, ["time_limit_exceeded", "timeout=true", "timeout: true", "timeout】\ntrue", "timed out", "timeoutexpired", "运行超时"]):
+        return _decision("RUNTIME", "TIME_LIMIT_EXCEEDED", "INFINITE_LOOP", False, evidence or ["TIME_LIMIT_EXCEEDED"], 0.95, "规则层检测到超时，通常是无限循环、阻塞输入或复杂度过高。")
+
+    if "indentationerror" in lowered:
+        return _decision("COMPILE", "COMPILE_ERROR", "INDENTATION_ERROR", False, evidence or ["IndentationError"], 0.95, "规则层检测到 Python 缩进错误。")
+
+    if "syntaxerror" in lowered:
+        return _decision("COMPILE", "COMPILE_ERROR", "SYNTAX_ERROR", False, evidence or ["SyntaxError"], 0.95, "规则层检测到 Python 语法错误。")
+
+    if _contains(lowered, ["cannot find symbol"]):
+        return _decision("COMPILE", "COMPILE_ERROR", "MISSING_SYMBOL", False, evidence or ["cannot find symbol"], 0.9, "规则层检测到 Java 符号缺失编译错误。")
+
+    if _contains(lowered, ["incompatible types"]):
+        return _decision("COMPILE", "COMPILE_ERROR", "TYPE_MISMATCH", False, evidence or ["incompatible types"], 0.9, "规则层检测到 Java 类型不匹配编译错误。")
+
+    if _contains(lowered, ["';' expected", "error:"]):
+        failed_stage = str(execution.get("failedStage") or "").upper()
+        if failed_stage == "COMPILE" or "javac" in lowered or ".java" in lowered:
+            return _decision("COMPILE", "COMPILE_ERROR", "SYNTAX_ERROR", False, evidence, 0.75, "规则层检测到 Java 编译错误。")
+
+    if "assertionerror" in lowered:
+        return _decision("TEST", "WRONG_ANSWER", "ALGORITHM_ERROR", False, evidence or ["AssertionError"], 0.95, "规则层检测到 HumanEval/单元测试断言失败，属于测试阶段答案错误。")
+
+    if "modulenotfounderror" in lowered or "importerror" in lowered or "no module named" in lowered or "cannot import name" in lowered:
+        query = _dependency_query(combined)
+        return _decision("RUNTIME", "API_MISUSE", "DEPENDENCY_MISSING", True, evidence or ["ModuleNotFoundError"], 0.9, "规则层检测到依赖缺失或导入失败。", query)
+
+    if "zerodivisionerror" in lowered:
+        return _decision("RUNTIME", "RUNTIME_ERROR", "DIVIDE_BY_ZERO", False, evidence or ["ZeroDivisionError"], 0.95, "规则层检测到 Python 除零异常。")
+
+    if "indexerror" in lowered or "arrayindexoutofboundsexception" in lowered:
+        return _decision("RUNTIME", "RUNTIME_ERROR", "INDEX_OUT_OF_BOUNDS", False, evidence, 0.85, "规则层检测到下标越界异常。")
+
+    if "typeerror" in lowered or "incompatible types" in lowered:
+        return _decision("RUNTIME", "RUNTIME_ERROR", "TYPE_MISMATCH", False, evidence, 0.8, "规则层检测到运行时类型错误。")
+
+    if _contains(lowered, ["keyerror", "nameerror", "recursionerror", "memoryerror", "nullpointerexception", "arithmeticexception"]):
+        subtype = "UNKNOWN"
+        if "recursionerror" in lowered or "memoryerror" in lowered:
+            subtype = "RESOURCE_LIMIT"
+        if "nullpointerexception" in lowered:
+            subtype = "NULL_POINTER"
+        if "arithmeticexception" in lowered:
+            subtype = "DIVIDE_BY_ZERO"
+        if "nameerror" in lowered:
+            subtype = "MISSING_SYMBOL"
+        return _decision("RUNTIME", "RUNTIME_ERROR", subtype, False, evidence, 0.75, "规则层检测到运行时异常。")
+
+    status = str(execution.get("status") or "").upper()
+    if status == "WRONG_ANSWER" or "expectedoutput" in lowered or "actualoutput" in lowered:
+        return _decision("TEST", "WRONG_ANSWER", "ALGORITHM_ERROR", False, evidence, 0.8, "规则层检测到实际输出与期望输出不一致。")
+
+    return _decision("UNKNOWN", "UNKNOWN", "UNKNOWN", False, evidence, 0.0, "规则层未检测到明确错误类型。")
+
+
 def _find_location(log: str) -> str:
     for pattern in (JAVA_LOCATION, PYTHON_LOCATION, SIMPLE_LOCATION):
         match = pattern.search(log)
         if match:
             return f"{match.group(1)}:{match.group(2)}"
     return ""
+
+
+def _contains(text: str, needles: list[str]) -> bool:
+    return any(needle.lower() in text for needle in needles)
+
+
+def _decision(
+    failed_stage: str,
+    error_type: str,
+    error_subtype: str,
+    need_retrieval: bool,
+    evidence: list[str],
+    confidence: float,
+    explanation: str,
+    retrieval_query: str = "",
+) -> RuleDecision:
+    return RuleDecision(
+        failedStage=failed_stage,
+        errorType=error_type,
+        errorSubtype=error_subtype,
+        needRetrieval=need_retrieval,
+        retrievalQuery=retrieval_query,
+        evidence=_dedupe(evidence),
+        confidence=confidence,
+        decisionSource="RULE",
+        explanation=explanation,
+    )
+
+
+def _dependency_query(text: str) -> str:
+    match = MODULE_NAME.search(text)
+    if match:
+        return f"Python ModuleNotFoundError No module named {match.group(1)} dependency installation or import usage"
+    return "Python ImportError ModuleNotFoundError dependency installation or import usage"
 
 
 def _dedupe(items: list[str]) -> list[str]:

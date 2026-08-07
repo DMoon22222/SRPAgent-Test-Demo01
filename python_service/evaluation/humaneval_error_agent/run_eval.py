@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import sys
 import json
+import os
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -28,7 +29,7 @@ def main() -> None:
         raise
 
     print(f"Loaded HumanEval problems: {len(problems)}")
-    task_ids = [task_id for task_id in DEFAULT_TASK_IDS if task_id in problems][: config.max_tasks]
+    task_ids = _selected_task_ids(problems)
     samples = build_buggy_samples(task_ids)
     print(f"Built buggy samples: {len(samples)}")
 
@@ -54,6 +55,10 @@ def main() -> None:
 
 def run_sample(sample: dict, problems: dict) -> dict:
     base_record = _base_record(sample)
+    if sample.get("skip_reason"):
+        base_record["skip_reason"] = sample["skip_reason"]
+        return _fill_skipped_groups(base_record)
+
     problem = problems.get(sample["task_id"])
     if not problem:
         base_record["skip_reason"] = f"Task not found: {sample['task_id']}"
@@ -103,7 +108,7 @@ def run_sample(sample: dict, problems: dict) -> dict:
             "execution_timeout": execution.get("timeout", False),
             "execution_errorLog": raw_error_log,
             "rule_only": analyze_rule_only(execution),
-            "llm_raw_log": analyze_llm_raw_log(problem["prompt"], full_code, raw_error_log),
+            "llm_raw_log": _analyze_raw_log(problem["prompt"], full_code, raw_error_log),
             "full_agent": _normalize_agent_result(full_agent),
         }
     )
@@ -151,6 +156,21 @@ def _post_json(url: str, payload: dict) -> dict:
         detail = exc.read().decode("utf-8", errors="replace")
         raise RuntimeError(f"HTTP {exc.code}: {detail}") from exc
     return json.loads(text)
+
+
+def _selected_task_ids(problems: dict) -> list[str]:
+    env_task_ids = os.environ.get("EVAL_TASK_IDS", "").strip()
+    if env_task_ids:
+        requested = [item.strip() for item in env_task_ids.split(",") if item.strip()]
+    else:
+        requested = DEFAULT_TASK_IDS
+    return [task_id for task_id in requested if task_id in problems][: config.max_tasks]
+
+
+def _analyze_raw_log(problem: str, code: str, raw_error_log: str) -> dict:
+    if os.environ.get("EVAL_SKIP_RAW_LLM", "").strip().lower() in {"1", "true", "yes"}:
+        return _unknown_result("EVAL_SKIP_RAW_LLM enabled; raw-log LLM baseline skipped.")
+    return analyze_llm_raw_log(problem, code, raw_error_log)
 
 
 def _base_record(sample: dict) -> dict:
@@ -204,6 +224,10 @@ def _normalize_agent_result(result: Any) -> dict:
         "retrievalQuery": result.get("retrievalQuery") or "",
         "repairSuggestion": result.get("repairSuggestion") or "",
         "confidence": result.get("confidence", 0.0),
+        "ruleDecision": result.get("ruleDecision") if isinstance(result.get("ruleDecision"), dict) else None,
+        "classificationSource": result.get("classificationSource") or "",
+        "enumNormalized": bool(result.get("enumNormalized", False)),
+        "llmOverrodeRule": bool(result.get("llmOverrodeRule", False)),
         "json_valid": True,
     }
     return normalized

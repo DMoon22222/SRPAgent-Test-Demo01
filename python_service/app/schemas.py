@@ -38,6 +38,18 @@ class AgentObservation(BaseModel):
     nextActionHint: str = ""
 
 
+class RuleDecision(BaseModel):
+    failedStage: str = "UNKNOWN"
+    errorType: str = "UNKNOWN"
+    errorSubtype: str = "UNKNOWN"
+    needRetrieval: bool = False
+    retrievalQuery: str = ""
+    evidence: List[str] = Field(default_factory=list)
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    decisionSource: str = "RULE"
+    explanation: str = ""
+
+
 class Execution(BaseModel):
     success: bool
     status: str
@@ -65,6 +77,10 @@ class ErrorAnalysisResult(BaseModel):
     retrievalQuery: str
     repairSuggestion: str
     confidence: float = Field(ge=0.0, le=1.0)
+    ruleDecision: Optional[RuleDecision] = None
+    classificationSource: str = "RULE_FIRST_LLM_EXPLAIN"
+    enumNormalized: bool = False
+    llmOverrodeRule: bool = False
 
 
 class ExecuteAndAnalyzeResult(BaseModel):

@@ -8,6 +8,25 @@ DEFAULT_TASK_IDS = [
     "HumanEval/4",
 ]
 
+WRONG_ANSWER_COMPLETION_BY_TASK = {
+    "HumanEval/0": "    return False\n",
+    "HumanEval/1": "    return []\n",
+    "HumanEval/2": "    return 0\n",
+    "HumanEval/3": "    return ''\n",
+    "HumanEval/4": "    return []\n",
+}
+
+COMPLEX_LOGIC_COMPLETION_BY_TASK = {
+    "HumanEval/0": (
+        "    for idx, elem in enumerate(numbers):\n"
+        "        for idx2, elem2 in enumerate(numbers):\n"
+        "            if idx != idx2:\n"
+        "                if elem - elem2 < threshold:\n"
+        "                    return True\n"
+        "    return False\n"
+    ),
+}
+
 BUG_TEMPLATES = [
     {
         "suffix": "compile_error",
@@ -32,12 +51,24 @@ BUG_TEMPLATES = [
     {
         "suffix": "wrong_answer",
         "bug_kind": "WRONG_ANSWER",
-        "completion": "    return None\n",
+        "completion": "",
+        "completion_by_task": WRONG_ANSWER_COMPLETION_BY_TASK,
         "expected_errorType": "WRONG_ANSWER",
         "expected_failedStage": "TEST",
         "expected_errorSubtype": "ALGORITHM_ERROR",
         "expected_needRetrieval": False,
         "description": "函数能运行，但返回结果明显不符合 HumanEval 测试要求。",
+    },
+    {
+        "suffix": "logic_no_abs",
+        "bug_kind": "WRONG_ANSWER",
+        "completion": "",
+        "completion_by_task": COMPLEX_LOGIC_COMPLETION_BY_TASK,
+        "expected_errorType": "WRONG_ANSWER",
+        "expected_failedStage": "TEST",
+        "expected_errorSubtype": "ALGORITHM_ERROR",
+        "expected_needRetrieval": False,
+        "description": "复杂逻辑错误：距离判断没有使用 abs，规则层只能识别 AssertionError，Agent 应解释算法根因。",
     },
     {
         "suffix": "timeout",
@@ -69,6 +100,11 @@ def build_buggy_samples(task_ids: list[str] | None = None) -> list[dict]:
         task_slug = task_id.replace("/", "_")
         for template in BUG_TEMPLATES:
             sample = dict(template)
+            completion_by_task = sample.pop("completion_by_task", None)
+            if completion_by_task is not None:
+                sample["completion"] = completion_by_task.get(task_id, "")
+                if not sample["completion"]:
+                    sample["skip_reason"] = "No type-safe wrong-answer completion for this task."
             sample.update(
                 {
                     "sample_id": f"{task_slug}_{template['suffix']}",

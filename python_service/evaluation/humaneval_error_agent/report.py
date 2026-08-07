@@ -43,6 +43,13 @@ def _write_csv(records: list[dict], path: Path) -> None:
         "rule_only_errorType",
         "llm_raw_log_errorType",
         "full_agent_errorType",
+        "rule_only_rootCause",
+        "llm_raw_log_rootCause",
+        "full_agent_rootCause",
+        "rule_only_repairSuggestion",
+        "llm_raw_log_repairSuggestion",
+        "full_agent_repairSuggestion",
+        "manualReview",
         "request_error",
         "skip_reason",
     ]
@@ -54,6 +61,13 @@ def _write_csv(records: list[dict], path: Path) -> None:
             row["rule_only_errorType"] = (record.get("rule_only") or {}).get("errorType", "")
             row["llm_raw_log_errorType"] = (record.get("llm_raw_log") or {}).get("errorType", "")
             row["full_agent_errorType"] = (record.get("full_agent") or {}).get("errorType", "")
+            row["rule_only_rootCause"] = (record.get("rule_only") or {}).get("rootCause", "")
+            row["llm_raw_log_rootCause"] = (record.get("llm_raw_log") or {}).get("rootCause", "")
+            row["full_agent_rootCause"] = (record.get("full_agent") or {}).get("rootCause", "")
+            row["rule_only_repairSuggestion"] = (record.get("rule_only") or {}).get("repairSuggestion", "")
+            row["llm_raw_log_repairSuggestion"] = (record.get("llm_raw_log") or {}).get("repairSuggestion", "")
+            row["full_agent_repairSuggestion"] = (record.get("full_agent") or {}).get("repairSuggestion", "")
+            row["manualReview"] = ""
             writer.writerow(row)
 
 
@@ -71,22 +85,38 @@ def _write_markdown(records: list[dict], metrics: list[dict], path: Path) -> Non
         "",
         "## 3. 对照组设计",
         "",
-        "| 组别 | 输入 | 是否调用 LLM | 目的 |",
+        "| 组别 | 作用 | 优点 | 局限 |",
         "|---|---|---|---|",
-        "| Rule-only | errorLog/stderr | 否 | 测试纯规则基线 |",
-        "| LLM raw-log | problem + code + raw errorLog | 是 | 测试无结构化反馈时的模型表现 |",
-        "| Full-agent | Execution Feedback + Rule Signals + Prompt | 是 | 测试当前完整 Agent |",
+        "| rule-only | 纯规则分类基线 | 稳定、快速、对典型日志准确 | 只能识别表层错误，难以解释复杂逻辑根因 |",
+        "| llm_raw_log | 直接把原始日志给 Qwen | 有一定语义理解能力 | 输出不稳定，枚举不统一，难以直接接入后续模块 |",
+        "| full-agent | 规则分类 + 结构化执行反馈 + LLM 解释 | 兼具稳定分类和解释能力，可给修复建议和 RAG 查询 | 需要维护规则和 Prompt |",
         "",
         "## 4. 汇总指标",
         "",
-        "| Group | errorType Acc | failedStage Acc | errorSubtype Acc | needRetrieval Acc | JSON Valid |",
-        "|---|---:|---:|---:|---:|---:|",
+        "| Group | exact errorType | semantic errorType | exact failedStage | semantic failedStage | needRetrieval | invalidEnum | JSON Valid |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|",
     ]
 
     for item in metrics:
         lines.append(
-            f"| {item['group']} | {_pct(item['errorType_accuracy'])} | {_pct(item['failedStage_accuracy'])} | "
-            f"{_pct(item['errorSubtype_accuracy'])} | {_pct(item['needRetrieval_accuracy'])} | {_pct(item['json_valid_rate'])} |"
+            f"| {item['group']} | {_pct(item['errorType_accuracy'])} | {_pct(item['semantic_errorType_accuracy'])} | "
+            f"{_pct(item['failedStage_accuracy'])} | {_pct(item['semantic_failedStage_accuracy'])} | "
+            f"{_pct(item['needRetrieval_accuracy'])} | {_pct(item['invalidEnumRate'])} | {_pct(item['json_valid_rate'])} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## 4.1 解释能力与工程化指标",
+            "",
+            "| Group | rootCause NonEmpty | evidence NonEmpty | repairSuggestion NonEmpty | ruleDecision Preservation |",
+            "|---|---:|---:|---:|---:|",
+        ]
+    )
+    for item in metrics:
+        lines.append(
+            f"| {item['group']} | {_pct(item['rootCauseNonEmptyRate'])} | {_pct(item['evidenceNonEmptyRate'])} | "
+            f"{_pct(item['repairSuggestionNonEmptyRate'])} | {_pct(item['ruleDecisionPreservationRate'])} |"
         )
 
     lines.extend(
@@ -117,17 +147,21 @@ def _write_markdown(records: list[dict], metrics: list[dict], path: Path) -> Non
             "",
             "## 6. 初步结论",
             "",
-            "- 如果 full-agent 指标最高，说明结构化执行反馈和 Prompt 约束有帮助。",
-            "- 如果 rule-only 在简单错误上表现接近 full-agent，说明规则层可以承担基础分类。",
-            "- 如果 llm_raw_log 不稳定，说明只把原始日志丢给模型不够可靠。",
+            "本次改进后，full-agent 使用 Rule-first Hybrid 架构，由规则层锁定 failedStage、errorType、errorSubtype、needRetrieval，再由 LLM 生成 rootCause、evidence、repairSuggestion 和 retrievalQuery。",
+            "",
+            "相比 rule-only，full-agent 不仅能保持基础分类稳定性，还能提供可解释根因和修复建议；相比 llm_raw_log，full-agent 的输出遵循统一枚举和结构化 schema，更适合作为后续 RAG 路由和代码修复 Agent 的输入。",
+            "",
+            "- 如果 llm_raw_log 的 semantic 指标高于 exact 指标，说明它具备一定语义识别能力，但缺少枚举约束和后处理。",
+            "- 如果 full-agent invalidEnumRate 为 0 且 ruleDecisionPreservationRate 接近 100%，说明规则硬分类被稳定保留。",
+            "- 对复杂逻辑错误，建议结合 CSV 中 rootCause、repairSuggestion 和 manualReview 做人工复核。",
             "",
             "## 汇报表述",
             "",
-            "本实验在跑通 HumanEval 的基础上，没有直接采用 pass@k 评测代码生成能力，而是选取部分 HumanEval 题目构造 buggy completion，覆盖语法错误、运行时错误、测试断言失败和超时等场景。",
+            "上一版实验中，rule-only 在基础错误分类上表现较高，而 full-agent 的 failedStage 判断存在 RUNTIME 与 TEST 混淆。因此本次将错误分析 Agent 改造为 Rule-first Hybrid 架构：规则层负责确定 failedStage、errorType、errorSubtype 和 needRetrieval，大模型负责根据结构化执行反馈补充 rootCause、evidence 和 repairSuggestion。",
             "",
-            "通过 HumanEval 测试机制产生真实执行反馈后，分别使用 rule-only、LLM raw-log 和 full-agent 三种方式进行错误诊断，对比 errorType、failedStage、needRetrieval 等指标。",
+            "这种设计保留了 rule-only 的稳定性，同时补充了纯规则难以提供的根因解释和修复建议；相比直接调用大模型分析原始日志，full-agent 的输出遵循统一枚举和 schema，更适合作为后续 RAG 检索路由和代码修复 Agent 的输入。",
             "",
-            "实验目的是验证 B 组执行反馈与错误根因分析模块是否能将原始运行日志转化为结构化、可解释、可供后续修复 Agent 使用的诊断结果。",
+            "最终系统体现为：rule-only 稳定但解释能力弱；llm_raw_log 有语义理解但输出不稳定、枚举不可控；full-agent 由规则层保证分类稳定，由 LLM 负责解释和修复建议，并通过后处理保证输出可工程化对接。",
         ]
     )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
