@@ -1,6 +1,7 @@
 import os
 import shlex
 import sys
+from pathlib import Path
 from unittest.mock import patch
 
 from pico import FakeModelClient, Pico, SessionStore, WorkspaceContext
@@ -102,6 +103,30 @@ def test_cli_build_agent_uses_default_configured_secret_names(tmp_path):
         agent = pico_cli.build_agent(args)
         assert agent.secret_env_summary()["secret_env_names"] == ["GH_PAT"]
 
+
+def test_cli_loads_agent_env_before_workspace_env(tmp_path):
+    class DummyModelClient:
+        def __init__(self, *args, **kwargs):
+            self.args = args
+            self.kwargs = kwargs
+
+    (tmp_path / "README.md").write_text("demo\n", encoding="utf-8")
+    calls = []
+
+    def record_env_load(start, override=True):
+        calls.append((Path(start).resolve(), override))
+        return {}
+
+    with patch.dict(os.environ, {}, clear=True), patch(
+        "pico.cli.AnthropicCompatibleModelClient", DummyModelClient
+    ), patch("pico.cli.load_project_env", side_effect=record_env_load):
+        args = pico_cli.build_arg_parser().parse_args(["--cwd", str(tmp_path), "--provider", "deepseek"])
+        pico_cli.build_agent(args)
+
+    assert calls == [
+        (pico_cli.AGENT_CONFIG_ROOT, True),
+        (tmp_path.resolve(), False),
+    ]
 
 def test_cli_build_agent_loads_project_env_secrets_before_redaction_setup(tmp_path):
     class DummyModelClient:

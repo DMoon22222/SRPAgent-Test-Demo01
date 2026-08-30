@@ -38,6 +38,18 @@ REPL 内置命令与会话路径：
 
 ![pico repl](assets/screenshots/pico-repl.png)
 
+### REPL 工作区切换
+
+在已启动的 `pilot>` 中，可查看或切换工作目录：
+
+```text
+/cwd
+/cwd F:\hmdpcode
+/cwd "F:\My Projects\demo"
+```
+
+切换后会在目标项目中创建新的 `.pico/sessions/` 会话文件；原项目的会话和记忆不会被删除，也不会带入新项目。
+
 ## 安装
 
 需要 Python 3.10+。
@@ -82,7 +94,7 @@ python -m pico
 
 ## 模型后端
 
-Pico 启动时会读取项目根目录的 `.env`。本地真实 key 放在 `.env`，仓库只保留 `.env.example`。配置优先级是：
+Pilot 启动时会优先读取 Pilot 自身项目根目录（`pyproject.toml` 所在目录）的 `.env`。这份文件保存模型与密钥；目标工作区的 `.env` 只会补充未设置的变量，不能覆盖 Pilot 的连接配置。本地真实 key 放在 `.env`，仓库只保留 `.env.example`。配置优先级是：
 
 ```text
 显式 CLI 参数 > .env 里的 PICO_* 变量 > 旧环境变量 > 代码默认值

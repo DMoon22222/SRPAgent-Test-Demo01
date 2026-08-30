@@ -10,6 +10,7 @@ import os
 import shutil
 import sys
 import textwrap
+from pathlib import Path
 
 from .config import load_project_env, provider_env
 from .providers.clients import AnthropicCompatibleModelClient, OllamaModelClient, OpenAICompatibleModelClient
@@ -58,6 +59,7 @@ HELP_DETAILS = textwrap.dedent(
     /session Show the path to the saved session file.
     /reset   Clear the current session history and memory.
     /exit    Exit the agent.
+    /cwd [path] Show the current workspace or switch to another workspace.
     """
 ).strip()
 
@@ -78,6 +80,7 @@ DEFAULT_DEEPSEEK_BASE_URL = "https://api.deepseek.com/anthropic"
 DEFAULT_PROVIDER = "deepseek"
 PROVIDER_CHOICES = ("ollama", "openai", "anthropic", "deepseek")
 SECRET_ENV_NAMES_VAR = "PICO_SECRET_ENV_NAMES"
+AGENT_CONFIG_ROOT = Path(__file__).resolve().parent.parent
 
 
 def _effective_provider(args):
@@ -239,6 +242,7 @@ def build_welcome(agent, model, host):
             divider("-"),
             row("Commands:"),
             row("/help     Show help        /memory   Working memory        /session   Session path"),
+            row("/cwd      Switch workspace"),
             row("/reset    Reset session    /exit     Exit agent"),
             divider("="),
         ]
@@ -261,10 +265,12 @@ def build_agent(args):
     它是整个程序启动链路里最靠近 runtime 的装配点。`main()` 先调它，
     得到 agent 后，后面无论是 one-shot 还是 REPL 模式，都会落到 `ask()`。
     """
-    # 这里是 CLI 到 runtime 的装配点：
-    # 先采集工作区快照和加载项目级环境，再整理 secret 名单、模型后端和 session。
+    # Agent 自身的 .env 保存模型和密钥；工作区 .env 只能补充未设置的变量。
+    # 这样切换到其他项目时，不会丢失 Pilot 的连接配置或被目标项目覆盖。
+    load_project_env(AGENT_CONFIG_ROOT)
     workspace = WorkspaceContext.build(args.cwd)
-    load_project_env(workspace.repo_root)
+    if Path(workspace.repo_root).resolve() != AGENT_CONFIG_ROOT:
+        load_project_env(workspace.repo_root, override=False)
     configured_secret_names = _configured_secret_names(args)
     store = SessionStore(workspace.repo_root + "/.pico/sessions")
     model = _build_model_client(args)
@@ -365,6 +371,20 @@ def main(argv=None):
             continue
         if user_input in {"/exit", "/quit"}:
             return 0
+        command, _, command_arg = user_input.partition(" ")
+        if command == "/cwd":
+            target = command_arg.strip()
+            if not target:
+                print(agent.workspace.cwd)
+                continue
+            try:
+                workspace = agent.switch_workspace(target)
+            except ValueError as exc:
+                print(f"workspace switch failed: {exc}")
+                continue
+            print(f"workspace switched: {workspace.cwd}")
+            print(f"session: {agent.session_path}")
+            continue
         if user_input == "/help":
             print(HELP_DETAILS)
             continue

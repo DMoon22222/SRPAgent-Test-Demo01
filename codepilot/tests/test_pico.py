@@ -38,6 +38,30 @@ def build_agent(tmp_path, outputs, **kwargs):
     )
 
 
+def test_agent_switch_workspace_creates_fresh_project_session(tmp_path):
+    first = tmp_path / "first"
+    second = tmp_path / "second"
+    first.mkdir()
+    second.mkdir()
+    (first / "README.md").write_text("first\n", encoding="utf-8")
+    (second / "README.md").write_text("second\n", encoding="utf-8")
+    (second / "new.txt").write_text("new project\n", encoding="utf-8")
+
+    agent = build_agent(first, [])
+    old_session_path = agent.session_path
+    agent.session["history"].append({"role": "user", "content": "old project"})
+
+    workspace = agent.switch_workspace(second)
+
+    assert workspace.cwd == str(second.resolve())
+    assert agent.root == second.resolve()
+    assert agent.session["history"] == []
+    assert agent.session_path.parent == second / ".pico" / "sessions"
+    assert old_session_path.exists()
+    assert agent.path("new.txt") == (second / "new.txt").resolve()
+    with pytest.raises(ValueError, match="path escapes workspace"):
+        agent.path("../first/README.md")
+
 def test_agent_runs_tool_then_final(tmp_path):
     (tmp_path / "hello.txt").write_text("alpha\nbeta\n", encoding="utf-8")
     agent = build_agent(

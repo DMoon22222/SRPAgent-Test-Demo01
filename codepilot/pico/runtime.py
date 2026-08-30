@@ -128,6 +128,56 @@ class Pico:
             session=session_store.load(session_id),
             **kwargs,
         )
+    def switch_workspace(self, cwd):
+        requested = Path(str(cwd).strip().strip('"')).expanduser()
+        target = requested if requested.is_absolute() else Path(self.workspace.cwd) / requested
+        target = target.resolve()
+
+        if not target.exists():
+            raise ValueError(f"workspace does not exist: {target}")
+        if not target.is_dir():
+            raise ValueError(f"workspace is not a directory: {target}")
+
+        workspace = WorkspaceContext.build(target)
+        self.workspace = workspace
+        self.root = Path(workspace.repo_root)
+        self.session_store = SessionStore(self.root / ".pico" / "sessions")
+        self.run_store = RunStore(self.root / ".pico" / "runs")
+
+        # 不把旧项目的对话、记忆和 checkpoint 带入新项目。
+        self.session = {
+            "id": datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + uuid.uuid4().hex[:6],
+            "created_at": now(),
+            "workspace_root": workspace.repo_root,
+            "history": [],
+            "memory": memorylib.default_memory_state(),
+        }
+        self._ensure_session_shape()
+        self.memory = memorylib.LayeredMemory(
+            self.session["memory"],
+            workspace_root=self.root,
+        )
+        self.tools = self._apply_tool_allowlist(self.build_tools())
+        self.tool_executor = ToolExecutor(self)
+        self._apply_prefix_state(self.build_prefix())
+        self.context_manager = ContextManager(self)
+        self.resume_state = self.evaluate_resume_state()
+        self.session_path = self.session_store.save(self.session)
+
+        self.current_task_state = None
+        self.current_run_dir = None
+        self.last_prompt_metadata = {}
+        self.last_completion_metadata = {}
+        self.last_durable_promotions = []
+        self.last_durable_rejections = []
+        self.last_durable_superseded = []
+        self._last_tool_result_metadata = {}
+        self._last_prefix_refresh = {
+            "workspace_changed": True,
+            "prefix_changed": True,
+        }
+        return self.workspace
+
 
     def _ensure_session_shape(self):
         self.session.setdefault("history", [])
