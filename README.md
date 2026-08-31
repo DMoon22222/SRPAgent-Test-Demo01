@@ -28,15 +28,15 @@
 
 CLI 帮助信息：
 
-![pico help](assets/screenshots/pico-help.png)
+![pico help](codepilot/assets/screenshots/pico-help.png)
 
 启动界面：
 
-![pico start](assets/screenshots/pico-start.png)
+![pico start](codepilot/assets/screenshots/pico-start.png)
 
 REPL 内置命令与会话路径：
 
-![pico repl](assets/screenshots/pico-repl.png)
+![pico repl](codepilot/assets/screenshots/pico-repl.png)
 
 ### REPL 工作区切换
 
