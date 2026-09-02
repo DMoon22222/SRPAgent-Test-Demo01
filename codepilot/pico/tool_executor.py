@@ -68,9 +68,15 @@ class ToolExecutor:
             )
 
         try:
-            agent.validate_tool(name, args)
+            validator = tool.get("validate")
+            if callable(validator):
+                validator(args)
+            else:
+                agent.validate_tool(name, args)
         except Exception as exc:
-            example = agent.tool_example(name)
+            example = str(tool.get("example", "")).strip()
+            if not example:
+                example = agent.tool_example(name)
             message = f"error: invalid arguments for {name}: {exc}"
             if example:
                 message += f"\nexample: {example}"

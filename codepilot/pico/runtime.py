@@ -24,6 +24,9 @@ from .session_store import SessionStore
 from .tool_context import ToolContext
 from .tool_executor import ToolExecutor
 from . import tools as toolkit
+from .tool_provider import BuiltinToolProvider
+from .tool_registry import ToolRegistry
+from .skills import SkillRegistry
 from .workspace import IGNORED_PATH_NAMES, MAX_HISTORY, WorkspaceContext, clip, now
 
 DEFAULT_SHELL_ENV_ALLOWLIST = ("HOME", "LANG", "LC_ALL", "LC_CTYPE", "LOGNAME", "PATH", "PWD", "SHELL", "TERM", "TMPDIR", "TMP", "TEMP", "USER")
@@ -68,24 +71,36 @@ class Pico:
         secret_env_names=None,
         feature_flags=None,
         allowed_tools=None,
+        tool_providers=None,
     ):
+        #保存启动时传入的核心依赖
         self.model_client = model_client
         self.workspace = workspace
         self.root = Path(workspace.repo_root)
         self.session_store = session_store
+        self.skill_registry = SkillRegistry(self.root)
+        #设置Agent的运行治理参数
         self.approval_policy = approval_policy
         self.max_steps = max_steps
         self.max_new_tokens = max_new_tokens
         self.depth = depth
         self.max_depth = max_depth
         self.read_only = read_only
+        # 处理shell环境与敏感信息
         self.shell_env_allowlist = tuple(shell_env_allowlist or DEFAULT_SHELL_ENV_ALLOWLIST)
         self.secret_env_names = {str(name).upper() for name in (secret_env_names or ())}
+        #Feature Flag与可用工具白名单
         self.feature_flags = dict(DEFAULT_FEATURE_FLAGS)
         if feature_flags:
             self.feature_flags.update({str(key): bool(value) for key, value in feature_flags.items()})
         self.allowed_tools = self._normalize_allowed_tools(allowed_tools)
+        self.tool_providers = list(
+            tool_providers
+            if tool_providers is not None
+            else [BuiltinToolProvider()]
+        )
         self.run_store = run_store or RunStore(Path(workspace.repo_root) / ".pico" / "runs")
+        # 创建或恢复Session
         self.session = session or {
             "id": datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + uuid.uuid4().hex[:6],
             "created_at": now(),
@@ -98,12 +113,18 @@ class Pico:
             self.session.setdefault("memory", memorylib.default_memory_state()),
             workspace_root=self.root,
         )
+        # 构建分层memory
         self.session["memory"] = self.memory.to_dict()
+        # 创建工具注册表
         self.tools = self._apply_tool_allowlist(self.build_tools())
+        # 创建ToolExecutor
         self.tool_executor = ToolExecutor(self)
+        # 创建稳定Prompt Prefix
         self.prefix_state = self.build_prefix()
         self.prefix = self.prefix_state.text
+        # 创建ContextManager
         self.context_manager = ContextManager(self)
+        #检查恢复状态并保存初始会话
         self.resume_state = self.evaluate_resume_state()
         self.session_path = self.session_store.save(self.session)
         self.current_task_state = None
@@ -143,6 +164,7 @@ class Pico:
         self.root = Path(workspace.repo_root)
         self.session_store = SessionStore(self.root / ".pico" / "sessions")
         self.run_store = RunStore(self.root / ".pico" / "runs")
+        self.skill_registry = SkillRegistry(self.root)
 
         # 不把旧项目的对话、记忆和 checkpoint 带入新项目。
         self.session = {
@@ -225,7 +247,9 @@ class Pico:
         del bucket[:-limit]
 
     def build_tools(self):
-        return toolkit.build_tool_registry(self.tool_context())
+        return ToolRegistry(self.tool_providers).discover(
+            self.tool_context()
+        )
 
     @staticmethod
     def _normalize_allowed_tools(allowed_tools):
@@ -237,18 +261,7 @@ class Pico:
         return normalized
 
     def _apply_tool_allowlist(self, tools):
-        if self.allowed_tools is None:
-            return tools
-        legal_names = toolkit.legal_tool_names()
-        unknown = [name for name in self.allowed_tools if name not in legal_names]
-        if unknown:
-            raise ValueError(f"unknown allowed tool: {', '.join(unknown)}")
-        allowed = set(self.allowed_tools)
-        return {
-            name: tool
-            for name, tool in tools.items()
-            if name in allowed
-        }
+        return ToolRegistry.filter_allowed(tools, self.allowed_tools)
 
     def tool_signature(self):
         return tool_signature(self.tools)
@@ -358,7 +371,11 @@ class Pico:
     def _build_prompt_and_metadata(self, user_message):
         refresh = self.refresh_prefix()
         self.resume_state = self.evaluate_resume_state()
-        prompt, metadata = self.context_manager.build(user_message)
+        self.skill_registry.discover()
+        skill_text, selected_skills = self.skill_registry.render_for_prompt(user_message)
+        if not selected_skills:
+            skill_text = ""
+        prompt, metadata = self.context_manager.build(user_message, skill_text=skill_text)
         # 这里把“这轮 prompt 是怎么拼出来的”连同缓存相关状态一起记下来，
         # 后面 trace/report 才能解释清楚：为什么这一轮 prefix 变了、缓存有没有命中。
         metadata.update(
@@ -367,6 +384,8 @@ class Pico:
                 "workspace_chars": len(self.workspace.text()),
                 "memory_chars": len(self.memory_text()),
                 "history_chars": len(self.history_text()),
+                "selected_skills": selected_skills,
+                "skill_chars": len(skill_text),
                 "request_chars": len(user_message),
                 "tool_count": len(self.tools),
                 "workspace_docs": len(self.workspace.project_docs),

@@ -63,7 +63,7 @@ HELP_DETAILS = textwrap.dedent(
     """
 ).strip()
 
-
+# 处理终端中文输出
 def configure_terminal_encoding():
     for stream in (sys.stdout, sys.stderr):
         if hasattr(stream, "reconfigure"):
@@ -75,14 +75,14 @@ DEFAULT_OPENAI_MODEL = "gpt-5.4"
 DEFAULT_OPENAI_BASE_URL = "https://www.right.codes/codex/v1"
 DEFAULT_ANTHROPIC_MODEL = "claude-sonnet-4-6"
 DEFAULT_ANTHROPIC_BASE_URL = "https://www.right.codes/claude/v1"
-DEFAULT_DEEPSEEK_MODEL = "deepseek-v4-pro"
+DEFAULT_DEEPSEEK_MODEL = "deepseek-v4-flash"
 DEFAULT_DEEPSEEK_BASE_URL = "https://api.deepseek.com/anthropic"
 DEFAULT_PROVIDER = "deepseek"
 PROVIDER_CHOICES = ("ollama", "openai", "anthropic", "deepseek")
 SECRET_ENV_NAMES_VAR = "PICO_SECRET_ENV_NAMES"
 AGENT_CONFIG_ROOT = Path(__file__).resolve().parent.parent
 
-
+# Provider与模型选择
 def _effective_provider(args):
     # Provider 选择优先级：
     # 1. 用户显式传入 --provider
@@ -122,7 +122,7 @@ def _effective_model(args, provider):
         return DEFAULT_DEEPSEEK_MODEL
     return DEFAULT_OLLAMA_MODEL
 
-
+# 配置环境变量名
 def _configured_secret_names(args):
     configured_secret_names = set(DEFAULT_SECRET_ENV_NAMES)
     configured_secret_names.update(str(name).upper() for name in args.secret_env_names)
@@ -135,7 +135,7 @@ def _configured_secret_names(args):
         )
     return sorted(configured_secret_names)
 
-
+# 把参数变成模型客户端
 def _build_model_client(args):
     provider = _effective_provider(args)
     # CLI 只负责把 provider 选择翻译成具体 client。
@@ -298,7 +298,7 @@ def build_agent(args):
         secret_env_names=configured_secret_names,
     )
 
-
+# 定义所有启动参数
 def build_arg_parser():
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,

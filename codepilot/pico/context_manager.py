@@ -1,7 +1,7 @@
 """Prompt 组装与上下文预算控制。
 
-这个模块负责决定：每一轮到底把多少 prefix、memory、相关笔记、历史
-以及当前用户请求送进模型。
+这个模块负责决定：每一轮到底把多少 prefix、任务 Skill、memory、相关笔记、
+历史以及当前用户请求送进模型。
 """
 
 from __future__ import annotations
@@ -13,19 +13,21 @@ from dataclasses import dataclass
 DEFAULT_TOTAL_BUDGET = 12000
 DEFAULT_SECTION_BUDGETS = {
     "prefix": 3600,
+    "skills": 1200,
     "memory": 1600,
     "relevant_memory": 1200,
     "history": 5200,
 }
 DEFAULT_SECTION_FLOORS = {
     "prefix": 1200,
+    "skills": 300,
     "memory": 400,
     "relevant_memory": 300,
     "history": 1500,
 }
 # 当 prompt 超预算时，会优先压缩这些 section。
-DEFAULT_REDUCTION_ORDER = ("relevant_memory", "history", "memory", "prefix")
-SECTION_ORDER = ("prefix", "memory", "relevant_memory", "history", "current_request")
+DEFAULT_REDUCTION_ORDER = ("skills", "relevant_memory", "history", "memory", "prefix")
+SECTION_ORDER = ("prefix", "skills", "memory", "relevant_memory", "history", "current_request")
 CURRENT_REQUEST_SECTION = "current_request"
 RELEVANT_MEMORY_LIMIT = 3
 
@@ -75,13 +77,13 @@ class ContextManager:
         self.section_floors = self._compute_section_floors()
         self.reduction_order = tuple(reduction_order or DEFAULT_REDUCTION_ORDER)
 
-    def build(self, user_message):
+    def build(self, user_message, skill_text=""):
         """按预算组装一轮完整 prompt。
 
         为什么存在：
         仅靠用户这一轮输入，模型并不知道当前仓库状态、会话里已经读过什么、
-        哪些旧信息还值得继续参考。这个函数负责把“稳定基线 + 工作记忆 +
-        相关笔记 + 历史 + 当前请求”拼成真正发给模型的 prompt。
+        哪些旧信息还值得继续参考。这个函数负责把“稳定基线 + 任务 Skill +
+        工作记忆 + 相关笔记 + 历史 + 当前请求”拼成真正发给模型的 prompt。
 
         输入 / 输出：
         - 输入：`user_message`，也就是用户当前这一轮的新请求。
@@ -107,6 +109,7 @@ class ContextManager:
             context_reduction_enabled = self.agent.feature_enabled("context_reduction")
         section_texts = {
             "prefix": str(getattr(self.agent, "prefix", "")),
+            "skills": str(skill_text),
             "memory": "Memory:\n- disabled" if not memory_enabled else str(self.agent.memory_text()),
             "history": "",
             CURRENT_REQUEST_SECTION: f"Current user request:\n{user_message}",
@@ -135,6 +138,8 @@ class ContextManager:
             return prompt, metadata
 
         budgets = dict(self.section_budgets)
+        if not section_texts["skills"]:
+            budgets["skills"] = 0
         rendered = self._render_sections(section_texts, budgets, selected_notes=selected_notes)
         prompt = self._assemble_prompt(rendered)
         reduction_log = []
@@ -193,6 +198,7 @@ class ContextManager:
         history_raw = self._raw_history_text(history)
         return {
             "prefix": SectionRender(raw=section_texts["prefix"], budget=len(section_texts["prefix"]), rendered=section_texts["prefix"], details={}),
+            "skills": SectionRender(raw=section_texts["skills"], budget=len(section_texts["skills"]), rendered=section_texts["skills"], details={}),
             "memory": SectionRender(raw=section_texts["memory"], budget=len(section_texts["memory"]), rendered=section_texts["memory"], details={}),
             "relevant_memory": SectionRender(
                 raw=relevant_raw,
@@ -444,13 +450,9 @@ class ContextManager:
     def _assemble_prompt(self, rendered):
         # 顺序是刻意设计的：稳定规则放前面，最新请求放最后。
         return "\n\n".join(
-            [
-                rendered["prefix"].rendered,
-                rendered["memory"].rendered,
-                rendered["relevant_memory"].rendered,
-                rendered["history"].rendered,
-                rendered[CURRENT_REQUEST_SECTION].rendered,
-            ]
+            rendered[section].rendered
+            for section in SECTION_ORDER
+            if rendered[section].rendered
         ).strip()
 
     def _metadata(self, prompt, rendered, budgets, reduction_log, selected_notes, user_message, section_texts):

@@ -29,11 +29,27 @@ def test_context_manager_assembles_sections_in_expected_order(tmp_path):
     prompt, metadata = ContextManager(agent).build("Where is the deploy key?")
 
     assert prompt.index("You are pico") < prompt.index("Memory:")
+    assert "Skills:" not in prompt
     assert prompt.index("Memory:") < prompt.index("Relevant memory:")
     assert prompt.index("Relevant memory:") < prompt.index("Transcript:")
     assert prompt.index("Transcript:") < prompt.index("Current user request:")
     assert prompt.rstrip().endswith("Current user request:\nWhere is the deploy key?")
-    assert metadata["section_order"] == ["prefix", "memory", "relevant_memory", "history", "current_request"]
+    assert metadata["section_order"] == ["prefix", "skills", "memory", "relevant_memory", "history", "current_request"]
+
+
+def test_context_manager_renders_skills_as_a_budgeted_section(tmp_path):
+    agent = build_agent(tmp_path, [])
+    skill_text = "Skills:\n[Skill: code_review]\n" + ("R" * 200)
+
+    prompt, metadata = ContextManager(
+        agent,
+        section_budgets={"skills": 80},
+    ).build("Review this change", skill_text=skill_text)
+
+    assert "[Skill: code_review]" in prompt
+    assert metadata["sections"]["skills"]["raw_chars"] == len(skill_text)
+    assert metadata["sections"]["skills"]["budget_chars"] == 80
+    assert metadata["sections"]["skills"]["rendered_chars"] == 80
 
 
 def test_context_manager_reduces_relevant_memory_before_history_and_preserves_newer_context(tmp_path):
