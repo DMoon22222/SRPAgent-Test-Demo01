@@ -5,8 +5,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-
 ROOT = Path.cwd().resolve()
+SUPPORTED_PROTOCOL_VERSIONS = {"2024-11-05", "2025-03-26", "2025-06-18"}
 
 TOOLS = [
     {
@@ -55,6 +55,7 @@ def git_diff(arguments: dict) -> dict:
         cwd=ROOT,
         capture_output=True,
         text=True,
+        check=False,
         encoding="utf-8",
         errors="replace",
         timeout=20,
@@ -73,6 +74,7 @@ def git_history(arguments: dict) -> dict:
         cwd=ROOT,
         capture_output=True,
         text=True,
+        check=False,
         encoding="utf-8",
         errors="replace",
         timeout=20,
@@ -87,6 +89,25 @@ def handle(request: dict) -> dict:
     method = request.get("method")
     params = request.get("params", {})
 
+    if method == "initialize":
+        version = params.get("protocolVersion")
+        if version not in SUPPORTED_PROTOCOL_VERSIONS:
+            return {
+                "jsonrpc": "2.0",
+                "id": request_id,
+                "error": {"code": -32602, "message": "unsupported protocol version"},
+            }
+        return {
+            "jsonrpc": "2.0",
+            "id": request_id,
+            "result": {
+                "protocolVersion": version,
+                "capabilities": {"tools": {}},
+                "serverInfo": {"name": "codepilot-git-analyzer", "version": "0.1.0"},
+            },
+        }
+    if method == "notifications/initialized":
+        return None
     if method == "tools/list":
         return {"jsonrpc": "2.0", "id": request_id, "result": {"tools": TOOLS}}
     if method == "tools/call":
@@ -110,9 +131,10 @@ def main() -> int:
             continue
         try:
             response = handle(json.loads(line))
-        except Exception as exc:
+        except (OSError, ValueError, TypeError) as exc:
             response = {"jsonrpc": "2.0", "id": None, "error": {"code": -32000, "message": str(exc)}}
-        print(json.dumps(response), flush=True)
+        if response is not None:
+            print(json.dumps(response), flush=True)
     return 0
 
 

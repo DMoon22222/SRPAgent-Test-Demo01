@@ -13,8 +13,16 @@ import textwrap
 from pathlib import Path
 
 from .config import load_project_env, provider_env
-from .providers.clients import AnthropicCompatibleModelClient, OllamaModelClient, OpenAICompatibleModelClient
+from .mcp import MCPClient
+from .mcp.config import load_mcp_server_configs
+from .mcp.provider import MCPToolProvider
+from .providers.clients import (
+    AnthropicCompatibleModelClient,
+    OllamaModelClient,
+    OpenAICompatibleModelClient,
+)
 from .runtime import Pico, SessionStore
+from .tool_provider import BuiltinToolProvider
 from .workspace import WorkspaceContext, middle
 
 DEFAULT_SECRET_ENV_NAMES = (
@@ -274,6 +282,7 @@ def build_agent(args):
     configured_secret_names = _configured_secret_names(args)
     store = SessionStore(workspace.repo_root + "/.pico/sessions")
     model = _build_model_client(args)
+    tool_providers = _build_tool_providers(args, workspace)
     session_id = args.resume
     if session_id == "latest":
         session_id = store.latest()
@@ -287,6 +296,7 @@ def build_agent(args):
             max_steps=args.max_steps,
             max_new_tokens=args.max_new_tokens,
             secret_env_names=configured_secret_names,
+            tool_providers=tool_providers,
         )
     return Pico(
         model_client=model,
@@ -296,7 +306,33 @@ def build_agent(args):
         max_steps=args.max_steps,
         max_new_tokens=args.max_new_tokens,
         secret_env_names=configured_secret_names,
+        tool_providers=tool_providers,
     )
+
+
+def _build_tool_providers(args, workspace):
+    """只在用户显式传入 --mcp-config 时装配 MCP Provider。"""
+    providers = [BuiltinToolProvider()]
+    config_path = getattr(args, "mcp_config", None)
+    if not config_path:
+        return providers
+
+    for server in load_mcp_server_configs(config_path, workspace.repo_root):
+        providers.append(
+            MCPToolProvider(
+                server.server_id,
+                MCPClient(server.config),
+                read_only_tools=set(server.read_only_tools),
+                workspace_cwd=server.workspace_cwd,
+            )
+        )
+    return providers
+
+
+def _close_agent(agent):
+    close = getattr(agent, "close", None)
+    if callable(close):
+        close()
 
 # 定义所有启动参数
 def build_arg_parser():
@@ -322,6 +358,11 @@ def build_arg_parser():
     parser.add_argument("--ollama-timeout", type=int, default=300, help="Ollama request timeout in seconds.")
     parser.add_argument("--openai-timeout", type=int, default=300, help="OpenAI-compatible request timeout in seconds.")
     parser.add_argument("--resume", default=None, help="Session id to resume or 'latest'.")
+    parser.add_argument(
+        "--mcp-config",
+        default=None,
+        help="Path to an explicitly trusted local MCP Server JSON configuration.",
+    )
     parser.add_argument("--approval", choices=("ask", "auto", "never"), default="ask", help="Approval policy for risky tools.")
     parser.add_argument(
         "--secret-env-name",
@@ -356,6 +397,10 @@ def main(argv=None):
             except RuntimeError as exc:
                 print(str(exc), file=sys.stderr)
                 return 1
+            finally:
+                _close_agent(agent)
+        else:
+            _close_agent(agent)
         return 0
 
     while True:
@@ -364,12 +409,14 @@ def main(argv=None):
         try:
             user_input = input("\npilot> ").strip()
         except (EOFError, KeyboardInterrupt):
-            print("")
+            print()
+            _close_agent(agent)
             return 0
 
         if not user_input:
             continue
         if user_input in {"/exit", "/quit"}:
+            _close_agent(agent)
             return 0
         command, _, command_arg = user_input.partition(" ")
         if command == "/cwd":
@@ -404,9 +451,6 @@ def main(argv=None):
             print(agent.ask(user_input))
         except RuntimeError as exc:
             print(str(exc), file=sys.stderr)
-
-
-
 
 
 

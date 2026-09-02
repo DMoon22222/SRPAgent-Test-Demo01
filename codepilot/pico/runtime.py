@@ -159,6 +159,7 @@ class Pico:
         if not target.is_dir():
             raise ValueError(f"workspace is not a directory: {target}")
 
+        self._close_tool_providers()
         workspace = WorkspaceContext.build(target)
         self.workspace = workspace
         self.root = Path(workspace.repo_root)
@@ -199,6 +200,16 @@ class Pico:
             "prefix_changed": True,
         }
         return self.workspace
+
+    def close(self):
+        """关闭由 Tool Provider 管理的外部进程。"""
+        self._close_tool_providers()
+
+    def _close_tool_providers(self):
+        for provider in self.tool_providers:
+            close = getattr(provider, "close", None)
+            if callable(close):
+                close()
 
 
     def _ensure_session_shape(self):
