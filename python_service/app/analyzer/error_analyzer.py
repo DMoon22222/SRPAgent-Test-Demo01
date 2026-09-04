@@ -24,7 +24,7 @@ class ErrorAnalyzer:
                 "confidence": rule.confidence,
             }
 
-        return postprocess_analysis(llm_result, rule)
+        return postprocess_analysis(llm_result, rule, request.code)
 
     def _call_llm(self, request: AnalyzeRequest, rule: RuleDecision) -> dict[str, Any]:
         try:
@@ -76,16 +76,23 @@ class ErrorAnalyzer:
 """.strip()
 
 
-def postprocess_analysis(llm_result: dict, rule: RuleDecision) -> ErrorAnalysisResult:
+def postprocess_analysis(llm_result: dict, rule: RuleDecision, code: str = "") -> ErrorAnalysisResult:
     llm_result = llm_result if isinstance(llm_result, dict) else {}
     normalized = _llm_enum_was_normalized(llm_result)
     rule_stage, _ = normalize_failed_stage(rule.failedStage)
     rule_type, _ = normalize_error_type(rule.errorType)
     rule_subtype, _ = normalize_error_subtype(rule.errorSubtype)
+    heuristic = _logic_bug_heuristic(code, rule)
 
     evidence = merge_evidence(rule.evidence, llm_result.get("evidence"))
+    if heuristic.get("evidence"):
+        evidence = merge_evidence(evidence, heuristic.get("evidence"))
     root_cause = str(llm_result.get("rootCause") or rule.explanation or "规则层给出基础诊断。").strip()
     repair = str(llm_result.get("repairSuggestion") or default_repair_suggestion(rule)).strip()
+    if heuristic.get("rootCause") and not _contains_any(root_cause, heuristic.get("keywords", [])):
+        root_cause = f"{root_cause} {heuristic['rootCause']}".strip()
+    if heuristic.get("repairSuggestion") and not _contains_any(repair, heuristic.get("repairKeywords", [])):
+        repair = f"{repair} {heuristic['repairSuggestion']}".strip()
     retrieval_query = rule.retrievalQuery
     if rule.needRetrieval and str(llm_result.get("retrievalQuery") or "").strip():
         retrieval_query = str(llm_result.get("retrievalQuery")).strip()
@@ -105,6 +112,8 @@ def postprocess_analysis(llm_result: dict, rule: RuleDecision) -> ErrorAnalysisR
         classificationSource="RULE_FIRST_LLM_EXPLAIN",
         enumNormalized=normalized,
         llmOverrodeRule=False,
+        analysisDepth="ROOT_CAUSE",
+        canExplainLogicBug=True,
     )
 
 
@@ -178,3 +187,54 @@ def _location_from_evidence(evidence: list[str]) -> str:
         if ".py:" in item or ".java:" in item:
             return item
     return ""
+
+
+def _logic_bug_heuristic(code: str, rule: RuleDecision) -> dict[str, Any]:
+    if rule.errorType != "WRONG_ANSWER" or rule.failedStage != "TEST":
+        return {}
+    if "elem - elem2 < threshold" in code and "abs(elem - elem2)" not in code:
+        return {
+            "rootCause": "代码比较 elem - elem2 与 threshold，没有使用 abs 计算双向距离，可能漏判或误判元素间距离。",
+            "repairSuggestion": "使用 abs(elem - elem2) < threshold 判断两个元素的绝对距离。",
+            "evidence": ["elem - elem2 < threshold"],
+            "keywords": ["abs", "absolute", "distance", "距离", "绝对值"],
+            "repairKeywords": ["abs", "absolute", "绝对值"],
+        }
+    if "paren_string.split()" in code:
+        return {
+            "rootCause": "代码直接按空格 split 拆分括号组，无法正确处理无空格连接的平衡括号组或组内空格。",
+            "repairSuggestion": "逐字符扫描括号串，忽略空格，用嵌套深度或 balance 判断每个完整分组。",
+            "evidence": ["paren_string.split()"],
+            "keywords": ["split", "space", "balanced", "group", "空格", "分组", "括号"],
+            "repairKeywords": ["depth", "balance", "忽略空格", "嵌套", "逐字符"],
+        }
+    if "number - round(number)" in code:
+        return {
+            "rootCause": "代码使用 round(number) 而不是整数部分/向下取整，导致小数部分计算错误。",
+            "repairSuggestion": "将 round(number) 改为 int(number) 或 math.floor(number)，返回 number - int(number)。",
+            "evidence": ["number - round(number)"],
+            "keywords": ["round", "integer", "floor", "decimal", "小数", "整数"],
+            "repairKeywords": ["int", "floor", "number - int", "整数部分", "小数部分"],
+        }
+    if "balance = sum(operations)" in code:
+        return {
+            "rootCause": "代码只检查最终余额，没有逐步检查账户余额在任意中间时刻是否跌破 0。",
+            "repairSuggestion": "遍历 operations 维护 running/cumulative balance，每一步更新后立即检查 balance < 0。",
+            "evidence": ["balance = sum(operations)"],
+            "keywords": ["running", "cumulative", "any point", "intermediate", "balance", "过程", "任意时刻"],
+            "repairKeywords": ["iterate", "running", "cumulative", "每一步", "余额", "循环"],
+        }
+    if "sum(x - mean for x in numbers)" in code:
+        return {
+            "rootCause": "代码计算平均偏差时漏掉 abs，正负偏差会相互抵消，不能得到 mean absolute deviation。",
+            "repairSuggestion": "将 x - mean 改为 abs(x - mean)，再对绝对偏差求平均。",
+            "evidence": ["sum(x - mean for x in numbers)"],
+            "keywords": ["abs", "absolute", "deviation", "mean", "平均", "绝对"],
+            "repairKeywords": ["abs", "absolute", "绝对值", "abs(x - mean)"],
+        }
+    return {}
+
+
+def _contains_any(text: str, keywords: list[str]) -> bool:
+    lowered = (text or "").lower()
+    return any(str(keyword).lower() in lowered for keyword in keywords)

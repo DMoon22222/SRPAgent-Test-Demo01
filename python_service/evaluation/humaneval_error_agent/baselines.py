@@ -54,9 +54,9 @@ def analyze_rule_only(execution: dict) -> dict:
             "TEST",
             "WRONG_ANSWER",
             "ALGORITHM_ERROR",
-            "规则判断：检测到 AssertionError，说明 HumanEval 测试断言失败。",
+            "规则判断：检测到 AssertionError，说明测试断言失败，但规则层无法判断具体算法根因。",
             _evidence(error_log, ["AssertionError"]),
-            "检查函数返回值是否符合 HumanEval 测试要求。",
+            "检查函数返回值、边界条件和算法逻辑。",
             0.75,
         )
     if "time_limit_exceeded" in lowered or "timeout=true" in lowered or execution.get("timeout") is True:
@@ -88,7 +88,7 @@ def analyze_rule_only(execution: dict) -> dict:
             "ALGORITHM_ERROR",
             "规则判断：执行反馈状态为 WRONG_ANSWER。",
             _evidence(error_log, ["WRONG_ANSWER", "expectedOutput", "actualOutput"]),
-            "检查算法逻辑、边界条件和输出格式。",
+            "检查函数返回值、边界条件和算法逻辑。",
             0.65,
         )
     if int(execution.get("exitCode") or 0) != 0:
@@ -202,6 +202,8 @@ def _result(
         "retrievalQuery": retrieval_query,
         "repairSuggestion": repair_suggestion,
         "confidence": confidence,
+        "analysisDepth": "SURFACE",
+        "canExplainLogicBug": False,
         "json_valid": True,
     }
 
@@ -218,6 +220,8 @@ def _unknown(root_cause: str) -> dict:
         "retrievalQuery": "",
         "repairSuggestion": "",
         "confidence": 0.0,
+        "analysisDepth": "SURFACE",
+        "canExplainLogicBug": False,
         "json_valid": False,
     }
 

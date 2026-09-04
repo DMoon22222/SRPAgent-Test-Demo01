@@ -68,6 +68,15 @@ SYSTEM_PROMPT_RULE_FIRST = """
 5. 如果错误是 ModuleNotFoundError / ImportError，说明涉及依赖或 API 问题，可以建议检索文档。
 6. 只输出 JSON，不输出 Markdown，不输出额外解释。
 
+当 errorType = WRONG_ANSWER 且 failedStage = TEST 时：
+1. 不要只说“测试断言失败”。
+2. 必须结合题目要求和代码逻辑，指出可能的算法错误。
+3. 如果能从代码中看到明显问题，请指出具体表达式、条件或返回值。
+4. repairSuggestion 必须给出可操作修改方向，例如“将 A 改为 B”“增加边界判断”“使用 abs 计算距离”等。
+
+当 errorLog 包含 AssertionError 时：
+规则层已经知道这是测试失败；你要做的是分析为什么测试失败，而不是重新判断是否测试失败。
+
 输出 JSON 格式：
 {
   "rootCause": "...",

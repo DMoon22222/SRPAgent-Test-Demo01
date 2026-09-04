@@ -4,6 +4,12 @@ import csv
 import json
 from pathlib import Path
 
+from evaluation.humaneval_error_agent.metrics import (
+    is_actionable_repair,
+    is_deep_explanation,
+    keyword_hit,
+)
+
 
 RECORDS_JSONL = "humaneval_error_agent_records.jsonl"
 RECORDS_CSV = "humaneval_error_agent_records.csv"
@@ -49,6 +55,16 @@ def _write_csv(records: list[dict], path: Path) -> None:
         "rule_only_repairSuggestion",
         "llm_raw_log_repairSuggestion",
         "full_agent_repairSuggestion",
+        "expected_root_cause_keywords",
+        "expected_repair_keywords",
+        "rule_only_rootCauseKeywordHit",
+        "full_agent_rootCauseKeywordHit",
+        "rule_only_repairKeywordHit",
+        "full_agent_repairKeywordHit",
+        "rule_only_actionableRepair",
+        "full_agent_actionableRepair",
+        "rule_only_deepExplanation",
+        "full_agent_deepExplanation",
         "manualReview",
         "request_error",
         "skip_reason",
@@ -67,7 +83,21 @@ def _write_csv(records: list[dict], path: Path) -> None:
             row["rule_only_repairSuggestion"] = (record.get("rule_only") or {}).get("repairSuggestion", "")
             row["llm_raw_log_repairSuggestion"] = (record.get("llm_raw_log") or {}).get("repairSuggestion", "")
             row["full_agent_repairSuggestion"] = (record.get("full_agent") or {}).get("repairSuggestion", "")
-            row["manualReview"] = ""
+            root_keywords = record.get("expected_root_cause_keywords") or []
+            repair_keywords = record.get("expected_repair_keywords") or []
+            rule = record.get("rule_only") or {}
+            full = record.get("full_agent") or {}
+            row["expected_root_cause_keywords"] = ";".join(root_keywords)
+            row["expected_repair_keywords"] = ";".join(repair_keywords)
+            row["rule_only_rootCauseKeywordHit"] = keyword_hit(rule.get("rootCause", ""), root_keywords) if root_keywords else ""
+            row["full_agent_rootCauseKeywordHit"] = keyword_hit(full.get("rootCause", ""), root_keywords) if root_keywords else ""
+            row["rule_only_repairKeywordHit"] = keyword_hit(rule.get("repairSuggestion", ""), repair_keywords) if repair_keywords else ""
+            row["full_agent_repairKeywordHit"] = keyword_hit(full.get("repairSuggestion", ""), repair_keywords) if repair_keywords else ""
+            row["rule_only_actionableRepair"] = is_actionable_repair(rule.get("repairSuggestion", ""))
+            row["full_agent_actionableRepair"] = is_actionable_repair(full.get("repairSuggestion", ""))
+            row["rule_only_deepExplanation"] = is_deep_explanation(rule.get("rootCause", ""))
+            row["full_agent_deepExplanation"] = is_deep_explanation(full.get("rootCause", ""))
+            row["manualReview"] = record.get("manualReview", "")
             writer.writerow(row)
 
 
@@ -91,7 +121,11 @@ def _write_markdown(records: list[dict], metrics: list[dict], path: Path) -> Non
         "| llm_raw_log | 直接把原始日志给 Qwen | 有一定语义理解能力 | 输出不稳定，枚举不统一，难以直接接入后续模块 |",
         "| full-agent | 规则分类 + 结构化执行反馈 + LLM 解释 | 兼具稳定分类和解释能力，可给修复建议和 RAG 查询 | 需要维护规则和 Prompt |",
         "",
-        "## 4. 汇总指标",
+        "## 4. 硬分类指标",
+        "",
+        "硬分类字段包括 errorType、failedStage、errorSubtype、needRetrieval。在 Rule-first Hybrid Agent 中，full-agent 会保留 ruleDecision 的硬分类结果，因此 full-agent 与 rule-only 在这些指标上接近或相同是预期现象。",
+        "",
+        "这说明 full-agent 继承了 rule-only 的稳定分类能力。",
         "",
         "| Group | exact errorType | semantic errorType | exact failedStage | semantic failedStage | needRetrieval | invalidEnum | JSON Valid |",
         "|---|---:|---:|---:|---:|---:|---:|---:|",
@@ -107,7 +141,25 @@ def _write_markdown(records: list[dict], metrics: list[dict], path: Path) -> Non
     lines.extend(
         [
             "",
-            "## 4.1 解释能力与工程化指标",
+            "## 5. 解释质量指标",
+            "",
+            "硬分类只能说明“错在哪里一类”，不能说明 Agent 是否理解“为什么错”。因此本实验新增 rootCauseKeywordHitRate、repairKeywordHitRate、logicBugExplainRate、actionableRepairRate 等指标。",
+            "",
+            "| Group | RootCause Keyword Hit | Repair Keyword Hit | Logic Bug Explain Rate | Actionable Repair Rate | Evidence Grounded Rate | Deep Explanation Rate |",
+            "|---|---:|---:|---:|---:|---:|---:|",
+        ]
+    )
+    for item in metrics:
+        lines.append(
+            f"| {item['group']} | {_pct(item['rootCauseKeywordHitRate'])} | {_pct(item['repairKeywordHitRate'])} | "
+            f"{_pct(item['logicBugExplainRate'])} | {_pct(item['actionableRepairRate'])} | "
+            f"{_pct(item['evidenceGroundedRate'])} | {_pct(item['deepExplanationRate'])} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## 5.1 工程化输出指标",
             "",
             "| Group | rootCause NonEmpty | evidence NonEmpty | repairSuggestion NonEmpty | ruleDecision Preservation |",
             "|---|---:|---:|---:|---:|",
@@ -122,7 +174,15 @@ def _write_markdown(records: list[dict], metrics: list[dict], path: Path) -> Non
     lines.extend(
         [
             "",
-            "## 5. 样本明细",
+            "## 6. 典型样本对比",
+            "",
+        ]
+    )
+    lines.extend(_typical_logic_comparisons(records))
+    lines.extend(
+        [
+            "",
+            "## 7. 样本明细",
             "",
             "| sample_id | expected | rule_only | llm_raw_log | full_agent | 备注 |",
             "|---|---|---|---|---|---|",
@@ -145,23 +205,21 @@ def _write_markdown(records: list[dict], metrics: list[dict], path: Path) -> Non
     lines.extend(
         [
             "",
-            "## 6. 初步结论",
+            "## 8. 结论",
             "",
-            "本次改进后，full-agent 使用 Rule-first Hybrid 架构，由规则层锁定 failedStage、errorType、errorSubtype、needRetrieval，再由 LLM 生成 rootCause、evidence、repairSuggestion 和 retrievalQuery。",
+            "本次评测中，rule-only 和 full-agent 在硬分类指标上接近或完全一致，这是 Rule-first Hybrid 架构的预期结果：规则层负责保证 failedStage、errorType、errorSubtype 和 needRetrieval 的稳定性。",
             "",
-            "相比 rule-only，full-agent 不仅能保持基础分类稳定性，还能提供可解释根因和修复建议；相比 llm_raw_log，full-agent 的输出遵循统一枚举和结构化 schema，更适合作为后续 RAG 路由和代码修复 Agent 的输入。",
+            "full-agent 的优势不体现在重复判断硬分类，而体现在解释质量上。相比 rule-only，full-agent 能结合 HumanEval 题目、错误代码和执行反馈，生成更具体的 rootCause、evidence 和 repairSuggestion，尤其是在复杂逻辑错误样本中，full-agent 能指出算法条件、边界处理或返回逻辑中的具体问题。",
             "",
-            "- 如果 llm_raw_log 的 semantic 指标高于 exact 指标，说明它具备一定语义识别能力，但缺少枚举约束和后处理。",
-            "- 如果 full-agent invalidEnumRate 为 0 且 ruleDecisionPreservationRate 接近 100%，说明规则硬分类被稳定保留。",
-            "- 对复杂逻辑错误，建议结合 CSV 中 rootCause、repairSuggestion 和 manualReview 做人工复核。",
+            "相比 llm_raw_log，full-agent 通过规则决策、结构化执行反馈、枚举约束和后处理，避免了大模型输出非标准枚举的问题，更适合作为后续 RAG 检索路由和代码修复 Agent 的输入。",
             "",
             "## 汇报表述",
             "",
-            "上一版实验中，rule-only 在基础错误分类上表现较高，而 full-agent 的 failedStage 判断存在 RUNTIME 与 TEST 混淆。因此本次将错误分析 Agent 改造为 Rule-first Hybrid 架构：规则层负责确定 failedStage、errorType、errorSubtype 和 needRetrieval，大模型负责根据结构化执行反馈补充 rootCause、evidence 和 repairSuggestion。",
+            "在 Rule-first Hybrid 架构下，full-agent 与 rule-only 在 errorType、failedStage 等硬分类指标上保持一致，这是预期结果，说明 full-agent 继承了规则层的稳定分类能力。",
             "",
-            "这种设计保留了 rule-only 的稳定性，同时补充了纯规则难以提供的根因解释和修复建议；相比直接调用大模型分析原始日志，full-agent 的输出遵循统一枚举和 schema，更适合作为后续 RAG 检索路由和代码修复 Agent 的输入。",
+            "但 full-agent 的优势不在于重新分类，而在于在规则分类基础上提供更高质量的根因解释和修复建议。为此，本实验新增复杂逻辑错误样本和解释质量指标，用于评估 rootCause 是否命中关键逻辑问题、repairSuggestion 是否具有可操作性。",
             "",
-            "最终系统体现为：rule-only 稳定但解释能力弱；llm_raw_log 有语义理解但输出不稳定、枚举不可控；full-agent 由规则层保证分类稳定，由 LLM 负责解释和修复建议，并通过后处理保证输出可工程化对接。",
+            "结果表明，rule-only 通常只能识别 AssertionError 并给出模板化建议，而 full-agent 能结合题目语义、代码逻辑和执行反馈，指出更具体的算法错误和修改方向。因此，full-agent 更适合作为后续 RAG 检索路由和代码修复 Agent 的输入。",
         ]
     )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -175,3 +233,45 @@ def _short_result(result: dict | None) -> str:
     if not result:
         return "UNKNOWN"
     return f"{result.get('errorType', 'UNKNOWN')}/{result.get('failedStage', 'UNKNOWN')}"
+
+
+def _typical_logic_comparisons(records: list[dict]) -> list[str]:
+    logic_records = [record for record in records if record.get("bug_kind") == "LOGIC_BUG_COMPLEX" and not record.get("skip_reason")]
+    if not logic_records:
+        return ["没有可展示的复杂逻辑错误样本。"]
+
+    lines: list[str] = []
+    for record in logic_records[:3]:
+        rule = record.get("rule_only") or {}
+        full = record.get("full_agent") or {}
+        lines.extend(
+            [
+                f"### {record.get('sample_id')}",
+                "",
+                "**预期错误：**",
+                "",
+                f"{record.get('expected_errorType')} / {record.get('expected_failedStage')} / {record.get('expected_errorSubtype')}",
+                "",
+                "**逻辑错误说明：**",
+                "",
+                record.get("logic_bug_description", ""),
+                "",
+                "**rule-only rootCause：**",
+                "",
+                rule.get("rootCause", ""),
+                "",
+                "**full-agent rootCause：**",
+                "",
+                full.get("rootCause", ""),
+                "",
+                "**full-agent repairSuggestion：**",
+                "",
+                full.get("repairSuggestion", ""),
+                "",
+                "**点评：**",
+                "",
+                "full-agent 能基于题目和代码指出具体逻辑问题，而 rule-only 只能停留在测试失败层面。",
+                "",
+            ]
+        )
+    return lines

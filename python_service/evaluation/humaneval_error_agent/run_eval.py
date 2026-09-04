@@ -30,7 +30,7 @@ def main() -> None:
 
     print(f"Loaded HumanEval problems: {len(problems)}")
     task_ids = _selected_task_ids(problems)
-    samples = build_buggy_samples(task_ids)
+    samples = build_buggy_samples(task_ids, problems)
     print(f"Built buggy samples: {len(samples)}")
 
     records: list[dict] = []
@@ -41,12 +41,26 @@ def main() -> None:
     metric_rows = [calc_metrics(records, group) for group in GROUPS]
     paths = write_reports(records, metric_rows, config.result_dir)
 
-    print("\n=== Summary ===")
+    print("\n=== Hard Classification Metrics ===")
     for metric in metric_rows:
         print(f"Group: {metric['group']}")
         print(f"errorType_accuracy: {metric['errorType_accuracy']:.2f}")
         print(f"failedStage_accuracy: {metric['failedStage_accuracy']:.2f}")
         print(f"needRetrieval_accuracy: {metric['needRetrieval_accuracy']:.2f}")
+        print(f"invalidEnumRate: {metric['invalidEnumRate']:.2f}")
+        if metric["group"] == "full_agent":
+            print(f"ruleDecisionPreservationRate: {metric['ruleDecisionPreservationRate']:.2f}")
+        print()
+
+    print("=== Explanation Quality Metrics ===")
+    for metric in metric_rows:
+        print(f"Group: {metric['group']}")
+        print(f"rootCauseKeywordHitRate: {metric['rootCauseKeywordHitRate']:.2f}")
+        print(f"repairKeywordHitRate: {metric['repairKeywordHitRate']:.2f}")
+        print(f"logicBugExplainRate: {metric['logicBugExplainRate']:.2f}")
+        print(f"actionableRepairRate: {metric['actionableRepairRate']:.2f}")
+        print(f"evidenceGroundedRate: {metric['evidenceGroundedRate']:.2f}")
+        print(f"deepExplanationRate: {metric['deepExplanationRate']:.2f}")
         print()
     print("Results saved to:")
     for path in paths.values():
@@ -107,6 +121,11 @@ def run_sample(sample: dict, problems: dict) -> dict:
             "execution_failedStage": execution.get("failedStage", ""),
             "execution_timeout": execution.get("timeout", False),
             "execution_errorLog": raw_error_log,
+            "code": full_code,
+            "expected_root_cause_keywords": sample.get("expected_root_cause_keywords", []),
+            "expected_repair_keywords": sample.get("expected_repair_keywords", []),
+            "logic_bug_description": sample.get("logic_bug_description", ""),
+            "manualReview": sample.get("manualReview", ""),
             "rule_only": analyze_rule_only(execution),
             "llm_raw_log": _analyze_raw_log(problem["prompt"], full_code, raw_error_log),
             "full_agent": _normalize_agent_result(full_agent),
@@ -189,6 +208,10 @@ def _base_record(sample: dict) -> dict:
         "execution_errorLog": "",
         "request_error": "",
         "skip_reason": "",
+        "expected_root_cause_keywords": sample.get("expected_root_cause_keywords", []),
+        "expected_repair_keywords": sample.get("expected_repair_keywords", []),
+        "logic_bug_description": sample.get("logic_bug_description", ""),
+        "manualReview": sample.get("manualReview", ""),
     }
 
 
@@ -228,6 +251,8 @@ def _normalize_agent_result(result: Any) -> dict:
         "classificationSource": result.get("classificationSource") or "",
         "enumNormalized": bool(result.get("enumNormalized", False)),
         "llmOverrodeRule": bool(result.get("llmOverrodeRule", False)),
+        "analysisDepth": result.get("analysisDepth") or "ROOT_CAUSE",
+        "canExplainLogicBug": bool(result.get("canExplainLogicBug", True)),
         "json_valid": True,
     }
     return normalized

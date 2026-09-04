@@ -81,6 +81,8 @@ class ErrorAnalysisResult(BaseModel):
     classificationSource: str = "RULE_FIRST_LLM_EXPLAIN"
     enumNormalized: bool = False
     llmOverrodeRule: bool = False
+    analysisDepth: str = "ROOT_CAUSE"
+    canExplainLogicBug: bool = True
 
 
 class ExecuteAndAnalyzeResult(BaseModel):
