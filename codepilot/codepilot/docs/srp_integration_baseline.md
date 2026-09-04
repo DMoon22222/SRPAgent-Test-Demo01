@@ -1,0 +1,227 @@
+# CodePilot × SRP Execution & Diagnosis 融合基线
+
+> 基线日期：2026-09-05
+> 当前阶段：Phase 0（仅建立融合前基线，尚未开始 SRP HTTP Client 或 Tool Adapter 实现）
+
+## 1. 当前项目信息
+
+- 原始任务指定路径：`F:\srpTest\codepilot_v2-master`
+- Phase 0 实际源码根目录：`F:\srpTest\codepilot_v2-master\codepilot_v2-master\codepilot`
+- 当前融合仓库中的源码目录：`codepilot/codepilot`
+- 规划文档位置：`F:\srpTest\CODEX_CODEPILOT_SRP_FUSION_PLAN.md`
+- Python：`3.12.4`
+- uv：`0.11.1 (a6042f67f 2026-03-24)`
+- Phase 0 Git 状态：当时的交付目录没有 `.git`，因此未获得 branch、commit、HEAD 和 remote；用户明确允许在不依赖 Git 元数据的情况下继续。
+- 项目包：`pico 0.1.0`
+- Python 要求：`>=3.10`
+
+Phase 0 时，源码根目录比规划路径多两层嵌套，项目主 README 位于源码根目录的上一级。后续融合仓库已将 CodePilot 完整导入 `codepilot/` 子目录；运行 Python 开发命令时，应以包含 `pyproject.toml`、`pico/` 和 `tests/` 的 `codepilot/codepilot` 为工作目录。
+
+## 2. 当前测试基线
+
+### 2.1 环境同步
+
+```text
+uv sync
+```
+
+结果：成功。创建 `.venv`，解析 11 个包并安装 8 个包。uv 报告无法跨文件系统 hardlink，已自动回退为复制；这是性能警告，不影响依赖安装结果。
+
+### 2.2 完整 pytest
+
+```text
+uv run pytest tests -q
+```
+
+结果：
+
+- 收集/执行测试：160
+- passed：148
+- failed：12
+- skipped：0
+- warnings：6
+- 首次总耗时：165.24 秒
+- 文档新增后复跑：仍为 148 passed、12 failed、6 warnings，没有新增失败
+- 总体状态：失败
+
+失败分类如下：
+
+| 类别 | 数量 | 说明 |
+| --- | ---: | --- |
+| 缺少依赖 / Windows 时区数据 | 4 | `ZoneInfo("Asia/Shanghai")` 无法加载；当前开发依赖没有声明 `tzdata`。 |
+| Benchmark / shell 跨平台问题 | 4 | verifier 使用 `python3` 或 POSIX 单引号命令；Windows `shell=True` 下不兼容。另外过滤后的 shell 环境在测试场景中缺少 `%ComSpec%` / `%SystemRoot%`。 |
+| 源码与测试契约漂移 | 3 | DeepSeek 源码默认值为 `deepseek-v4-flash`，README、`.env.example` 和测试期望为 `deepseek-v4-pro`（2 项）；欢迎界面测试仍期望旧 ASCII 图形（1 项）。 |
+| Windows 权限限制 | 1 | 当前账户没有创建符号链接所需权限，安全边界测试在准备 fixture 时失败。 |
+
+这些失败是融合前仓库的既有基线，Phase 0 未修改业务代码或测试来消除它们。
+
+### 2.3 核心模块定向测试
+
+```text
+uv run pytest tests/test_cli.py tests/test_agent_loop.py tests/test_tool_executor.py tests/test_tools.py -q
+```
+
+结果：`10 passed in 3.17s`。CLI、AgentLoop、ToolExecutor 和内置 Tool 的核心定向用例通过。仓库没有规划文字中提到的独立 `tests/test_tool_registry.py`；Tool Registry 的行为由其他测试间接覆盖。
+
+CLI 入口使用 `uv run pilot --help` 验证成功，无需连接模型服务。
+
+### 2.4 Ruff
+
+```text
+uv run ruff check pico tests scripts
+```
+
+结果：失败，共报告 95 个 lint 问题，其中 42 个可由普通 `--fix` 自动修复，另有 12 个需要 unsafe fixes 才能自动修改。Phase 0 没有执行自动修复。
+
+### 2.5 测试体系
+
+- `tests/` 包含 24 个 `test_*.py` 文件。
+- 单元/契约测试覆盖 AgentLoop、TaskState、ToolExecutor、内置工具、allowlist、Context Manager、Memory、Checkpoint、Session/Run Store、安全约束、Provider、MCP、CLI 和公共 API。
+- `pico/evaluation/` 包含 `evaluator.py`、`metrics.py` 和 `phase4.py`，用于固定 benchmark、消融指标以及 Skill/MCP/Tool Governance 集成评测。
+- `benchmarks/coding_tasks.json` 定义 12 个确定性 harness 回归任务。
+
+## 3. 当前 Agent Runtime 结构
+
+```text
+User Task
+→ Pico.ask()
+→ AgentLoop.run()
+→ 创建 TaskState 与 Run 目录
+→ ContextManager 构建 Prompt
+→ Model Client 返回文本决策
+→ Pico.parse() 解析 <tool> 或 <final>
+→ ToolExecutor 校验、审批并执行 Tool
+→ Tool Result 写入 Session History
+→ 更新 TaskState / Memory / Trace
+→ 创建 Checkpoint
+→ 下一轮 Model Decision
+→ Final Answer
+→ 最终 Checkpoint / Report
+```
+
+各组件职责：
+
+- **AgentLoop**：支持连续多轮 Tool Call。`max_steps` 默认值为 6；模型尝试上限为 `max(max_steps * 3, max_steps + 4)`。工具预算耗尽后会额外请求一次只能返回最终答案的 finalization。
+- **Tool Registry**：从 Builtin/MCP 等 Provider 调用 `discover()`，校验统一 Tool Spec、检测重名，并应用本次任务的 Tool allowlist。
+- **ToolExecutor**：执行 Tool 存在性、参数、重复调用、风险审批检查；对 risky Tool 执行前后采集 workspace 快照，并统一返回内容和 metadata。
+- **TaskState**：记录 `run_id`、`task_id`、状态、tool steps、model attempts、last tool、stop reason、final answer、checkpoint 和 resume 状态，并持续写入 `task_state.json`。
+- **History**：用户消息、模型消息和 Tool Result 保存在 session history；Tool Result 会作为下一轮 Prompt 的历史证据重新提供给模型。
+- **Trace**：按 JSONL 追加记录 `run_started`、`prompt_built`、`model_requested`、`model_parsed`、`tool_executed`、`checkpoint_created`、`run_finished` 等事件。
+- **Report**：运行结束后汇总 TaskState、Prompt metadata、工具步数、尝试次数、停止原因、checkpoint、持久记忆提升和脱敏信息。
+- **Checkpoint**：在 Tool 执行后、上下文缩减、freshness/workspace mismatch、模型错误和运行结束等节点创建；包含关键文件 freshness 和 Runtime identity，支持恢复时判断是否过期。
+- **Memory**：包含 working、episodic、durable/topic 等层次。文件读取可形成摘要，写入/patch 会使旧摘要失效；部分稳定事实可提升为 durable memory。
+- **Context Manager**：按固定顺序拼装 prefix、checkpoint、memory、relevant memory、history 和 current request，并按字符预算压缩旧历史与次要内容。
+- **Prompt Prefix**：提供工作区事实、Tool Schema、风险标记和文本工具协议。模型必须输出一个 `<tool>...</tool>` 或 `<final>...</final>`；当前不是 Provider-native function calling。
+- **Provider**：支持 Ollama、OpenAI-compatible Responses、Anthropic-compatible Messages 和 DeepSeek Anthropic-compatible。选择优先级为 CLI 参数、`PICO_*` 环境变量、旧环境变量、代码默认值；API key 只从环境读取。
+
+运行工件默认保存在工作区：
+
+```text
+.pico/sessions/<session_id>.json
+.pico/runs/<run_id>/task_state.json
+.pico/runs/<run_id>/trace.jsonl
+.pico/runs/<run_id>/report.json
+```
+
+## 4. 当前 Tool 列表
+
+未显式传入 `--mcp-config` 时，内置 Tool 共 7 个：
+
+| Tool | 主要用途 | risky | 逻辑只读 | 可能修改 workspace |
+| --- | --- | --- | --- | --- |
+| `list_files` | 列出工作区目录内容 | false | 是 | 否 |
+| `read_file` | 按行范围读取 UTF-8 文件 | false | 是 | 否 |
+| `search` | 使用 `rg` 或 Python fallback 搜索工作区 | false | 是 | 否 |
+| `run_shell` | 在仓库根目录执行普通宿主机命令 | true | 否 | 是，命令可产生任意工作区副作用 |
+| `write_file` | 创建或覆盖文本文件 | true | 否 | 是 |
+| `patch_file` | 精确替换唯一文本块 | true | 否 | 是 |
+| `delegate` | 启动步数受限、`approval=never` 的只读子 Agent 调查任务 | false | 是 | 否 |
+
+当显式提供可信的 `--mcp-config` 时，Registry 还会发现 `mcp.<server_id>.<tool_name>` 工具。MCP Server 声明在 `read_only_tools` 中的工具按只读处理，其余 MCP Tool 按 risky 处理。当前默认启动没有额外 MCP Tool。
+
+ToolExecutor 会为正常、失败和拒绝结果记录统一 metadata，主要字段包括：
+
+```text
+tool_status
+tool_error_code
+security_event_type
+risk_level
+read_only
+affected_paths
+workspace_changed
+workspace_fingerprint
+diff_summary
+```
+
+## 5. 当前 `run_shell` 行为
+
+`run_shell` 是 CodePilot 的普通仓库命令工具，不是 SRP 的 Docker 隔离执行环境。
+
+- 在 CodePilot 宿主机进程中执行。
+- 使用 Python `subprocess.run(..., shell=True)`。
+- `cwd` 固定为 Agent workspace 根目录。
+- 捕获 stdout、stderr 和 exit code，并把它们编码为文本 Tool Result。
+- timeout 默认 20 秒，参数允许范围为 1～120 秒。
+- 环境变量经过 allowlist 过滤。默认候选为 `HOME`、`LANG`、`LC_ALL`、`LC_CTYPE`、`LOGNAME`、`PATH`、`PWD`、`SHELL`、`TERM`、`TMPDIR`、`TMP`、`TEMP`、`USER`，并强制设置 `PWD`；当前列表没有 Windows 的 `ComSpec` 和 `SystemRoot`。
+- Tool 被标记为 risky。默认 `approval=ask` 会交互确认，`auto` 自动允许，`never` 拒绝执行；只读 delegate 使用 `approval=never`。
+- 执行前后采集 workspace 文件哈希快照，生成 `affected_paths`、`workspace_changed` 和 `diff_summary`。
+- 非零退出码会映射为 `error`；若命令失败但已修改工作区，则映射为 `partial_success`。
+- 没有容器、文件系统隔离、资源配额、网络隔离或恶意代码防护，因此不能用来替代 SRP Docker Sandbox。
+
+## 6. 后续融合目标
+
+```text
+CodePilot
+= Agent Runtime / Tool Routing / Repo Search / Patch /
+  Context / Memory / Checkpoint / Repair Loop
+
+SRP
+= Docker Sandbox / Compile & Run / Execution Feedback /
+  Rule-first Diagnosis / Root Cause / Evidence /
+  needRetrieval / repairSuggestion
+```
+
+未来通过两层适配连接：
+
+```text
+CodePilot execute_and_diagnose Tool
+→ 独立 SRP HTTP Client
+→ SRP POST /api/execute-and-analyze
+→ Docker Sandbox + Rule-first Diagnosis
+→ 结构化 Agent Observation
+→ CodePilot 下一轮决策
+```
+
+融合时必须保持以下边界：
+
+- 不复制 SRP Rule-first 分类逻辑到 CodePilot。
+- 不用 `run_shell` 替代 SRP Docker Sandbox。
+- 不让 SRP ErrorAnalyzer 负责 Runtime Tool Routing、RAG 或自动修复循环。
+- CodePilot 只消费 SRP 返回的 Execution、Diagnosis 和 AgentObservation，并决定搜索、检索、patch、重测或停止。
+
+## 7. Phase 1 预计新增文件
+
+Phase 1 只规划、不在 Phase 0 创建：
+
+```text
+pico/integrations/__init__.py
+pico/integrations/srp_client.py
+tests/test_srp_client.py
+```
+
+建议继续采用以上路径，因为当前项目已经按 `pico/providers/`、`pico/features/`、`pico/mcp/` 和 `pico/evaluation/` 划分边界，独立的 `pico/integrations/` 能让 SRP HTTP 序列化逻辑避免进入 `runtime.py`。
+
+Phase 1 应先完成纯 HTTP Client 和 mock 测试，不注册 `execute_and_diagnose`，不修改 AgentLoop。Phase 2 再通过 Tool Provider/Registry 接入 Tool Adapter。
+
+## 8. Phase 0 边界确认
+
+Phase 0 未实现以下内容：
+
+- `execute_and_diagnose`
+- SRP HTTP Client
+- RAG / Retrieval
+- SWE-bench
+- 自动修复闭环
+- AgentLoop 重构
+- SRP Rule-first 逻辑复制
+- SRP 项目修改
