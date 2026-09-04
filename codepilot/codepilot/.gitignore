@@ -48,6 +48,7 @@ docs/*
 !docs/architecture/
 !docs/architecture/agent-harness-v1-overview.md
 !docs/srp_integration_baseline.md
+!docs/srp_integration.md
 
 # OS files
 .DS_Store

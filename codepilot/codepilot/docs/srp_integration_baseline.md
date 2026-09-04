@@ -289,3 +289,9 @@ Phase 0 未实现以下内容：
 - Rule-first 逻辑不得复制到 CodePilot。
 
 Phase 0.5 未实现 `SrpClient`、`execute_and_diagnose`、`RepositoryExecution`、Repair Loop、Retrieval Hook 或任何 SWE-bench 集成。
+
+## Phase 1 状态引用
+
+Phase 1 在 `pico/integrations/srp_client.py` 建立了独立 SRP HTTP Client，
+配置与失败边界见 `docs/srp_integration.md`。本阶段不修改 Agent Runtime，
+不注册 `execute_and_diagnose` Tool，也不开始 Repair Loop 或 Retrieval。
