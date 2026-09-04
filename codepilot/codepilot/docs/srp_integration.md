@@ -61,3 +61,49 @@ An unavailable SRP service is not a user-code compile or runtime error.
 or service failures. `SrpResponseError` represents invalid JSON or a response
 contract violation. Only a valid SRP response describes the submitted program's
 execution and diagnosis.
+
+## Phase 2 Agent Tool
+
+Phase 2 adds this agent-visible path when `PICO_SRP_ENABLED=true`:
+
+```text
+CodePilot Agent
+→ execute_and_diagnose
+→ SrpClient
+→ SRP FastAPI
+→ Docker Sandbox
+→ Rule-first Diagnosis
+→ Agent-facing Observation
+→ AgentLoop history
+→ next model decision
+```
+
+`SrpToolProvider` is assembled beside the Builtin and optional MCP providers.
+When SRP is disabled its `discover()` method returns no tools, so the default
+CodePilot tool list and behavior remain unchanged.
+
+The Tool accepts a workspace-relative code path plus optional problem, language,
+stdin, expected output, and benchmark values. The existing workspace path guard
+resolves the path and rejects traversal, outside absolute paths, and symlink
+escape before the file is read. Python aliases `python3` and `py` are normalized
+to `python`; Java is passed as `java`.
+
+The Tool is marked `risky=false` because it does not mutate the CodePilot
+workspace and submitted code executes in the SRP isolated sandbox. Its metadata
+explicitly records `execution_isolated=true`. This classification does not make
+the submitted code trusted; it identifies where execution occurs.
+
+The Agent-facing Observation keeps execution status, stage, timeout, exit code,
+duration, SRP diagnosis, evidence, repair suggestion, retrieval signal, and SRP's
+short observation fields. Raw stdout, stderr, error log, rule decision, and
+classification internals are omitted by default to keep history bounded.
+
+`run_shell` remains available for ordinary host-side repository commands such as
+Git and pytest. `execute_and_diagnose` is specifically for isolated execution of
+a workspace code file and structured SRP diagnosis.
+
+SRP connection, timeout, HTTP, and response-contract failures produce a Tool
+error with a distinct `tool_error_code`; they are never represented as a user
+program compile or runtime error. Phase 2 returns `needRetrieval` and
+`retrievalQuery` as signals only—it does not perform Retrieval or an automatic
+Repair Loop.

@@ -295,3 +295,18 @@ Phase 0.5 未实现 `SrpClient`、`execute_and_diagnose`、`RepositoryExecution`
 Phase 1 在 `pico/integrations/srp_client.py` 建立了独立 SRP HTTP Client，
 配置与失败边界见 `docs/srp_integration.md`。本阶段不修改 Agent Runtime，
 不注册 `execute_and_diagnose` Tool，也不开始 Repair Loop 或 Retrieval。
+
+## Phase 2 状态
+
+Phase 2 通过 `pico/integrations/srp_provider.py` 注册可配置的
+`execute_and_diagnose` Tool，并把精简的 SRP Observation 写入既有 history、
+trace 和下一轮 prompt。仅在 `PICO_SRP_ENABLED=true` 时暴露该 Tool；本阶段
+没有修改 AgentLoop 或 SRP ErrorAnalyzer，也没有实现自动 Repair Loop、
+Retrieval、Repository Execution 或 SWE-bench。
+
+Phase 2 验证结果：SrpClient `15 passed`、SRP Tool `24 passed`、AgentLoop
+SRP 闭环 `1 passed`、核心 Runtime `10 passed`、CodePilot 全量
+`188 passed, 12 failed, 6 warnings`、本阶段 Ruff `0 errors`、SRP 服务端
+`8 passed`。12 个全量失败均属于既有冻结基线，没有新增 failure。真实 smoke
+未执行，因为本机 `127.0.0.1:8080` 的 SRP ping 在 2 秒内不可用；这不影响
+全 mock 通信和 AgentLoop 闭环验收。

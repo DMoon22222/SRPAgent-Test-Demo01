@@ -13,6 +13,7 @@ import textwrap
 from pathlib import Path
 
 from .config import load_project_env, provider_env
+from .integrations import SrpClient, SrpToolProvider
 from .mcp import MCPClient
 from .mcp.config import load_mcp_server_configs
 from .mcp.provider import MCPToolProvider
@@ -311,8 +312,8 @@ def build_agent(args):
 
 
 def _build_tool_providers(args, workspace):
-    """只在用户显式传入 --mcp-config 时装配 MCP Provider。"""
-    providers = [BuiltinToolProvider()]
+    """装配内置、可选 SRP 与用户显式配置的 MCP Provider。"""
+    providers = [BuiltinToolProvider(), SrpToolProvider(SrpClient())]
     config_path = getattr(args, "mcp_config", None)
     if not config_path:
         return providers

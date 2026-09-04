@@ -1,7 +1,7 @@
 """Structured tool execution for the agent runtime."""
 
-from dataclasses import dataclass
 import re
+from dataclasses import dataclass
 
 from .workspace import clip
 
@@ -73,7 +73,7 @@ class ToolExecutor:
                 validator(args)
             else:
                 agent.validate_tool(name, args)
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001 - validation is a provider boundary
             example = str(tool.get("example", "")).strip()
             if not example:
                 example = agent.tool_example(name)
@@ -118,7 +118,13 @@ class ToolExecutor:
         before_snapshot = agent.capture_workspace_snapshot() if tool["risky"] else {}
         after_snapshot = before_snapshot
         try:
-            content = clip(tool["run"](args))
+            raw_result = tool["run"](args)
+            runner_metadata = {}
+            if isinstance(raw_result, ToolExecutionResult):
+                content = clip(raw_result.content)
+                runner_metadata = dict(raw_result.metadata or {})
+            else:
+                content = clip(raw_result)
             after_snapshot = agent.capture_workspace_snapshot() if tool["risky"] else before_snapshot
             affected_paths, diff_summary = agent.diff_workspace_snapshots(before_snapshot, after_snapshot)
             workspace_changed = bool(affected_paths)
@@ -144,9 +150,25 @@ class ToolExecutor:
                 workspace_fingerprint=agent.workspace.fingerprint(),
                 diff_summary=diff_summary,
             )
+            protected_metadata = {
+                "affected_paths",
+                "diff_summary",
+                "read_only",
+                "risk_level",
+                "security_event_type",
+                "workspace_changed",
+                "workspace_fingerprint",
+            }
+            metadata.update(
+                {
+                    key: value
+                    for key, value in runner_metadata.items()
+                    if key not in protected_metadata
+                }
+            )
             agent.record_process_note_for_tool(name, metadata)
             return ToolExecutionResult(content=content, metadata=metadata)
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001 - execution is a provider boundary
             after_snapshot = agent.capture_workspace_snapshot() if tool["risky"] else before_snapshot
             affected_paths, diff_summary = agent.diff_workspace_snapshots(before_snapshot, after_snapshot)
             workspace_changed = bool(affected_paths)
