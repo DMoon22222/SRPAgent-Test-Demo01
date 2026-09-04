@@ -225,3 +225,67 @@ Phase 0 未实现以下内容：
 - AgentLoop 重构
 - SRP Rule-first 逻辑复制
 - SRP 项目修改
+
+## Phase 0.5：Monorepo 基线
+
+> 冻结日期：2026-09-05
+> 阶段边界：仅确认 Monorepo、测试和目录基线，未开始 Phase 1。
+
+### Git 与目录基线
+
+- Git Root：`F:\srpTest\execution-diagnosis`
+- 当前分支：`master`
+- Phase 0.5 开始时的 commit：`1bde8d19acb847a3a837d78915de99ea5261c90a`
+- 主远端：`origin = https://github.com/DMoon22222/SRPAgent-Test-Demo01.git`
+- CodePilot 来源远端：`codepilot-source = https://github.com/DMoon22222/codepilot_v2.git`，仅用于保留上游来源，不构成独立仓库。
+- CodePilot subtree 位置：`F:\srpTest\execution-diagnosis\codepilot`
+- CodePilot subtree 导入提交：`f31ad88`，导入的上游提交为 `d1199d6`；两者在导入时的 Git tree 完全一致。
+- CodePilot Python 根目录：`F:\srpTest\execution-diagnosis\codepilot\codepilot`
+- SRP Python 根目录：`F:\srpTest\execution-diagnosis\python_service`
+- `codepilot/`、`codepilot/codepilot/` 和 `python_service/` 均不存在内部 `.git`。
+
+整个融合项目共用一套 Git 历史。正式开发、提交和回滚均以 `F:\srpTest\execution-diagnosis` 为唯一 Git 工作区，不得在子目录重新初始化仓库。
+
+### 测试与质量基线
+
+- CodePilot 完整 pytest：`148 passed, 12 failed, 0 skipped, 6 warnings`。允许保留这 12 个融合前已知失败，但后续不得新增失败。
+- 已知失败类别：Windows 缺少 `tzdata`、Windows shell 兼容性、symlink 权限、默认模型配置与测试契约漂移、欢迎界面测试契约漂移。
+- CodePilot 核心 Runtime 定向测试：`10 passed in 3.17s`，后续必须保持全部通过。
+- CodePilot 全仓 Ruff：95 个历史问题。暂不清理；后续新增或修改的 Python 文件必须通过 Ruff。
+- SRP Python 服务现有测试：`8 passed, 1 warning in 0.15s`。警告来自 Windows 下 pytest 缓存目录不可写，不影响用例结果。
+- Phase 0.5 没有修改 Python 源码。由于当前子树源码与 Phase 0 已验证的上游提交一致，且核心测试已复验，本阶段不重复执行耗时的 CodePilot 全量 pytest 和全仓 Ruff。
+- 后续每个 Phase 新增的测试必须 100% 通过。
+
+### SRP 结构确认
+
+- FastAPI 入口：`python_service/app/main.py`
+- Docker Sandbox：`python_service/app/sandbox/docker_sandbox.py`
+- Local Sandbox：`python_service/app/sandbox/local_sandbox.py`
+- ErrorAnalyzer：`python_service/app/analyzer/error_analyzer.py`
+- Rule-first 信号提取：`python_service/app/analyzer/error_signal_extractor.py`
+- `AgentObservation`、`RuleDecision` 及错误字段：`python_service/app/schemas.py`
+- `requirements.txt`、`app/`、`tests/` 和 `evaluation/` 均存在。本阶段未修改这些模块。
+
+### 工作目录规范
+
+- 执行 Git 命令：`F:\srpTest\execution-diagnosis`
+- 执行 CodePilot 的 `uv sync`、pytest、Ruff 等 Python 命令：`F:\srpTest\execution-diagnosis\codepilot\codepilot`
+- 执行 SRP Python 命令：`F:\srpTest\execution-diagnosis\python_service`
+- 不得从 `F:\srpTest` 直接执行本项目 Git 操作。
+- `F:\srpTest\codepilot\codepilot_v2-master` 仍存在，但旧 `codepilot_v2-master` 仅作为备份，不再作为融合开发工作区；不得修改或同步融合代码到该目录。
+
+### Ignore 与仓库卫生
+
+- 根 `.gitignore` 已覆盖 SRP 的 `.env`、`.venv/`、`.pytest_cache/`、pytest fallback 缓存目录、`.ruff_cache/`、`.sandbox_tmp/`、`__pycache__/`、`*.pyc` 和 evaluation 运行结果。
+- `codepilot/codepilot/.gitignore` 已覆盖 `.env`、`.venv/`、`uv.lock`、`.pytest_cache/`、`.ruff_cache/`、`.pico/`、构建产物及临时文件。
+- `codepilot/.idea/` 与 `codepilot/.pico/` 中存在从上游导入的历史 tracked 文件，记为仓库卫生问题；Phase 0.5 不执行 `git rm` 或 `git rm --cached`。
+- 未发现需要提交的 IDE 文件、运行输出、缓存或 Codex 临时文件。
+
+### 职责边界
+
+- CodePilot 负责 Agent Runtime、Tool Routing、Repo Search、File Read、Patch、Memory、Context Manager、Checkpoint 和后续 Repair Loop。
+- SRP `python_service` 负责 Docker Sandbox、Compile/Run、Execution Feedback、Rule-first Classification、Root Cause Analysis、Evidence、`needRetrieval`、`retrievalQuery`、`repairSuggestion` 和 `AgentObservation`。
+- 后续连接链固定为：`CodePilot → SrpClient → SRP FastAPI → Docker Sandbox → ErrorAnalyzer → AgentObservation → CodePilot 下一轮`。
+- Rule-first 逻辑不得复制到 CodePilot。
+
+Phase 0.5 未实现 `SrpClient`、`execute_and_diagnose`、`RepositoryExecution`、Repair Loop、Retrieval Hook 或任何 SWE-bench 集成。

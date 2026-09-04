@@ -36,6 +36,8 @@ docker-test/*.class
 python_service/.env
 python_service/.venv/
 python_service/.pytest_cache/
+python_service/pytest-cache-files-*/
+python_service/.ruff_cache/
 python_service/.sandbox_tmp/
 python_service/**/__pycache__/
 python_service/**/*.pyc
