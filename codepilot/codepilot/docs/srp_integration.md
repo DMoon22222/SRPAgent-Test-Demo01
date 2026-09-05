@@ -198,3 +198,12 @@ Repository allowed-root validation, canonical path containment, strict
 symlink/junction protection, isolated filesystem snapshots, and ownership-checked
 cleanup are ready on the SRP server. `/api/execute-repository` still returns 501;
 CodePilot does not yet expose or execute a repository Tool.
+
+## Phase 4.3 Status
+
+The SRP server now executes repository pytest through an allowed-root validated,
+disposable Snapshot and a fixed-profile Docker runner. Docker receives only the
+Snapshot path; the Original Workspace is never mounted. JUnit parsing produces
+the existing compact `RepositoryExecution` contract, while repository
+`analysis` remains null. CodePilot Runtime and its Tool registry are unchanged;
+there is still no CodePilot repository Tool until Phase 4.4.

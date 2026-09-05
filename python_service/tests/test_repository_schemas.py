@@ -52,6 +52,18 @@ def test_repository_request_rejects_arbitrary_command_field():
         )
 
 
+@pytest.mark.parametrize(
+    "target",
+    ["", "-p", "../test_x.py", r"C:\secret\test.py", "/secret/test.py"],
+)
+def test_repository_request_rejects_unsafe_test_target(target):
+    with pytest.raises(ValidationError):
+        RepositoryExecutionRequest(
+            workspacePath=r"F:\temp\project",
+            testTargets=[target],
+        )
+
+
 def test_repository_failure_contract_is_compact():
     failure = RepositoryTestFailure(
         testId="tests/test_math.py::test_divide",

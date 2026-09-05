@@ -391,3 +391,32 @@ SWE-bench；`POST /api/execute-repository` 继续按设计返回 HTTP 501。Phas
 Contract 回归 `19 passed, 1 warning`，SRP 全量为 `51 passed, 1 warning`，
 Phase 4.2 修改文件 Ruff `0 errors`。CodePilot 关键回归 `61 passed`，全量仍为
 `199 passed, 12 failed, 6 warnings`；12 项均为冻结的已知失败，没有新增回归。
+
+## Phase 4.3 状态
+
+Phase 4.3 在 SRP Server 接通 `POST /api/execute-repository`：请求先经过 Phase 4.2
+Allowed Root 与 Snapshot 边界，再由固定 profile 的
+`DockerPytestRepositoryRunner` 执行 pytest。Runner 的内部接口只接收 Snapshot
+路径与不含 Original Workspace 的 `RepositoryRunSpec`；Docker 命令不包含原路径。
+
+Repository pytest 使用直接 argv、固定 pytest 参数、JUnit XML、无网络、资源与
+Linux capability 限制、只读容器根文件系统及可写的一次性 Snapshot。容器运行时
+不安装依赖，不转发 host secrets；timeout 后按 server-owned container name 执行
+best-effort `docker rm -f`。JUnit、failure list 及 stdout/stderr 均有明确大小边界。
+
+本阶段仍不调用 ErrorAnalyzer，`analysis` 保持 `null`；没有修改 CodePilot Runtime、
+RepairTrajectory、SRP Provider/Client，也没有实现 Repository Tool、Maven、RAG 或
+SWE-bench。
+
+Phase 4.3 Runner、Parser、Target、API 与 Snapshot 组合专项为 `77 passed`；其中
+Repository Runner `19`、JUnit Parser `9`、Target Validation `18`、API `7`、
+Snapshot Regression `24`。SRP 全量为 `105 passed, 3 skipped, 1 warning`；3 个默认
+skip 是需显式设置 `RUN_REPOSITORY_DOCKER_SMOKE=1` 的真实 Docker 验收，同一文件
+显式运行最终结果为 `3 passed, 1 warning in 4.87s`。
+
+`srp-code-sandbox:latest` 已成功重建并确认镜像内 `pytest 6.2.5`。真实 API Smoke
+覆盖 SUCCESS、TEST_FAILED 与 TIME_LIMIT_EXCEEDED，验证测试可写 Snapshot 但
+Original Workspace 内容不变；验收后没有 `srp-repo-*` 容器或 `repo_*` Snapshot
+残留。CodePilot 关键回归 `61 passed`，全量仍为
+`199 passed, 12 failed, 6 warnings`，失败集合与冻结基线一致。Phase 4.3 修改的
+Python 文件 Ruff 为 `0 errors`。

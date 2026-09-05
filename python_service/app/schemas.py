@@ -106,6 +106,13 @@ class RepositoryExecutionRequest(BaseModel):
             raise ValueError("workspacePath must not be blank")
         return value
 
+    @field_validator("testTargets")
+    @classmethod
+    def test_targets_must_be_safe(cls, values: list[str]) -> list[str]:
+        from app.repository.target_validation import validate_target_selector
+
+        return [validate_target_selector(value) for value in values]
+
 
 class RepositoryTestFailure(BaseModel):
     testId: str

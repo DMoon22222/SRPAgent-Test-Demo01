@@ -41,10 +41,36 @@ docker build -t srp-code-sandbox:latest -f docker/sandbox/Dockerfile docker/sand
 测试：
 
 ```bash
-docker run --rm srp-code-sandbox:latest
+docker run --rm srp-code-sandbox:latest python3 -m pytest --version
 ```
 
-应看到 Java 和 Python 版本信息。
+应看到镜像内 pytest 的版本信息。pytest 在镜像构建时通过系统包安装；Repository
+Runner 不会在容器运行时安装项目依赖，也不会给测试容器开放网络。
+
+## Repository pytest 执行
+
+在 `.env` 中配置服务端允许读取的根目录：
+
+```text
+REPOSITORY_ALLOWED_ROOT=F:\srpTest\trusted-repositories
+```
+
+目标项目必须位于该目录内。服务会先创建独立 Snapshot，Docker 只挂载该
+Snapshot，不挂载或修改 Original Workspace。Phase 4.3 只支持 `pytest`：
+
+```json
+{
+  "workspacePath": "F:\\srpTest\\trusted-repositories\\example",
+  "runner": "pytest",
+  "testTargets": ["tests/test_calc.py::test_add"],
+  "timeoutSeconds": 60,
+  "benchmark": ""
+}
+```
+
+请求发送到 `POST /api/execute-repository`。客户端不能提供任意 command、pytest
+参数或环境变量；测试命令使用固定参数、无网络 Docker 和受限资源执行。当前响应
+中的 `analysis` 固定为 `null`，Repository Diagnosis 将在后续阶段接入。
 
 ## 启动服务
 
@@ -155,6 +181,7 @@ summary.passRate = 1.0
 - `POST /api/execute-and-analyze`
 - `POST /api/check-syntax`
 - `POST /api/execute-batch`
+- `POST /api/execute-repository`（Phase 4.3：仅 pytest）
 
 ## 测试
 

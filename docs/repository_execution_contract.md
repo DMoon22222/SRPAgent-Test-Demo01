@@ -123,9 +123,9 @@ The corresponding `failedStage` vocabulary is `NONE`, `PRE_CHECK`, `COMPILE`,
 `TEST`, `RUNTIME`, and `SANDBOX`. Phase 4.1 freezes these meanings but does not
 implement each execution path.
 
-## Current HTTP 501 behavior
+## Historical Phase 4.1 HTTP 501 behavior
 
-After request validation, `/api/execute-repository` returns HTTP 501 with a
+During Phase 4.1 and Phase 4.2, `/api/execute-repository` returned HTTP 501 with a
 message that the Repository Runner is not implemented until Phase 4.3. Invalid
 requests still return HTTP 422 through FastAPI/Pydantic validation.
 
@@ -136,9 +136,10 @@ does not call the runner interface yet and never fabricates `success=true`.
 
 ## Runner extension point
 
-`python_service/app/repository/base.py` defines the abstract
-`RepositoryRunner.run(RepositoryExecutionRequest) -> RepositoryExecution`
-interface. Phase 4.1 includes no `DockerRepositoryRunner` implementation.
+`python_service/app/repository/base.py` initially defined a contract-only runner
+interface. Phase 4.3 narrows it to
+`run(snapshot_path, RepositoryRunSpec) -> RepositoryExecution`, ensuring the
+runner cannot receive the original workspace path through its type contract.
 
 ## Security boundary and roadmap
 
@@ -238,3 +239,90 @@ does not create a snapshot, execute repository pytest, invoke Docker, parse test
 output, or fabricate a result. Phase 4.3 should compose the existing
 `RepositoryWorkspaceManager.snapshot_workspace()` context manager with a new
 isolated pytest runner that receives only `snapshot.snapshot_path`.
+
+## Phase 4.3 Python Repository Docker Runner
+
+Phase 4.3 activates `POST /api/execute-repository` for the single fixed runner
+profile `pytest`. The endpoint validates the server-configured allowed root,
+creates a disposable snapshot, and passes only that snapshot path plus a
+`RepositoryRunSpec` to `DockerPytestRepositoryRunner`. It returns
+`RepositoryExecuteAndAnalyzeResult` with `analysis: null`; repository diagnosis
+remains Phase 4.4 work.
+
+### Build and runtime profile
+
+Build the shared image from the monorepo root:
+
+```text
+docker build -t srp-code-sandbox:latest docker/sandbox
+```
+
+The image installs `python3-pytest` at build time. Repository execution never
+runs `pip install`, `poetry install`, `uv sync`, or another dependency resolver.
+The first version supports Python's standard library, pytest, and packages
+already baked into the image. A target repository's missing third-party module
+is a repository test/collection failure, not permission to enable networking.
+
+Every test container uses `--network none`, the configured memory, CPU and PID
+limits, `no-new-privileges`, `--cap-drop ALL`, a read-only container root, and a
+bounded writable `/tmp` tmpfs. The server passes only three fixed Python
+environment flags and never forwards host environment variables or API keys.
+
+The bind mount is the disposable snapshot at `/workspace`; the original
+workspace is never present in Docker argv. The snapshot mount is writable so
+tests may create or modify files. This does not make the original repository
+writable because snapshot files are independent copies and are deleted after
+the request.
+
+### Fixed pytest command and target validation
+
+The server constructs subprocess argv directly and never uses `shell=True`,
+`bash -lc`, or string command concatenation. The fixed payload is equivalent to:
+
+```text
+python3 -m pytest -q --color=no --tb=short -p no:cacheprovider \
+  --junitxml=/workspace/.srp_test_results_<uuid>/junit.xml [validated targets]
+```
+
+Each target is a separate argv item. Empty targets, option-like values beginning
+with `-`, absolute paths, Windows drive paths, backslashes, `..` traversal, NUL
+or control characters, malformed node ids, and shell metacharacters are
+rejected. For a normal node id such as `tests/test_math.py::test_add`, the path
+before `::` must resolve to an existing entry inside the snapshot. Request-level
+syntax errors receive HTTP 422; a defensive runner-level missing-path result is
+structured as `TEST_FAILED` without starting Docker.
+
+### JUnit parsing and bounded output
+
+JUnit XML is written to a server-random directory inside the snapshot. The
+parser treats it as untrusted: reports must exist, be non-empty, be at most 5
+MiB, contain supported XML without entity/doctype declarations, and provide a
+testsuite root. Missing, invalid, or oversized reports map to `SANDBOX_ERROR`
+instead of escaping as an HTTP 500.
+
+`errors + failures` maps to `RepositoryTestSummary.failed`; passed is clamped to
+`total - failed - skipped`. At most five representative `<failure>`/`<error>`
+items are returned, with messages limited to 500 characters and excerpts to
+1,000. Full summary counts remain intact, and `importantSignals` reports when
+the failure list is truncated. stdout and stderr reuse
+`sandbox_max_output_chars` and `truncate_output()`, including accurate
+observation truncation flags.
+
+### Status and cleanup mapping
+
+| Condition | status | failedStage |
+| --- | --- | --- |
+| pytest exit 0 and no failed tests | `SUCCESS` | `NONE` |
+| pytest failures, collection/import errors, or no collected tests | `TEST_FAILED` | `TEST` |
+| host timeout | `TIME_LIMIT_EXCEEDED` | `TEST` |
+| Docker CLI/daemon/image or image pytest unavailable | `ENVIRONMENT_ERROR` | `PRE_CHECK` |
+| container infrastructure or JUnit transport/parser failure | `SANDBOX_ERROR` | `SANDBOX` |
+
+Preflight checks Docker CLI, daemon, the configured local image, and pytest in
+that image. It never pulls an image. Each execution receives a server-owned
+`srp-repo-<uuid>` container name. On host timeout the runner performs best-effort
+`docker rm -f` before returning, while the workspace context always cleans the
+snapshot on normal and exceptional exits.
+
+Phase 4.3 does not invoke ErrorAnalyzer, expose a CodePilot repository Tool,
+install repository dependencies, add Maven, or implement SWE-bench semantics.

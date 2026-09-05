@@ -1,7 +1,16 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 
 from app.analyzer.error_analyzer import ErrorAnalyzer
 from app.config import settings
+from app.repository.base import RepositoryRunSpec
+from app.repository.docker_runner import (
+    DockerPytestRepositoryRunner,
+    _execution_error,
+)
+from app.repository.workspace import (
+    RepositoryWorkspaceError,
+    RepositoryWorkspaceManager,
+)
 from app.sandbox.docker_sandbox import DockerSandbox
 from app.sandbox.local_sandbox import LocalSandbox
 from app.schemas import (
@@ -55,14 +64,29 @@ def execute_and_analyze(request: ExecuteAndAnalyzeRequest) -> ExecuteAndAnalyzeR
 def execute_repository(
     request: RepositoryExecutionRequest,
 ) -> RepositoryExecuteAndAnalyzeResult:
-    del request
-    raise HTTPException(
-        status_code=501,
-        detail=(
-            "Repository execution contract is available, but the Repository "
-            "Runner is not implemented until Phase 4.3."
-        ),
+    manager = RepositoryWorkspaceManager()
+    runner = DockerPytestRepositoryRunner()
+    return _execute_repository_request(request, manager, runner)
+
+
+def _execute_repository_request(request, manager, runner):
+    spec = RepositoryRunSpec(
+        runner=request.runner,
+        test_targets=tuple(request.testTargets),
+        timeout_seconds=request.timeoutSeconds,
+        benchmark=request.benchmark,
     )
+    try:
+        with manager.snapshot_workspace(request.workspacePath) as snapshot:
+            execution = runner.run(snapshot.snapshot_path, spec)
+    except RepositoryWorkspaceError as exc:
+        execution = _execution_error(
+            status="ENVIRONMENT_ERROR",
+            failed_stage="PRE_CHECK",
+            message=str(exc),
+            execution_time_ms=0,
+        )
+    return RepositoryExecuteAndAnalyzeResult(execution=execution, analysis=None)
 
 
 @app.post("/api/check-syntax", response_model=Execution)
