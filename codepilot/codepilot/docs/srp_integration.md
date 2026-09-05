@@ -183,3 +183,11 @@ DIVIDE_BY_ZERO execution cases are recorded as
 `REAL_SMOKE_BLOCKED_BY_DOCKER`; the end-to-end model repair example is recorded
 as `REAL_REPAIR_SMOKE_BLOCKED`. No SRP server or sandbox code was changed to hide
 this environment limitation.
+
+## Phase 4.1 Status
+
+The SRP server now defines a separate Repository Execution Contract at
+`POST /api/execute-repository`. Phase 4.1 performs request validation and returns
+HTTP 501 because snapshotting and the Repository Runner are intentionally not yet
+implemented. CodePilot Runtime and its Tool registry remain unchanged; repository
+execution will be connected to CodePilot in Phase 4.4.

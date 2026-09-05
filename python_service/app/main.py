@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 from app.analyzer.error_analyzer import ErrorAnalyzer
 from app.config import settings
@@ -14,6 +14,8 @@ from app.schemas import (
     ExecuteAndAnalyzeRequest,
     ExecuteAndAnalyzeResult,
     Execution,
+    RepositoryExecuteAndAnalyzeResult,
+    RepositoryExecutionRequest,
 )
 
 app = FastAPI(title="SRP B Group Python Service")
@@ -44,6 +46,23 @@ def execute_and_analyze(request: ExecuteAndAnalyzeRequest) -> ExecuteAndAnalyzeR
             )
         )
     return ExecuteAndAnalyzeResult(execution=execution, analysis=analysis)
+
+
+@app.post(
+    "/api/execute-repository",
+    response_model=RepositoryExecuteAndAnalyzeResult,
+)
+def execute_repository(
+    request: RepositoryExecutionRequest,
+) -> RepositoryExecuteAndAnalyzeResult:
+    del request
+    raise HTTPException(
+        status_code=501,
+        detail=(
+            "Repository execution contract is available, but the Repository "
+            "Runner is not implemented until Phase 4.3."
+        ),
+    )
 
 
 @app.post("/api/check-syntax", response_model=Execution)

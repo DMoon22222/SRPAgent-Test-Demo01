@@ -6,7 +6,13 @@ from pathlib import Path
 
 from app.config import settings
 from app.sandbox.base import CodeSandbox
-from app.sandbox.support import build_run_result, execution, format_log, normalize_language, temporary_workspace
+from app.sandbox.support import (
+    build_run_result,
+    execution,
+    format_log,
+    normalize_language,
+    temporary_workspace,
+)
 from app.schemas import ExecuteAndAnalyzeRequest, Execution
 
 
@@ -114,12 +120,12 @@ def _docker_run(workdir: Path, shell_command: str, stdin: str) -> dict[str, obje
         completed = subprocess.run(
             command,
             input=stdin,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             text=True,
             encoding="utf-8",
             errors="replace",
             timeout=settings.sandbox_timeout_ms / 1000,
+            check=False,
         )
         return {
             "stdout": completed.stdout,
@@ -140,11 +146,32 @@ def _docker_run(workdir: Path, shell_command: str, stdin: str) -> dict[str, obje
 
 def _check_docker() -> str:
     try:
-        completed = subprocess.run(["docker", "--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=3)
-    except Exception as exc:
-        return str(exc)
-    if completed.returncode != 0:
-        return completed.stderr or completed.stdout
+        version = subprocess.run(
+            ["docker", "--version"],
+            capture_output=True,
+            text=True,
+            timeout=3,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        return f"Docker CLI preflight failed: {exc}"
+    if version.returncode != 0:
+        detail = version.stderr or version.stdout or "unknown docker --version error"
+        return f"Docker CLI preflight failed: {detail}"
+
+    try:
+        daemon = subprocess.run(
+            ["docker", "info"],
+            capture_output=True,
+            text=True,
+            timeout=3,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        return f"Docker daemon preflight failed: {exc}"
+    if daemon.returncode != 0:
+        detail = daemon.stderr or daemon.stdout or "unknown docker info error"
+        return f"Docker daemon preflight failed: {detail}"
     return ""
 
 
@@ -157,8 +184,27 @@ def _syntax_result(language: str, request: ExecuteAndAnalyzeRequest, result: dic
 
 
 def _docker_environment_error(detail: str) -> Execution:
-    message = "Docker 不可用。请确认 Docker Desktop 已启动，并且命令行可以执行 docker --version。\n" + detail
-    return execution(False, "ENVIRONMENT_ERROR", "PRE_CHECK", False, False, -1, "", message, message, 0, "", "", "docker --version", "docker")
+    message = (
+        "Docker 不可用。请确认 Docker CLI 已安装、Docker Desktop 已启动，"
+        "并且 docker info 可以连接 daemon。\n"
+        + detail
+    )
+    return execution(
+        False,
+        "ENVIRONMENT_ERROR",
+        "PRE_CHECK",
+        False,
+        False,
+        -1,
+        "",
+        message,
+        message,
+        0,
+        "",
+        "",
+        "docker --version; docker info",
+        "docker",
+    )
 
 
 def _unsupported_language(language: str) -> Execution:

@@ -341,3 +341,27 @@ Docker Desktop daemon 不可用，因此真实代码执行记为
 `REAL_SMOKE_BLOCKED_BY_DOCKER`，真实模型修复闭环记为
 `REAL_REPAIR_SMOKE_BLOCKED`；未修改 SRP 业务逻辑。Phase 3 未实现 Retrieval、
 Repository Execution、worktree 或 SWE-bench，也未开始 Phase 4。
+
+## Phase 4.1 状态
+
+Phase 4.1 在 SRP Server 冻结独立的 Repository Execution Contract：新增
+`RepositoryExecutionRequest`、`RepositoryExecution`、
+`RepositoryObservation`、`RepositoryTestSummary`、
+`RepositoryTestFailure` 和 `RepositoryExecuteAndAnalyzeResult`，并提供
+`POST /api/execute-repository`。当前合法请求按设计返回 HTTP 501；非法
+timeout、空路径或非 `pytest` runner 返回 422。
+
+本阶段 endpoint 不读取 `workspacePath`，不复制 snapshot，不执行 pytest、
+Maven 或 repository Docker，也没有 arbitrary command 字段。抽象
+`RepositoryRunner` 仅作为后续扩展点；CodePilot Runtime、RepairTrajectory、
+SrpClient、SrpToolProvider 和 ErrorAnalyzer 均未修改。
+
+同时修正单文件 DockerSandbox preflight：`docker --version` 验证 CLI 后，
+必须再由 `docker info` 验证 daemon。任一步失败都在编译/运行前返回
+`ENVIRONMENT_ERROR / PRE_CHECK`，不会再被误报为 `COMPILE_ERROR`。
+
+Phase 4.1 新增 Repository Schema、API Contract 与 Docker preflight 专项测试，
+共 `19 passed`；SRP 全量由 8 增至 `27 passed, 1 warning`。CodePilot 关键回归
+`61 passed`，全量仍为 `199 passed, 12 failed, 6 warnings`，12 项均为冻结的
+已知失败。完整协议见根目录 `docs/repository_execution_contract.md`。Phase 4.1
+未开始 Snapshot、Repository Runner、Repository Tool、Maven 或 SWE-bench。
