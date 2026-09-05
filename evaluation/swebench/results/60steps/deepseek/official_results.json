@@ -1,0 +1,27 @@
+{
+  "schema_version": 2,
+  "total_instances": 1,
+  "submitted_instances": 3,
+  "completed_instances": 1,
+  "resolved_instances": 1,
+  "unresolved_instances": 0,
+  "infra_failure_instances": 0,
+  "ambiguous_failure_instances": 0,
+  "empty_patch_instances": 0,
+  "error_instances": 0,
+  "submitted_ids": [
+    "astropy__astropy-14309",
+    "astropy__astropy-14995",
+    "astropy__astropy-7166"
+  ],
+  "completed_ids": ["astropy__astropy-14309"],
+  "resolved_ids": ["astropy__astropy-14309"],
+  "unresolved_ids": [],
+  "incomplete_ids": [],
+  "infra_failure_ids": [],
+  "ambiguous_failure_ids": [],
+  "empty_patch_ids": [],
+  "error_ids": [],
+  "failure_reasons": {},
+  "run_ids": ["phase45-hotfix-deepseek-14309"]
+}

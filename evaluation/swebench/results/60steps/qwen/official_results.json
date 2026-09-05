@@ -1,0 +1,33 @@
+{
+  "schema_version": 2,
+  "total_instances": 2,
+  "submitted_instances": 3,
+  "completed_instances": 2,
+  "resolved_instances": 1,
+  "unresolved_instances": 1,
+  "infra_failure_instances": 0,
+  "ambiguous_failure_instances": 0,
+  "empty_patch_instances": 0,
+  "error_instances": 0,
+  "submitted_ids": [
+    "astropy__astropy-14309",
+    "astropy__astropy-14995",
+    "astropy__astropy-7166"
+  ],
+  "completed_ids": [
+    "astropy__astropy-14309",
+    "astropy__astropy-7166"
+  ],
+  "resolved_ids": ["astropy__astropy-14309"],
+  "unresolved_ids": ["astropy__astropy-7166"],
+  "incomplete_ids": [],
+  "infra_failure_ids": [],
+  "ambiguous_failure_ids": [],
+  "empty_patch_ids": [],
+  "error_ids": [],
+  "failure_reasons": {},
+  "run_ids": [
+    "phase45-hotfix-qwen-14309",
+    "phase45-hotfix-qwen-7166"
+  ]
+}
