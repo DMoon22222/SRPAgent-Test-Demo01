@@ -152,3 +152,89 @@ Phase 4.3 will add the first fixed-profile pytest Docker runner and compact test
 parsing. Phase 4.4 will add repository diagnosis and the CodePilot Tool adapter.
 Phase 4.5 will add Maven support. SWE-bench integration remains outside these
 contract and runner phases.
+
+## Phase 4.2 Repository Workspace Security
+
+Phase 4.2 adds a server-side `RepositoryWorkspaceManager` without changing the
+HTTP contract or invoking a Repository Runner. The policy flow is:
+
+```text
+workspacePath
+  → configured Allowed Root
+  → canonical resolution and containment check
+  → symlink/junction/reparse scan
+  → controlled filesystem copy
+  → disposable snapshot outside the source
+  → ownership-checked cleanup
+```
+
+### Allowed Root and canonical paths
+
+`REPOSITORY_ALLOWED_ROOT` is server configuration and defaults to an empty
+string. An empty value disables snapshot creation with the explicit error
+`repository allowed root is not configured`; it does not affect snippet
+execution. Clients cannot override this policy through
+`RepositoryExecutionRequest`.
+
+Both the allowed root and requested workspace use `expanduser`, absolute-path
+normalization, and canonical `resolve`. Relative workspace paths are interpreted
+only beneath the allowed root. Containment uses `Path.relative_to`, not string
+prefix comparison, so `..` escapes, sibling-prefix tricks, outside absolute
+paths, and Windows cross-drive paths are rejected safely. The resolved workspace
+must exist and be a directory.
+
+### Link and reparse-point policy
+
+The first version is strict: a workspace root or copied tree entry identified as
+a symlink, Windows junction, or reparse point rejects the snapshot. Checks use
+`Path.is_symlink()`, `Path.is_junction()` when available, and the Windows reparse
+file attribute. Scanning and copying use `os.scandir`; link checks occur before
+`is_dir(follow_symlinks=False)` or `is_file(follow_symlinks=False)`. Excluded
+directories are checked at their boundary and are never traversed or copied.
+
+### Snapshot and exclusions
+
+Snapshots are controlled copies of the current filesystem state, including
+uncommitted edits. Git worktrees are not used. The default manager-owned root is:
+
+```text
+%TEMP%\srp_repository_snapshots\repo_<uuid>
+```
+
+For example:
+
+```text
+F:\allowed\project
+  → validate and scan
+  → %TEMP%\srp_repository_snapshots\repo_<uuid>
+  → future Phase 4.3 runner receives only the snapshot path
+```
+
+The server-owned exclusion set is `.git`, `.venv`, `venv`, `node_modules`,
+`target`, `build`, `dist`, `__pycache__`, `.pytest_cache`, `.mypy_cache`,
+`.ruff_cache`, `.pico`, `.idea`, and `.vscode`. Source and test directories plus
+project manifests such as `pyproject.toml`, `requirements.txt`, and `pom.xml`
+remain available. Clients cannot supply exclusion patterns.
+
+Copying is performed entry by entry after a pre-scan and repeats the unsafe-link
+check during the copy. Files are independent copies: modifying or deleting a
+snapshot file cannot modify or delete the source workspace.
+
+### Cleanup and limitations
+
+`snapshot_workspace()` is a context manager and removes the snapshot on normal
+exit and when the enclosed operation raises. Cleanup accepts only a
+`RepositorySnapshot` path recorded as owned by the same manager, requires it to
+be a direct `repo_` child of the manager's snapshot root, refuses linked paths,
+and explicitly refuses the source path. It never deletes a request path.
+
+This local trusted-integration boundary uses validate → scan → controlled copy
+to reduce path-escape risk. It does not claim complete protection against a
+malicious process concurrently mutating the source filesystem; OS-level TOCTOU
+hardening remains future work.
+
+`POST /api/execute-repository` still returns HTTP 501 in Phase 4.2. The endpoint
+does not create a snapshot, execute repository pytest, invoke Docker, parse test
+output, or fabricate a result. Phase 4.3 should compose the existing
+`RepositoryWorkspaceManager.snapshot_workspace()` context manager with a new
+isolated pytest runner that receives only `snapshot.snapshot_path`.

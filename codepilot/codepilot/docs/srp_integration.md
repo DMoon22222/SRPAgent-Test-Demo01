@@ -191,3 +191,10 @@ The SRP server now defines a separate Repository Execution Contract at
 HTTP 501 because snapshotting and the Repository Runner are intentionally not yet
 implemented. CodePilot Runtime and its Tool registry remain unchanged; repository
 execution will be connected to CodePilot in Phase 4.4.
+
+## Phase 4.2 Status
+
+Repository allowed-root validation, canonical path containment, strict
+symlink/junction protection, isolated filesystem snapshots, and ownership-checked
+cleanup are ready on the SRP server. `/api/execute-repository` still returns 501;
+CodePilot does not yet expose or execute a repository Tool.

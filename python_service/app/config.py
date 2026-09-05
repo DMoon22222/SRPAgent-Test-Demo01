@@ -5,7 +5,7 @@ from pydantic import AliasChoices, BaseModel, Field, model_validator
 
 try:
     from pydantic_settings import BaseSettings, SettingsConfigDict
-except Exception:
+except ImportError:
     BaseSettings = BaseModel
 
     def SettingsConfigDict(**kwargs):
@@ -33,6 +33,7 @@ class Settings(BaseSettings):
     sandbox_docker_cpus: str = "1"
     sandbox_docker_pids_limit: str = "64"
     sandbox_max_output_chars: int = 12000
+    repository_allowed_root: str = ""
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -91,6 +92,7 @@ def _fallback_settings_data() -> dict[str, str]:
         "sandbox_docker_cpus": pick("SANDBOX_DOCKER_CPUS"),
         "sandbox_docker_pids_limit": pick("SANDBOX_DOCKER_PIDS_LIMIT"),
         "sandbox_max_output_chars": pick("SANDBOX_MAX_OUTPUT_CHARS"),
+        "repository_allowed_root": pick("REPOSITORY_ALLOWED_ROOT"),
     }
     return {key: value for key, value in values.items() if value != ""}
 

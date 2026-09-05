@@ -365,3 +365,29 @@ Phase 4.1 新增 Repository Schema、API Contract 与 Docker preflight 专项测
 `61 passed`，全量仍为 `199 passed, 12 failed, 6 warnings`，12 项均为冻结的
 已知失败。完整协议见根目录 `docs/repository_execution_contract.md`。Phase 4.1
 未开始 Snapshot、Repository Runner、Repository Tool、Maven 或 SWE-bench。
+
+## Phase 4.2 状态
+
+Phase 4.2 在 SRP Server 新增 `RepositoryWorkspaceManager` 和内部
+`RepositorySnapshot`。服务端配置 `REPOSITORY_ALLOWED_ROOT` 默认留空，未配置
+时拒绝 Snapshot；相对路径只按 allowed root 解释，allowed root 与 workspace
+都经过 absolute/canonical resolution，并使用路径组件关系阻止 `..`、不同磁盘
+和 allowed root 外路径。
+
+Snapshot 前及受控复制过程中均检查 symlink、Windows junction 和 reparse point，
+不跟随链接。Snapshot 默认位于系统临时目录的
+`srp_repository_snapshots/repo_<uuid>`，不会位于 source workspace 内；固定排除
+`.git`、虚拟环境、依赖、构建、缓存、IDE 和 `.pico` 目录，但保留 `src/`、
+`tests/` 与项目清单。
+
+`snapshot_workspace()` 在正常及异常退出时清理；Cleanup 只删除同一 manager
+登记且位于其 snapshot root 直属位置的目录，拒绝 source 或外部目录。隔离测试
+证明修改或删除 Snapshot 文件不会影响 Original Workspace。本阶段不宣称解决
+恶意并发文件系统变更的完整 TOCTOU 问题。
+
+Phase 4.2 Workspace/Snapshot 专项测试 `24 passed`。本阶段没有实现 Repository
+Runner、pytest/Docker repository execution、Repository Tool、Diagnosis 或
+SWE-bench；`POST /api/execute-repository` 继续按设计返回 HTTP 501。Phase 4.1
+Contract 回归 `19 passed, 1 warning`，SRP 全量为 `51 passed, 1 warning`，
+Phase 4.2 修改文件 Ruff `0 errors`。CodePilot 关键回归 `61 passed`，全量仍为
+`199 passed, 12 failed, 6 warnings`；12 项均为冻结的已知失败，没有新增回归。
