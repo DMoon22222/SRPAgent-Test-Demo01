@@ -1,0 +1,48 @@
+{
+  "schema_version": 2,
+  "total_instances": 6,
+  "submitted_instances": 6,
+  "completed_instances": 5,
+  "resolved_instances": 4,
+  "unresolved_instances": 1,
+  "infra_failure_instances": 1,
+  "ambiguous_failure_instances": 0,
+  "empty_patch_instances": 0,
+  "error_instances": 0,
+  "submitted_ids": [
+    "django__django-10880",
+    "django__django-10914",
+    "django__django-10999",
+    "django__django-11066",
+    "django__django-11099",
+    "django__django-11119"
+  ],
+  "completed_ids": [
+    "django__django-10914",
+    "django__django-10999",
+    "django__django-11066",
+    "django__django-11099",
+    "django__django-11119"
+  ],
+  "resolved_ids": [
+    "django__django-10914",
+    "django__django-11066",
+    "django__django-11099",
+    "django__django-11119"
+  ],
+  "unresolved_ids": ["django__django-10999"],
+  "infra_failure_ids": ["django__django-10880"],
+  "ambiguous_failure_ids": [],
+  "empty_patch_ids": [],
+  "error_ids": [],
+  "failure_reasons": {
+    "django__django-10880": "Official image pull failed with repeated Docker Hub EOF errors."
+  },
+  "run_ids": [
+    "expanded-qwen-guard-10914",
+    "expanded-qwen-guard-10999",
+    "expanded-qwen-guard-11066",
+    "expanded-qwen-guard-11099-utf8",
+    "expanded-qwen-guard-11119"
+  ]
+}
