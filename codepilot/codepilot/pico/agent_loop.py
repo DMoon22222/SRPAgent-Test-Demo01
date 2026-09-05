@@ -1,6 +1,7 @@
 """Agent control loop extracted from the runtime facade."""
 
 import time
+from pathlib import PurePosixPath
 
 from .checkpoint import (
     CHECKPOINT_NONE_STATUS,
@@ -48,6 +49,175 @@ def tool_budget_guidance(max_steps, used_steps):
             ]
         )
     return "\n".join(lines), remaining, tier
+
+
+EXPLORATION_TOOLS = {"list_files", "search", "read_file"}
+VALIDATION_TOOLS = {"execute_repository_and_diagnose"}
+SOURCE_SUFFIXES = {
+    ".c",
+    ".cc",
+    ".cpp",
+    ".cs",
+    ".go",
+    ".java",
+    ".js",
+    ".jsx",
+    ".php",
+    ".py",
+    ".rb",
+    ".rs",
+    ".scala",
+    ".swift",
+    ".ts",
+    ".tsx",
+}
+
+
+def source_patch_from_tool(name, metadata):
+    if name not in {"patch_file", "write_file"} or not metadata.get(
+        "workspace_changed"
+    ):
+        return False
+    created_paths = {
+        str(item).split(":", 1)[1].replace("\\", "/").lower()
+        for item in metadata.get("diff_summary", [])
+        if str(item).startswith("created:")
+    }
+    for raw_path in metadata.get("affected_paths", []):
+        path = str(raw_path).replace("\\", "/").lstrip("./")
+        lowered = path.lower()
+        parts = PurePosixPath(lowered).parts
+        name_lower = PurePosixPath(lowered).name
+        if any(
+            part in {".pico", ".pytest_cache", "__pycache__"}
+            or part.startswith(".srp")
+            or part in {"benchmark", "benchmarks"}
+            for part in parts
+        ):
+            continue
+        if lowered.startswith("evaluation/swebench/"):
+            continue
+        if any(word in name_lower for word in ("debug", "repro", "reproduction")):
+            continue
+        if lowered in created_paths and (
+            name_lower.startswith("test_") or "tests" in parts
+        ):
+            continue
+        if PurePosixPath(lowered).suffix in SOURCE_SUFFIXES:
+            return True
+    return False
+
+
+def validation_environment_failure(metadata):
+    status = str(metadata.get("execution_status", "")).upper()
+    subtype = str(metadata.get("error_subtype", "")).upper()
+    return status in {"ENVIRONMENT_ERROR", "SANDBOX_ERROR"} or subtype == (
+        "DEPENDENCY_MISSING"
+    )
+
+
+def tool_strategy_guidance(
+    used_steps,
+    *,
+    source_patch_seen=False,
+    validation_attempted=False,
+    validation_environment_limited=False,
+    stagnant_exploration_steps=0,
+):
+    if source_patch_seen:
+        phase = "VERIFY"
+        lines = [
+            "A repository source patch has been applied.",
+            "Prioritize validation over further broad exploration.",
+            "Preferred next step: execute_repository_and_diagnose.",
+            (
+                "If validation produces useful new failure evidence, make one "
+                "focused repair. If validation succeeds, finalize."
+            ),
+            (
+                "Do not return to broad repository search unless validation provides "
+                "new evidence that the current patch targets the wrong implementation."
+            ),
+        ]
+    elif used_steps <= 25:
+        phase = "EXPLORE"
+        lines = [
+            "You are still in the exploration phase.",
+            "Locate the smallest relevant implementation surface.",
+            "Avoid reading unrelated files.",
+        ]
+    elif used_steps <= 35:
+        phase = "CONVERGE"
+        lines = [
+            "You are now in the convergence phase.",
+            "Stop broad repository exploration.",
+            (
+                "If current evidence identifies a likely faulty implementation, focus "
+                "on at most one or two candidate source files."
+            ),
+            (
+                "Prefer targeted read then concrete patch over additional broad search "
+                "and unrelated file inspection."
+            ),
+            (
+                "Do not delay a justified source modification merely to gather "
+                "redundant evidence."
+            ),
+        ]
+    else:
+        phase = "ACT"
+        lines = [
+            "You have spent substantial tool budget exploring the repository.",
+            (
+                "If a plausible root cause and target implementation have been "
+                "identified, prioritize applying a concrete source patch now."
+            ),
+            "Do not continue broad list/search/read loops.",
+            (
+                "Limit further investigation to the smallest set of files directly "
+                "related to the suspected implementation."
+            ),
+            (
+                "A reproduction script, debug file, or standalone test alone does not "
+                "count as a completed fix."
+            ),
+        ]
+    if stagnant_exploration_steps >= 4:
+        lines.extend(
+            [
+                "Recent exploration has not produced new actionable evidence.",
+                "Do not repeat the same search/read pattern.",
+                (
+                    "Either apply the best justified source patch or inspect one "
+                    "directly relevant unresolved location."
+                ),
+            ]
+        )
+    if validation_environment_limited:
+        lines.extend(
+            [
+                (
+                    "Repository validation is currently limited by the lightweight "
+                    "SRP environment."
+                ),
+                "Do not repeatedly retry the same environment failure.",
+                (
+                    "Preserve the best justified source patch and finalize so that the "
+                    "external SWE-bench Harness can perform authoritative evaluation."
+                ),
+            ]
+        )
+    elif source_patch_seen and validation_attempted:
+        lines.extend(
+            [
+                (
+                    "A source patch has already been produced and evaluated as far as "
+                    "the current environment allows."
+                ),
+                "Avoid redundant exploration and finalize when no new evidence remains.",
+            ]
+        )
+    return "\n".join(lines), phase
 
 
 class AgentLoop:
@@ -184,6 +354,10 @@ class AgentLoop:
 
         tool_steps = 0
         attempts = 0
+        source_patch_seen = False
+        validation_attempted = False
+        validation_environment_limited = False
+        stagnant_exploration_steps = 0
         max_attempts = max(agent.max_steps * 3, agent.max_steps + 4)
 
         # 这是 agent 的主循环，可以按“感知 -> 决策 -> 行动 -> 记录”来理解：
@@ -202,11 +376,21 @@ class AgentLoop:
                 agent.max_steps, tool_steps
             )
             prompt += f"\n\n{budget_guidance}"
+            strategy_guidance, strategy_phase = tool_strategy_guidance(
+                tool_steps,
+                source_patch_seen=source_patch_seen,
+                validation_attempted=validation_attempted,
+                validation_environment_limited=validation_environment_limited,
+                stagnant_exploration_steps=stagnant_exploration_steps,
+            )
+            prompt += f"\n\n{strategy_guidance}"
             prompt_metadata.update(
                 {
                     "tool_budget_used": tool_steps,
                     "tool_budget_remaining": remaining_steps,
                     "tool_budget_notice_tier": budget_tier,
+                    "tool_strategy_phase": strategy_phase,
+                    "source_patch_seen": source_patch_seen,
                 }
             )
             agent.emit_trace(
@@ -274,6 +458,19 @@ class AgentLoop:
                 tool_started_at = time.monotonic()
                 tool_result = agent.execute_tool(name, args)
                 result = tool_result.content
+                tool_metadata = dict(tool_result.metadata or {})
+                if source_patch_from_tool(name, tool_metadata):
+                    source_patch_seen = True
+                if name in VALIDATION_TOOLS and source_patch_seen:
+                    validation_attempted = True
+                    if validation_environment_failure(tool_metadata):
+                        validation_environment_limited = True
+                if name in EXPLORATION_TOOLS and not tool_metadata.get(
+                    "workspace_changed"
+                ):
+                    stagnant_exploration_steps += 1
+                else:
+                    stagnant_exploration_steps = 0
                 agent.record(
                     {
                         "role": "tool",
@@ -292,7 +489,7 @@ class AgentLoop:
                         "args": args,
                         "result": clip(result, 500),
                         "duration_ms": int((time.monotonic() - tool_started_at) * 1000),
-                        **dict(tool_result.metadata or {}),
+                        **tool_metadata,
                     },
                 )
                 checkpoint = agent.create_checkpoint(task_state, user_message, trigger="tool_executed")

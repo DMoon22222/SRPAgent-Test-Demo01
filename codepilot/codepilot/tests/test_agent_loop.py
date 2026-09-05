@@ -2,8 +2,14 @@ import json
 from typing import ClassVar
 
 import pytest
+
 from pico import FakeModelClient, Pico, SessionStore, WorkspaceContext
-from pico.agent_loop import AgentLoop, tool_budget_guidance
+from pico.agent_loop import (
+    AgentLoop,
+    source_patch_from_tool,
+    tool_budget_guidance,
+    tool_strategy_guidance,
+)
 
 
 def build_agent(tmp_path, outputs, **kwargs):
@@ -90,6 +96,54 @@ def test_tool_budget_guidance_thresholds(used, expected_tier, expected_notice):
     guidance, _remaining, tier = tool_budget_guidance(60, used)
     assert tier == expected_tier
     assert expected_notice in guidance
+
+
+@pytest.mark.parametrize(
+    ("used", "phase", "notice"),
+    [
+        (25, "EXPLORE", "exploration phase"),
+        (26, "CONVERGE", "convergence phase"),
+        (36, "ACT", "prioritize applying a concrete source patch"),
+    ],
+)
+def test_tool_strategy_phases(used, phase, notice):
+    guidance, actual_phase = tool_strategy_guidance(used)
+    assert actual_phase == phase
+    assert notice in guidance
+
+
+def test_source_patch_enters_verify_guidance():
+    guidance, phase = tool_strategy_guidance(12, source_patch_seen=True)
+    assert phase == "VERIFY"
+    assert "execute_repository_and_diagnose" in guidance
+
+
+def test_created_reproduction_test_is_not_a_source_patch():
+    metadata = {
+        "workspace_changed": True,
+        "affected_paths": ["tests/test_reproduction.py"],
+        "diff_summary": ["created:tests/test_reproduction.py"],
+    }
+    assert not source_patch_from_tool("write_file", metadata)
+    assert source_patch_from_tool(
+        "patch_file",
+        {
+            "workspace_changed": True,
+            "affected_paths": ["package/implementation.py"],
+            "diff_summary": ["modified:package/implementation.py"],
+        },
+    )
+
+
+def test_environment_failure_guidance_prevents_repeat_validation():
+    guidance, phase = tool_strategy_guidance(
+        40,
+        source_patch_seen=True,
+        validation_attempted=True,
+        validation_environment_limited=True,
+    )
+    assert phase == "VERIFY"
+    assert "Do not repeatedly retry the same environment failure" in guidance
 
 
 def test_agent_loop_persists_model_failure_before_reraising(tmp_path):
