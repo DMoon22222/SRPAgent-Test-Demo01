@@ -10,6 +10,10 @@ import time
 from pathlib import Path
 from typing import Any
 
+from evaluation.swebench import (
+    DEFAULT_SWEBENCH_MAX_STEPS,
+    DEFAULT_SWEBENCH_WALL_TIMEOUT_SECONDS,
+)
 from evaluation.swebench.common import (
     find_instance,
     load_selected,
@@ -30,6 +34,21 @@ Make the smallest justified code change.
 Do not modify unrelated files.
 Do not access benchmark gold patches or reference solutions.
 Do not claim success merely because a patch was applied.
+
+You have a finite repository tool budget.
+Use early tool calls to locate the relevant implementation, but avoid exhaustive
+repository exploration. Once you have enough evidence for a concrete fix, stop
+broad browsing and modify the repository. Do not finish by merely describing a
+patch if a justified code fix can be applied with the available tools.
+Reserve sufficient tool budget for:
+1. at least one concrete code modification, and
+2. when feasible, one validation or diagnosis attempt.
+
+If repository execution is unavailable because the lightweight SRP sandbox lacks
+project dependencies, do not repeatedly retry the same environment failure.
+Continue using repository inspection and reasoning to make a justified source
+patch when possible. Final benchmark correctness will be judged by the external
+official SWE-bench harness.
 
 Issue:
 
@@ -59,6 +78,22 @@ def _tool_call_count(report_path: Path | None) -> int:
         except json.JSONDecodeError:
             continue
     return count
+
+
+def classify_agent_status(
+    *,
+    timed_out: bool,
+    agent_completed: bool,
+    patch_nonempty: bool,
+    tool_budget_exhausted: bool,
+) -> str:
+    if timed_out:
+        return "AGENT_TIMEOUT"
+    if not agent_completed:
+        return "AGENT_FAILED"
+    if not patch_nonempty:
+        return "NO_PATCH_TOOL_BUDGET" if tool_budget_exhausted else "NO_PATCH"
+    return "AGENT_COMPLETED"
 
 
 def run_instance(
@@ -154,14 +189,14 @@ def run_instance(
 
     final_answer = str(report.get("final_answer") or "")
     agent_completed = return_code == 0 and not timed_out
-    if timed_out:
-        agent_status = "AGENT_TIMEOUT"
-    elif not agent_completed:
-        agent_status = "AGENT_FAILED"
-    elif not patch:
-        agent_status = "NO_PATCH"
-    else:
-        agent_status = "AGENT_COMPLETED"
+    tool_calls = _tool_call_count(report_path)
+    tool_budget_exhausted = tool_calls >= max_steps
+    agent_status = classify_agent_status(
+        timed_out=timed_out,
+        agent_completed=agent_completed,
+        patch_nonempty=bool(patch),
+        tool_budget_exhausted=tool_budget_exhausted,
+    )
     row = {
         "instance_id": instance["instance_id"],
         "provider": provider,
@@ -175,7 +210,8 @@ def run_instance(
         "duration_seconds": round(duration, 3),
         "agent_completed": agent_completed,
         "agent_status": agent_status,
-        "tool_calls": _tool_call_count(report_path),
+        "tool_calls": tool_calls,
+        "tool_budget_exhausted": tool_budget_exhausted,
         "repair_attempts": int(repair.get("repair_attempts", 0)),
         "diagnosis_calls": int(repair.get("diagnosis_calls", 0)),
         "diagnosis_transitions": repair.get("diagnosis_transitions", []),
@@ -205,11 +241,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--model", required=True)
     parser.add_argument("--base-url")
     parser.add_argument("--temperature", type=float, default=0.0)
-    parser.add_argument("--max-steps", type=int, default=12)
+    parser.add_argument(
+        "--max-steps", type=int, default=DEFAULT_SWEBENCH_MAX_STEPS
+    )
     parser.add_argument("--max-new-tokens", type=int, default=2048)
     parser.add_argument("--max-repair-rounds", type=int, default=3)
     parser.add_argument("--no-srp", action="store_true")
-    parser.add_argument("--wall-timeout", type=int, default=900)
+    parser.add_argument(
+        "--wall-timeout",
+        type=int,
+        default=DEFAULT_SWEBENCH_WALL_TIMEOUT_SECONDS,
+    )
     args = parser.parse_args(argv)
     instance = find_instance(load_selected(args.selected), args.instance_id)
     row = run_instance(

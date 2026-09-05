@@ -64,6 +64,14 @@ def aggregate(
     updated = []
     for source in runs:
         row = dict(source)
+        max_steps = int(row.get("max_steps", 0))
+        inferred_exhaustion = max_steps > 0 and int(row.get("tool_calls", 0)) >= max_steps
+        row["tool_budget_exhausted"] = bool(
+            row.get(
+                "tool_budget_exhausted",
+                inferred_exhaustion,
+            )
+        )
         if row["instance_id"] in verdicts:
             resolved = verdicts[row["instance_id"]]
             row["official_resolved"] = resolved
@@ -106,6 +114,13 @@ def aggregate(
         "avg_duration_seconds": _mean(evaluated, "duration_seconds"),
         "patch_generation_rate": _ratio(
             sum(bool(row.get("patch_nonempty")) for row in updated), len(updated)
+        ),
+        "tool_budget_exhausted_tasks": sum(
+            bool(row.get("tool_budget_exhausted")) for row in updated
+        ),
+        "tool_budget_exhaustion_rate": _ratio(
+            sum(bool(row.get("tool_budget_exhausted")) for row in updated),
+            len(updated),
         ),
         "retrieval_requested_count": sum(
             bool(row.get("retrieval_requested")) for row in updated
@@ -153,6 +168,7 @@ def render_summary(summary: dict[str, Any], runs: list[dict[str, Any]]) -> str:
         ),
         ("Avg Duration Seconds", "avg_duration_seconds", False),
         ("Patch Generation Rate", "patch_generation_rate", True),
+        ("Tool Budget Exhaustion Rate", "tool_budget_exhaustion_rate", True),
     ]
     lines.extend(
         f"| {label} | {_format_metric(summary[key], percent=percent)} |"

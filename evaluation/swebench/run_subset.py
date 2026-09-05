@@ -6,6 +6,10 @@ import argparse
 import json
 from pathlib import Path
 
+from evaluation.swebench import (
+    DEFAULT_SWEBENCH_MAX_STEPS,
+    DEFAULT_SWEBENCH_WALL_TIMEOUT_SECONDS,
+)
 from evaluation.swebench.common import load_selected, read_jsonl
 from evaluation.swebench.run_instance import run_instance
 
@@ -20,10 +24,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--model", required=True)
     parser.add_argument("--base-url")
     parser.add_argument("--temperature", type=float, default=0.0)
-    parser.add_argument("--max-steps", type=int, default=12)
+    parser.add_argument(
+        "--max-steps", type=int, default=DEFAULT_SWEBENCH_MAX_STEPS
+    )
     parser.add_argument("--max-new-tokens", type=int, default=2048)
     parser.add_argument("--max-repair-rounds", type=int, default=3)
-    parser.add_argument("--wall-timeout", type=int, default=900)
+    parser.add_argument(
+        "--wall-timeout",
+        type=int,
+        default=DEFAULT_SWEBENCH_WALL_TIMEOUT_SECONDS,
+    )
     parser.add_argument("--no-srp", action="store_true")
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args(argv)
@@ -34,6 +44,7 @@ def main(argv: list[str] | None = None) -> int:
         if row.get("agent_status") in {
             "AGENT_COMPLETED",
             "NO_PATCH",
+            "NO_PATCH_TOOL_BUDGET",
             "AGENT_TIMEOUT",
             "AGENT_FAILED",
         }

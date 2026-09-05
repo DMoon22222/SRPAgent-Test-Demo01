@@ -3,6 +3,10 @@ import subprocess
 
 import pytest
 
+from evaluation.swebench import (
+    DEFAULT_SWEBENCH_MAX_STEPS,
+    DEFAULT_SWEBENCH_WALL_TIMEOUT_SECONDS,
+)
 from evaluation.swebench.aggregate_results import (
     aggregate,
     parse_official_errors,
@@ -19,6 +23,7 @@ from evaluation.swebench.common import (
 )
 from evaluation.swebench.export_prediction import export_model_patch, prediction_row
 from evaluation.swebench.prepare_instance import remove_disposable_workspace
+from evaluation.swebench.run_instance import classify_agent_status
 from evaluation.swebench.select_instances import select_public_instances
 
 
@@ -144,6 +149,8 @@ def metric_run(instance_id, resolved, diagnoses=0):
         "duration_seconds": 10,
         "patch_nonempty": True,
         "retrieval_requested": False,
+        "max_steps": 60,
+        "tool_budget_exhausted": False,
     }
 
 
@@ -176,6 +183,38 @@ def test_zero_denominators_are_null_not_fake_zero():
     assert summary["resolve_rate"] is None
     assert summary["diagnosis_trigger_rate"] is None
     assert summary["repair_after_diagnosis_success_rate"] is None
+    assert summary["tool_budget_exhaustion_rate"] is None
+
+
+def test_swebench_budget_defaults_are_repository_sized():
+    assert DEFAULT_SWEBENCH_MAX_STEPS == 60
+    assert DEFAULT_SWEBENCH_WALL_TIMEOUT_SECONDS == 1800
+
+
+def test_no_patch_status_distinguishes_exhausted_budget():
+    common = {
+        "timed_out": False,
+        "agent_completed": True,
+        "patch_nonempty": False,
+    }
+    assert (
+        classify_agent_status(**common, tool_budget_exhausted=True)
+        == "NO_PATCH_TOOL_BUDGET"
+    )
+    assert (
+        classify_agent_status(**common, tool_budget_exhausted=False) == "NO_PATCH"
+    )
+
+
+def test_tool_budget_exhaustion_metrics_are_inferred_for_baseline_rows():
+    run = metric_run("a", None)
+    run.pop("tool_budget_exhausted")
+    run["max_steps"] = 12
+    run["tool_calls"] = 12
+    rows, summary = aggregate([run], subset_size=1)
+    assert rows[0]["tool_budget_exhausted"] is True
+    assert summary["tool_budget_exhausted_tasks"] == 1
+    assert summary["tool_budget_exhaustion_rate"] == 1.0
 
 
 def test_official_result_parser_supports_harness_summary_lists():

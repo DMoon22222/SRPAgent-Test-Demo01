@@ -123,8 +123,8 @@ F:\srpTest\execution-diagnosis\codepilot\codepilot\.venv\Scripts\python.exe `
   --results-dir evaluation\swebench\results `
   --provider openai --model qwen3-coder-plus `
   --base-url https://dashscope.aliyuncs.com/compatible-mode/v1 `
-  --temperature 0 --max-steps 12 --max-new-tokens 2048 `
-  --max-repair-rounds 3 --wall-timeout 900
+  --temperature 0 --max-steps 60 --max-new-tokens 2048 `
+  --max-repair-rounds 3 --wall-timeout 1800
 ```
 
 Run the entire frozen subset sequentially with durable per-instance output:
@@ -138,13 +138,18 @@ F:\srpTest\execution-diagnosis\codepilot\codepilot\.venv\Scripts\python.exe `
   --results-dir evaluation\swebench\results `
   --provider openai --model qwen3-coder-plus `
   --base-url https://dashscope.aliyuncs.com/compatible-mode/v1 `
-  --temperature 0 --max-steps 12 --max-new-tokens 2048 `
-  --max-repair-rounds 3 --wall-timeout 900
+  --temperature 0 --max-steps 60 --max-new-tokens 2048 `
+  --max-repair-rounds 3 --wall-timeout 1800
 ```
 
 Completed rows are skipped by default; `--force` explicitly reruns them. Every
 instance starts from a fresh checkout and a new CLI process/session. A timeout or
 empty patch remains in the results rather than being silently discarded.
+
+Repository-level evaluation defaults to 60 tool calls and a 1,800-second wall
+timeout. The runtime includes used/remaining metadata on every turn and
+non-mandatory convergence notices at 20, 10, and 5 remaining calls. The hard
+tool stop remains active, and final-answer text is never converted into a patch.
 
 ## 6. Export predictions
 

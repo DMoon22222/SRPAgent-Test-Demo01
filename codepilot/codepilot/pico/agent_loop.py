@@ -2,9 +2,52 @@
 
 import time
 
-from .checkpoint import CHECKPOINT_NONE_STATUS, CHECKPOINT_PARTIAL_STALE_STATUS, CHECKPOINT_WORKSPACE_MISMATCH_STATUS
+from .checkpoint import (
+    CHECKPOINT_NONE_STATUS,
+    CHECKPOINT_PARTIAL_STALE_STATUS,
+    CHECKPOINT_WORKSPACE_MISMATCH_STATUS,
+)
 from .task_state import TaskState
 from .workspace import clip, now
+
+
+def tool_budget_guidance(max_steps, used_steps):
+    remaining = max(int(max_steps) - int(used_steps), 0)
+    lines = [f"Tool budget: used = {used_steps}; remaining = {remaining}."]
+    tier = "metadata"
+    if remaining <= 5:
+        tier = "critical"
+        lines.extend(
+            [
+                "Runtime budget notice: 5 or fewer tool calls remain.",
+                (
+                    "Stop nonessential exploration. If a justified fix has been "
+                    "identified, prioritize applying it now. Reserve the remaining "
+                    "budget for at most the essential patch and validation actions."
+                ),
+            ]
+        )
+    elif remaining <= 10:
+        tier = "modification"
+        lines.extend(
+            [
+                "Runtime budget notice: 10 or fewer tool calls remain.",
+                (
+                    "If the available evidence supports a concrete fix, prioritize "
+                    "applying the repository modification and validating it instead "
+                    "of continuing broad exploration."
+                ),
+            ]
+        )
+    elif remaining <= 20:
+        tier = "convergence"
+        lines.extend(
+            [
+                "Runtime budget notice: 20 or fewer tool calls remain.",
+                "Begin converging on a concrete fix. Avoid unnecessary exploratory browsing.",
+            ]
+        )
+    return "\n".join(lines), remaining, tier
 
 
 class AgentLoop:
@@ -155,6 +198,17 @@ class AgentLoop:
             agent.run_store.write_task_state(task_state)
             prompt_started_at = time.monotonic()
             prompt, prompt_metadata = agent._build_prompt_and_metadata(user_message)
+            budget_guidance, remaining_steps, budget_tier = tool_budget_guidance(
+                agent.max_steps, tool_steps
+            )
+            prompt += f"\n\n{budget_guidance}"
+            prompt_metadata.update(
+                {
+                    "tool_budget_used": tool_steps,
+                    "tool_budget_remaining": remaining_steps,
+                    "tool_budget_notice_tier": budget_tier,
+                }
+            )
             agent.emit_trace(
                 task_state,
                 "prompt_built",
@@ -266,12 +320,23 @@ class AgentLoop:
             agent.run_store.write_task_state(task_state)
             prompt_started_at = time.monotonic()
             prompt, prompt_metadata = agent._build_prompt_and_metadata(user_message)
+            budget_guidance, remaining_steps, budget_tier = tool_budget_guidance(
+                agent.max_steps, tool_steps
+            )
+            prompt += f"\n\n{budget_guidance}"
             prompt += (
                 "\n\nRuntime notice: the tool budget is exhausted. Do not call another tool. "
                 "Use the evidence already present in the tool history and return exactly one "
                 "non-empty <final>...</final> answer."
             )
-            prompt_metadata["finalization"] = True
+            prompt_metadata.update(
+                {
+                    "finalization": True,
+                    "tool_budget_used": tool_steps,
+                    "tool_budget_remaining": remaining_steps,
+                    "tool_budget_notice_tier": budget_tier,
+                }
+            )
             agent.emit_trace(
                 task_state,
                 "prompt_built",

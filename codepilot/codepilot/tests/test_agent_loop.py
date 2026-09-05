@@ -1,9 +1,9 @@
 import json
+from typing import ClassVar
 
 import pytest
-
 from pico import FakeModelClient, Pico, SessionStore, WorkspaceContext
-from pico.agent_loop import AgentLoop
+from pico.agent_loop import AgentLoop, tool_budget_guidance
 
 
 def build_agent(tmp_path, outputs, **kwargs):
@@ -66,12 +66,36 @@ def test_agent_loop_reserves_a_final_answer_after_tool_budget_is_exhausted(tmp_p
         event["event"] == "model_requested" and event.get("purpose") == "finalization"
         for event in trace_events
     )
+    assert "tool budget is exhausted" in agent.model_client.prompts[-1]
+    assert "remaining = 0" in agent.model_client.prompts[-1]
+
+
+def test_tool_budget_guidance_above_twenty_is_metadata_only():
+    guidance, remaining, tier = tool_budget_guidance(60, 39)
+    assert remaining == 21
+    assert tier == "metadata"
+    assert "used = 39; remaining = 21" in guidance
+    assert "Runtime budget notice" not in guidance
+
+
+@pytest.mark.parametrize(
+    ("used", "expected_tier", "expected_notice"),
+    [
+        (40, "convergence", "20 or fewer tool calls remain"),
+        (50, "modification", "prioritize applying the repository modification"),
+        (55, "critical", "Stop nonessential exploration"),
+    ],
+)
+def test_tool_budget_guidance_thresholds(used, expected_tier, expected_notice):
+    guidance, _remaining, tier = tool_budget_guidance(60, used)
+    assert tier == expected_tier
+    assert expected_notice in guidance
 
 
 def test_agent_loop_persists_model_failure_before_reraising(tmp_path):
     class FailingModelClient:
         supports_prompt_cache = False
-        last_completion_metadata = {
+        last_completion_metadata: ClassVar = {
             "stop_reason": "max_tokens",
             "content_block_types": ["thinking"],
         }
