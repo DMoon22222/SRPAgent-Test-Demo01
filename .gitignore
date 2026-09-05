@@ -49,6 +49,8 @@ python_service/evaluation/humaneval_error_agent/results/*
 /swebench_eval/
 evaluation/swebench/results/official/
 evaluation/swebench/results/agent_logs/
+evaluation/**/__pycache__/
+evaluation/**/*.py[cod]
 
 ### VS Code ###
 .vscode/
