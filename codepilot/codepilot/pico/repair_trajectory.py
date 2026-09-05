@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -329,7 +330,20 @@ def diagnosis_fingerprint(diagnosis: dict[str, Any]) -> str:
         "error_subtype",
         "suspected_location",
     )
-    return "|".join(str(diagnosis.get(field, "") or "") for field in fields)
+    values = [str(diagnosis.get(field, "") or "") for field in fields]
+    values[-1] = normalize_diagnosis_location(values[-1])
+    return "|".join(values)
+
+
+def normalize_diagnosis_location(location: Any) -> str:
+    """Remove volatile SRP sandbox prefixes while preserving repository paths."""
+    normalized = str(location or "").strip().replace("\\", "/")
+    match = re.search(
+        r"(?:^|/)\.sandbox_tmp/srp_local_[^/]+/(?P<location>.+)$",
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    return match.group("location") if match else normalized
 
 
 def _normalize_path(value: Any) -> str:

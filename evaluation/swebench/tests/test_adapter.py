@@ -23,7 +23,11 @@ from evaluation.swebench.common import (
 )
 from evaluation.swebench.export_prediction import export_model_patch, prediction_row
 from evaluation.swebench.prepare_instance import remove_disposable_workspace
-from evaluation.swebench.run_instance import classify_agent_status
+from evaluation.swebench.run_instance import (
+    PROMPT_TEMPLATE,
+    classify_agent_status,
+    infer_agent_reported_success,
+)
 from evaluation.swebench.select_instances import select_public_instances
 
 
@@ -204,6 +208,23 @@ def test_no_patch_status_distinguishes_exhausted_budget():
     assert (
         classify_agent_status(**common, tool_budget_exhausted=False) == "NO_PATCH"
     )
+
+
+def test_agent_reported_success_requires_execution_evidence():
+    assert not infer_agent_reported_success(
+        repair_succeeded=False,
+        final_execution_status="RUNTIME_ERROR",
+        final_answer="The issue was fixed successfully.",
+    )
+    assert infer_agent_reported_success(
+        repair_succeeded=False,
+        final_execution_status="SUCCESS",
+    )
+
+
+def test_prompt_rejects_reproduction_only_fix_and_routes_repository_validation():
+    assert "reproduction file is not a completed fix" in PROMPT_TEMPLATE
+    assert "prefer execute_repository_and_diagnose" in PROMPT_TEMPLATE
 
 
 def test_tool_budget_exhaustion_metrics_are_inferred_for_baseline_rows():

@@ -3,7 +3,11 @@ from unittest.mock import patch
 
 from pico import FakeModelClient, Pico, SessionStore, WorkspaceContext
 from pico.integrations import SrpConnectionError, SrpToolProvider
-from pico.repair_trajectory import RepairTrajectory, diagnosis_fingerprint
+from pico.repair_trajectory import (
+    RepairTrajectory,
+    diagnosis_fingerprint,
+    normalize_diagnosis_location,
+)
 from pico.tool_provider import BuiltinToolProvider
 
 
@@ -333,6 +337,29 @@ def test_fingerprint_uses_stable_fields_not_root_cause_text():
     assert first == second
     assert first == (
         "RUNTIME_ERROR|RUNTIME|RUNTIME_ERROR|DIVIDE_BY_ZERO|solution.py:2"
+    )
+
+
+def test_fingerprint_ignores_random_srp_sandbox_directory():
+    prefix = {
+        "execution_status": "RUNTIME_ERROR",
+        "failed_stage": "RUNTIME",
+        "error_type": "API_MISUSE",
+        "error_subtype": "DEPENDENCY_MISSING",
+    }
+    first_location = (
+        r"F:\repo\python_service\.sandbox_tmp\srp_local_eb57c8af\Main.py:7"
+    )
+    second_location = (
+        r"F:\repo\python_service\.sandbox_tmp\srp_local_911723d1\Main.py:7"
+    )
+
+    assert normalize_diagnosis_location(first_location) == "Main.py:7"
+    assert diagnosis_fingerprint(
+        {**prefix, "suspected_location": first_location}
+    ) == diagnosis_fingerprint({**prefix, "suspected_location": second_location})
+    assert normalize_diagnosis_location("astropy/utils/misc.py:123") == (
+        "astropy/utils/misc.py:123"
     )
 
 

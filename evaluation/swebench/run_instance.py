@@ -35,6 +35,19 @@ Do not modify unrelated files.
 Do not access benchmark gold patches or reference solutions.
 Do not claim success merely because a patch was applied.
 
+For repository repair tasks, a reproduction or debug script may be used only as
+temporary investigation evidence. A reproduction file is not a completed fix.
+Creating only a reproduction script, debug file, or standalone test does not
+constitute a completed fix. Once the faulty implementation is identified,
+prioritize modifying the existing repository implementation. Do not finalize if
+the only repository change is a reproduction/debug file and the original
+implementation remains unchanged.
+
+For repository-level repair tasks, prefer execute_repository_and_diagnose over
+snippet-level execute_and_diagnose when validating repository changes. Do not
+repeatedly validate an isolated reproduction script while the actual repository
+implementation remains unchanged.
+
 You have a finite repository tool budget.
 Use early tool calls to locate the relevant implementation, but avoid exhaustive
 repository exploration. Once you have enough evidence for a concrete fix, stop
@@ -49,6 +62,14 @@ project dependencies, do not repeatedly retry the same environment failure.
 Continue using repository inspection and reasoning to make a justified source
 patch when possible. Final benchmark correctness will be judged by the external
 official SWE-bench harness.
+
+After applying a justified source patch:
+1. Prefer one focused validation attempt.
+2. If validation succeeds, finalize.
+3. If validation cannot run because the lightweight SRP environment lacks project
+   dependencies, do not repeatedly retry the same environment failure.
+4. Avoid returning to broad repository exploration unless validation produces new
+   evidence requiring another repair.
 
 Issue:
 
@@ -94,6 +115,17 @@ def classify_agent_status(
     if not patch_nonempty:
         return "NO_PATCH_TOOL_BUDGET" if tool_budget_exhausted else "NO_PATCH"
     return "AGENT_COMPLETED"
+
+
+def infer_agent_reported_success(
+    *,
+    repair_succeeded: bool,
+    final_execution_status: str,
+    final_answer: str = "",
+) -> bool:
+    """Report only execution-backed success; final-answer wording is not evidence."""
+    del final_answer
+    return repair_succeeded or final_execution_status == "SUCCESS"
 
 
 def run_instance(
@@ -197,6 +229,7 @@ def run_instance(
         patch_nonempty=bool(patch),
         tool_budget_exhausted=tool_budget_exhausted,
     )
+    final_execution_status = str(repair.get("final_execution_status", ""))
     row = {
         "instance_id": instance["instance_id"],
         "provider": provider,
@@ -217,12 +250,15 @@ def run_instance(
         "diagnosis_transitions": repair.get("diagnosis_transitions", []),
         "repeated_diagnosis": bool(repair.get("repeated_diagnosis", False)),
         "retrieval_requested": bool(repair.get("retrieval_requested", False)),
-        "final_execution_status": str(repair.get("final_execution_status", "")),
+        "final_execution_status": final_execution_status,
         "patch_nonempty": bool(patch),
         "patch_chars": len(patch),
         "changed_files": changed_files,
-        "agent_reported_success": bool(repair.get("repair_succeeded", False))
-        or any(word in final_answer.lower() for word in ("fixed", "resolved", "success")),
+        "agent_reported_success": infer_agent_reported_success(
+            repair_succeeded=bool(repair.get("repair_succeeded", False)),
+            final_execution_status=final_execution_status,
+            final_answer=final_answer,
+        ),
         "official_resolved": None,
         "official_status": "PENDING_OFFICIAL_EVAL",
     }
