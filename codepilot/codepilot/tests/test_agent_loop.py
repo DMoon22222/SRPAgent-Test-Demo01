@@ -6,6 +6,7 @@ import pytest
 from pico import FakeModelClient, Pico, SessionStore, WorkspaceContext
 from pico.agent_loop import (
     AgentLoop,
+    should_reject_patchless_final,
     source_patch_from_tool,
     tool_budget_guidance,
     tool_strategy_guidance,
@@ -144,6 +145,38 @@ def test_environment_failure_guidance_prevents_repeat_validation():
     )
     assert phase == "VERIFY"
     assert "Do not repeatedly retry the same environment failure" in guidance
+
+
+def test_early_final_guard_rejects_first_patchless_final_before_eight_tools():
+    assert should_reject_patchless_final(
+        source_patch_seen=False,
+        tool_steps=3,
+        patchless_final_guard_triggered=False,
+    )
+
+
+def test_early_final_guard_allows_second_patchless_final():
+    assert not should_reject_patchless_final(
+        source_patch_seen=False,
+        tool_steps=3,
+        patchless_final_guard_triggered=True,
+    )
+
+
+def test_early_final_guard_allows_final_after_source_patch():
+    assert not should_reject_patchless_final(
+        source_patch_seen=True,
+        tool_steps=3,
+        patchless_final_guard_triggered=False,
+    )
+
+
+def test_early_final_guard_allows_patchless_final_after_eight_tools():
+    assert not should_reject_patchless_final(
+        source_patch_seen=False,
+        tool_steps=10,
+        patchless_final_guard_triggered=False,
+    )
 
 
 def test_agent_loop_persists_model_failure_before_reraising(tmp_path):

@@ -53,6 +53,19 @@ def tool_budget_guidance(max_steps, used_steps):
 
 EXPLORATION_TOOLS = {"list_files", "search", "read_file"}
 VALIDATION_TOOLS = {"execute_repository_and_diagnose"}
+EARLY_FINAL_GUIDANCE = """This is a repository repair benchmark task.
+
+The agent attempted to finalize before producing any repository source patch.
+
+Only a small amount of investigation has been performed.
+
+Do not finalize prematurely.
+
+Continue investigating the repository and identify the most likely implementation
+location that requires modification.
+
+A final answer without a source patch is only appropriate after sufficient
+investigation shows that no justified repository change can be made."""
 SOURCE_SUFFIXES = {
     ".c",
     ".cc",
@@ -113,6 +126,16 @@ def validation_environment_failure(metadata):
     subtype = str(metadata.get("error_subtype", "")).upper()
     return status in {"ENVIRONMENT_ERROR", "SANDBOX_ERROR"} or subtype == (
         "DEPENDENCY_MISSING"
+    )
+
+
+def should_reject_patchless_final(
+    *, source_patch_seen, tool_steps, patchless_final_guard_triggered
+):
+    return (
+        not source_patch_seen
+        and tool_steps < 8
+        and not patchless_final_guard_triggered
     )
 
 
@@ -358,6 +381,8 @@ class AgentLoop:
         validation_attempted = False
         validation_environment_limited = False
         stagnant_exploration_steps = 0
+        patchless_final_guard_triggered = False
+        early_final_guidance_pending = False
         max_attempts = max(agent.max_steps * 3, agent.max_steps + 4)
 
         # 这是 agent 的主循环，可以按“感知 -> 决策 -> 行动 -> 记录”来理解：
@@ -384,6 +409,9 @@ class AgentLoop:
                 stagnant_exploration_steps=stagnant_exploration_steps,
             )
             prompt += f"\n\n{strategy_guidance}"
+            if early_final_guidance_pending:
+                prompt += f"\n\n{EARLY_FINAL_GUIDANCE}"
+                early_final_guidance_pending = False
             prompt_metadata.update(
                 {
                     "tool_budget_used": tool_steps,
@@ -507,6 +535,20 @@ class AgentLoop:
             if kind == "retry":
                 agent.record({"role": "assistant", "content": payload, "created_at": now()})
                 agent.run_store.write_task_state(task_state)
+                continue
+
+            if should_reject_patchless_final(
+                source_patch_seen=source_patch_seen,
+                tool_steps=tool_steps,
+                patchless_final_guard_triggered=patchless_final_guard_triggered,
+            ):
+                patchless_final_guard_triggered = True
+                early_final_guidance_pending = True
+                agent.emit_trace(
+                    task_state,
+                    "early_final_rejected",
+                    {"tool_steps": tool_steps, "source_patch_seen": False},
+                )
                 continue
 
             final = (payload or raw).strip()
