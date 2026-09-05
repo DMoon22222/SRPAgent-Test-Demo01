@@ -18,6 +18,7 @@ from evaluation.swebench.common import (
     write_json,
 )
 from evaluation.swebench.export_prediction import export_model_patch, prediction_row
+from evaluation.swebench.prepare_instance import remove_disposable_workspace
 from evaluation.swebench.select_instances import select_public_instances
 
 
@@ -70,6 +71,16 @@ def test_skip_reason_recording(tmp_path):
     write_json(path, selected)
     record_skip_reason(path, "a", "GOLD_ENV_FAILED")
     assert read_json(path)[0]["skip_reason"] == "GOLD_ENV_FAILED"
+
+
+def test_remove_disposable_workspace_handles_readonly_files(tmp_path):
+    target = tmp_path / "instance"
+    target.mkdir()
+    locked = target / "pack.idx"
+    locked.write_bytes(b"git pack")
+    locked.chmod(0o444)
+    remove_disposable_workspace(target)
+    assert not target.exists()
 
 
 def test_patch_export_is_relative_to_base_commit(repo):

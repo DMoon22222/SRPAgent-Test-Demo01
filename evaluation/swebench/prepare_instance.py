@@ -3,11 +3,24 @@
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
+import stat
 from pathlib import Path
 from typing import Any
 
 from evaluation.swebench.common import find_instance, load_selected, run_command
+
+
+def _remove_readonly_and_retry(function, path: str, _error) -> None:
+    """Allow rmtree to remove read-only Git pack files on Windows."""
+    os.chmod(path, stat.S_IWRITE)
+    function(path)
+
+
+def remove_disposable_workspace(target: Path) -> None:
+    if target.exists():
+        shutil.rmtree(target, onerror=_remove_readonly_and_retry)
 
 
 def workspace_path(workspaces_root: str | Path, instance_id: str) -> Path:
@@ -27,8 +40,7 @@ def prepare_instance(
     root = Path(workspaces_root).resolve()
     root.mkdir(parents=True, exist_ok=True)
     target = workspace_path(root, instance["instance_id"])
-    if target.exists():
-        shutil.rmtree(target)
+    remove_disposable_workspace(target)
 
     repo_url = f"https://github.com/{instance['repo']}.git"
     run_command(
