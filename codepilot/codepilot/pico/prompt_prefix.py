@@ -41,7 +41,19 @@ def build_prompt_prefix(workspace, tools, built_at=None):
         risk = "approval required" if tool["risky"] else "safe"
         tool_lines.append(f"- {name}({fields}) [{risk}] {tool['description']}")
     tool_text = "\n".join(tool_lines)
-    examples = "\n".join(
+    repair_rules = ""
+    if "execute_and_diagnose" in tools:
+        repair_rules = textwrap.dedent(
+            """\
+            SRP repair guidance:
+            - Inspect a structured diagnosis and the relevant code before editing.
+            - Apply the smallest justified model-selected change; runtime never chooses the fix.
+            - After changing diagnosed code, run execute_and_diagnose again.
+            - Do not claim repair success until execute_and_diagnose reports SUCCESS.
+            - If the same diagnosis repeats, reconsider the approach instead of repeating an equivalent patch.
+            """
+        ).strip()
+    examples = "\n".join(  # noqa: FLY002 - keep examples individually editable
         [
             '<tool>{"name":"list_files","args":{"path":"."}}</tool>',
             '<tool>{"name":"read_file","args":{"path":"README.md","start":1,"end":80}}</tool>',
@@ -77,6 +89,8 @@ def build_prompt_prefix(workspace, tools, built_at=None):
 
         Tools:
         {tool_text}
+
+        {repair_rules}
 
         Valid response examples:
         {examples}

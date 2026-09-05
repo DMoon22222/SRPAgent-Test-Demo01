@@ -310,3 +310,34 @@ SRP 闭环 `1 passed`、核心 Runtime `10 passed`、CodePilot 全量
 `8 passed`。12 个全量失败均属于既有冻结基线，没有新增 failure。真实 smoke
 未执行，因为本机 `127.0.0.1:8080` 的 SRP ping 在 2 秒内不可用；这不影响
 全 mock 通信和 AgentLoop 闭环验收。
+
+## Phase 3 状态
+
+Phase 3 在 `pico/repair_trajectory.py` 增加只负责观测的
+`RepairTrajectory`，复用现有 AgentLoop、ToolExecutor、history、trace、
+checkpoint、session 与 report。Runtime 没有增加错误类型到补丁的规则，也未
+修改 AgentLoop；代码修改仍完全由模型决定。一次成功的代码修改后针对相同路径
+执行 `execute_and_diagnose`，才构成一个 repair iteration。
+
+诊断指纹由 execution status、failed stage、error type、error subtype 和
+suspected location 组成，不包含自由文本 root cause。连续两次相同失败诊断会
+记录 `repeated_diagnosis` 并提示模型重新评估。修复轮数默认上限为 3，由
+`PICO_SRP_MAX_REPAIR_ROUNDS` 配置；第一版在达到上限时记录
+`repair_round_limit` 并依赖既有 `max_steps` finalization，不直接终止 Runtime。
+
+状态随 session 保存、进入 checkpoint，并在 `report.json` 的
+`repair_summary` 中汇总完整 trajectory、diagnosis transitions、最终执行状态、
+基础设施失败与 retrieval 信号。SRP unavailable 不计作代码诊断；
+`needRetrieval` 只记录，不触发 Retrieval。
+
+Phase 3 新增专项测试 `11 passed`；SrpClient `15 passed`、SRP Tool
+`24 passed`、Phase 2 AgentLoop integration `1 passed`、核心 Runtime
+`10 passed`，均无回归。CodePilot 全量为
+`199 passed, 12 failed, 6 warnings`，通过数较 Phase 2 增加 11，失败仍为同一组
+冻结基线问题；Phase 3 修改文件 Ruff `0 errors`，SRP 服务端 `8 passed`。
+
+真实 smoke 已确认 SRP FastAPI 可启动，直接 ping 与 `SrpClient.ping()` 均成功。
+Docker Desktop daemon 不可用，因此真实代码执行记为
+`REAL_SMOKE_BLOCKED_BY_DOCKER`，真实模型修复闭环记为
+`REAL_REPAIR_SMOKE_BLOCKED`；未修改 SRP 业务逻辑。Phase 3 未实现 Retrieval、
+Repository Execution、worktree 或 SWE-bench，也未开始 Phase 4。

@@ -139,7 +139,6 @@ class ToolExecutor:
                 elif exit_code != 0:
                     tool_status = "error"
                     tool_error_code = "tool_failed"
-            agent.update_memory_after_tool(name, args, content)
             metadata = _metadata(
                 tool_status,
                 tool_error_code=tool_error_code,
@@ -166,6 +165,14 @@ class ToolExecutor:
                     if key not in protected_metadata
                 }
             )
+            content, repair_metadata = agent.update_repair_trajectory(
+                name,
+                args,
+                content,
+                metadata,
+            )
+            metadata.update(repair_metadata)
+            agent.update_memory_after_tool(name, args, content)
             agent.record_process_note_for_tool(name, metadata)
             return ToolExecutionResult(content=content, metadata=metadata)
         except Exception as exc:  # noqa: BLE001 - execution is a provider boundary

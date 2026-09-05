@@ -20,6 +20,7 @@ RUNTIME_IDENTITY_KEYS = (
     "read_only",
     "max_steps",
     "max_new_tokens",
+    "max_repair_rounds",
     "feature_flags",
     "shell_env_allowlist",
     "workspace_fingerprint",
@@ -37,6 +38,7 @@ def current_runtime_identity(agent):
         "read_only": bool(agent.read_only),
         "max_steps": int(agent.max_steps),
         "max_new_tokens": int(agent.max_new_tokens),
+        "max_repair_rounds": int(agent.max_repair_rounds),
         "feature_flags": dict(agent.feature_flags),
         "shell_env_allowlist": list(agent.shell_env_allowlist),
         "workspace_fingerprint": getattr(getattr(agent, "prefix_state", None), "workspace_fingerprint", agent.workspace.fingerprint()),
@@ -124,6 +126,21 @@ def render_checkpoint_text(agent):
         lines.append("- Completed: " + " | ".join(str(item) for item in checkpoint.get("completed", [])))
     if checkpoint.get("excluded"):
         lines.append("- Excluded: " + " | ".join(str(item) for item in checkpoint.get("excluded", [])))
+    repair_summary = checkpoint.get("repair_summary") or {}
+    if repair_summary.get("diagnosis_calls"):
+        lines.append(
+            "- Repair state: "
+            f"attempts={repair_summary.get('repair_attempts', 0)}, "
+            f"diagnoses={repair_summary.get('diagnosis_calls', 0)}, "
+            f"final_status={repair_summary.get('final_execution_status', '-') or '-'}"
+        )
+        if repair_summary.get("repair_round_limit_exceeded"):
+            lines.append("- Repair stop reason: repair_round_limit")
+        elif repair_summary.get("repeated_diagnosis"):
+            lines.append(
+                "- Repair guidance: Previous repair attempts produced the same diagnosis; "
+                "reconsider the approach before applying another similar patch."
+            )
     if agent.resume_state.get("stale_paths"):
         lines.append("- Stale paths: " + ", ".join(agent.resume_state["stale_paths"]))
     summary = str(checkpoint.get("summary", "")).strip()
@@ -166,6 +183,7 @@ def create_checkpoint(agent, task_state, user_message, trigger):
         "freshness": freshness,
         "summary": f"{trigger}: {clip(str(user_message), 120)}",
         "runtime_identity": current_runtime_identity(agent),
+        "repair_summary": agent.repair_summary(),
     }
     state["items"][checkpoint_id] = checkpoint
     state["current_id"] = checkpoint_id

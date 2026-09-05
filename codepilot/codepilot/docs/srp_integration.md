@@ -107,3 +107,79 @@ error with a distinct `tool_error_code`; they are never represented as a user
 program compile or runtime error. Phase 2 returns `needRetrieval` and
 `retrievalQuery` as signals only—it does not perform Retrieval or an automatic
 Repair Loop.
+
+## Phase 3 Controlled Repair Loop
+
+Phase 3 keeps the existing AgentLoop and makes its model-directed repair cycle
+observable:
+
+```text
+Agent
+  ↓
+model-selected Patch
+  ↓
+execute_and_diagnose
+  ↓
+structured Observation
+  ↓
+model-selected Patch
+  ↓
+Retest
+  ↓
+SUCCESS / repair budget record / existing finalization
+```
+
+`pico/repair_trajectory.py` records this sequence. It never chooses a patch and
+contains no mapping from an SRP error type to repair code. A Repair Attempt is
+counted at an `execute_and_diagnose` boundary only when the diagnosed path has
+actually changed through a successful `patch_file` or `write_file` call since
+the previous boundary. Reads, searches, multiple edits before the boundary, and
+an unrelated documentation edit do not add attempts by themselves.
+
+Each valid SRP response records the execution status, failed stage, error type,
+error subtype, suspected location, affected path, retrieval signal, and the
+previous/current diagnosis. The diagnosis fingerprint is the stable string:
+
+```text
+executionStatus|failedStage|errorType|errorSubtype|suspectedLocation
+```
+
+Free-form `rootCause` text is deliberately excluded. Two consecutive identical
+failed fingerprints set `repeatedDiagnosis=true`; the Observation and the next
+prompt then ask the model to reconsider its approach without prescribing a fix.
+Transitions record only whether the fingerprint changed—they do not label a new
+diagnosis as better or worse.
+
+`PICO_SRP_MAX_REPAIR_ROUNDS` defaults to `3`. It is separate from AgentLoop
+`max_steps`: the former counts changed-code → diagnosis boundaries, while the
+latter bounds all Tool calls. This low-intrusion first version records
+`repair_round_limit_exceeded` and `repair_stop_reason=repair_round_limit`, adds a
+stop/summarize instruction to the next model prompt, and relies on the existing
+AgentLoop tool-budget finalization instead of killing the Runtime or synthesizing
+an answer.
+
+A successful SRP result sets `repairSucceeded=true` and
+`finalExecutionStatus=SUCCESS`; the model still writes the final answer. An SRP
+transport/service failure is stored under `infrastructure_failures`, does not
+increment diagnosis calls or create a diagnosis transition, and leaves a pending
+changed path available for a later retry. `needRetrieval` and `retrievalQuery`
+are recorded only; Phase 3 adds neither a Retrieval Tool nor automatic web
+search.
+
+The complete state is saved in the existing session and checkpoint structures,
+and `report.json` exposes it as `repair_summary`. `trace.jsonl` continues to use
+the existing Tool events, enriched with repair iteration, fingerprint, repeat,
+limit, success, and retrieval metadata. No new persistence system is introduced.
+
+Phase 3 remains single-file/code-snippet execution. It does not implement
+repository test execution, worktrees, SWE-bench, or any Phase 4 capability.
+
+### Phase 3 real smoke status (2026-09-05)
+
+The existing SRP FastAPI application started locally on `127.0.0.1:8080`.
+`GET /api/ping` succeeded both directly and through `SrpClient.ping()`. The local
+Docker Desktop daemon was unavailable, so the requested SUCCESS and
+DIVIDE_BY_ZERO execution cases are recorded as
+`REAL_SMOKE_BLOCKED_BY_DOCKER`; the end-to-end model repair example is recorded
+as `REAL_REPAIR_SMOKE_BLOCKED`. No SRP server or sandbox code was changed to hide
+this environment limitation.

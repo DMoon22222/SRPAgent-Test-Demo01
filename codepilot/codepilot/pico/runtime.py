@@ -4,8 +4,8 @@ Pico 就是包在模型外面的控制循环：负责组 prompt、解析模型�
 校验并执行工具、写 trace、更新工作记忆，以及在合适的时候停下来。
 """
 
-import json
 import hashlib
+import json
 import os
 import re
 import uuid
@@ -13,20 +13,21 @@ from datetime import datetime
 from pathlib import Path
 
 from . import checkpoint as checkpointlib
-from .features import memory as memorylib
 from . import security as securitylib
-from .context_manager import ContextManager
+from . import tools as toolkit
 from .checkpoint import CHECKPOINT_NONE_STATUS
+from .context_manager import ContextManager
+from .features import memory as memorylib
 from .prompt_prefix import build_prompt_prefix, tool_signature
+from .repair_trajectory import RepairTrajectory, resolve_max_repair_rounds
 from .run_store import RunStore
 from .security import REDACTED_VALUE
 from .session_store import SessionStore
+from .skills import SkillRegistry
 from .tool_context import ToolContext
 from .tool_executor import ToolExecutor
-from . import tools as toolkit
 from .tool_provider import BuiltinToolProvider
 from .tool_registry import ToolRegistry
-from .skills import SkillRegistry
 from .workspace import IGNORED_PATH_NAMES, MAX_HISTORY, WorkspaceContext, clip, now
 
 DEFAULT_SHELL_ENV_ALLOWLIST = ("HOME", "LANG", "LC_ALL", "LC_CTYPE", "LOGNAME", "PATH", "PWD", "SHELL", "TERM", "TMPDIR", "TMP", "TEMP", "USER")
@@ -72,6 +73,7 @@ class Pico:
         feature_flags=None,
         allowed_tools=None,
         tool_providers=None,
+        max_repair_rounds=None,
     ):
         #保存启动时传入的核心依赖
         self.model_client = model_client
@@ -94,6 +96,7 @@ class Pico:
         if feature_flags:
             self.feature_flags.update({str(key): bool(value) for key, value in feature_flags.items()})
         self.allowed_tools = self._normalize_allowed_tools(allowed_tools)
+        self.max_repair_rounds = resolve_max_repair_rounds(max_repair_rounds)
         self.tool_providers = list(
             tool_providers
             if tool_providers is not None
@@ -102,13 +105,18 @@ class Pico:
         self.run_store = run_store or RunStore(Path(workspace.repo_root) / ".pico" / "runs")
         # 创建或恢复Session
         self.session = session or {
-            "id": datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + uuid.uuid4().hex[:6],
+            "id": datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + uuid.uuid4().hex[:6],  # noqa: DTZ005 - local IDs preserve compatibility
             "created_at": now(),
             "workspace_root": workspace.repo_root,
             "history": [],
             "memory": memorylib.default_memory_state(),
         }
         self._ensure_session_shape()
+        self.repair_trajectory = RepairTrajectory(
+            self.session.get("repair_trajectory"),
+            max_rounds=self.max_repair_rounds,
+        )
+        self.session["repair_trajectory"] = self.repair_trajectory.to_dict()
         self.memory = memorylib.LayeredMemory(
             self.session.setdefault("memory", memorylib.default_memory_state()),
             workspace_root=self.root,
@@ -169,13 +177,18 @@ class Pico:
 
         # 不把旧项目的对话、记忆和 checkpoint 带入新项目。
         self.session = {
-            "id": datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + uuid.uuid4().hex[:6],
+            "id": datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + uuid.uuid4().hex[:6],  # noqa: DTZ005 - local IDs preserve compatibility
             "created_at": now(),
             "workspace_root": workspace.repo_root,
             "history": [],
             "memory": memorylib.default_memory_state(),
         }
         self._ensure_session_shape()
+        self.repair_trajectory = RepairTrajectory(
+            self.session.get("repair_trajectory"),
+            max_rounds=self.max_repair_rounds,
+        )
+        self.session["repair_trajectory"] = self.repair_trajectory.to_dict()
         self.memory = memorylib.LayeredMemory(
             self.session["memory"],
             workspace_root=self.root,
@@ -386,7 +399,17 @@ class Pico:
         skill_text, selected_skills = self.skill_registry.render_for_prompt(user_message)
         if not selected_skills:
             skill_text = ""
-        prompt, metadata = self.context_manager.build(user_message, skill_text=skill_text)
+        repair_guidance = self.repair_trajectory.prompt_guidance()
+        context_request = str(user_message)
+        if repair_guidance:
+            context_request += (
+                "\n\nRuntime repair guidance (not user-authored):\n"
+                + repair_guidance
+            )
+        prompt, metadata = self.context_manager.build(
+            context_request,
+            skill_text=skill_text,
+        )
         # 这里把“这轮 prompt 是怎么拼出来的”连同缓存相关状态一起记下来，
         # 后面 trace/report 才能解释清楚：为什么这一轮 prefix 变了、缓存有没有命中。
         metadata.update(
@@ -398,6 +421,7 @@ class Pico:
                 "selected_skills": selected_skills,
                 "skill_chars": len(skill_text),
                 "request_chars": len(user_message),
+                "repair_guidance_chars": len(repair_guidance),
                 "tool_count": len(self.tools),
                 "workspace_docs": len(self.workspace.project_docs),
                 "recent_commits": len(self.workspace.recent_commits),
@@ -438,7 +462,7 @@ class Pico:
                 continue
             try:
                 snapshot[path.relative_to(self.root).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
-            except Exception:
+            except Exception:  # noqa: BLE001, S112 - unreadable files are skipped
                 continue
         return snapshot
 
@@ -498,6 +522,19 @@ class Pico:
             self.memory.append_note(summary, tags=(canonical_path,), source=canonical_path)
         elif name in {"write_file", "patch_file"}:
             self.memory.invalidate_file_summary(canonical_path)
+
+    def update_repair_trajectory(self, name, args, content, metadata):
+        content, repair_metadata = self.repair_trajectory.observe_tool(
+            name,
+            args,
+            content,
+            metadata,
+        )
+        self.session["repair_trajectory"] = self.repair_trajectory.to_dict()
+        return content, repair_metadata
+
+    def repair_summary(self):
+        return self.repair_trajectory.summary()
 
     def note_tool(self, name, args, result):
         self.update_memory_after_tool(name, args, result)
@@ -621,11 +658,11 @@ class Pico:
 
     @staticmethod
     def new_task_id():
-        return "task_" + datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + uuid.uuid4().hex[:6]
+        return "task_" + datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + uuid.uuid4().hex[:6]  # noqa: DTZ005 - local IDs preserve compatibility
 
     @staticmethod
     def new_run_id():
-        return "run_" + datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + uuid.uuid4().hex[:6]
+        return "run_" + datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + uuid.uuid4().hex[:6]  # noqa: DTZ005 - local IDs preserve compatibility
 
     def build_report(self, task_state):
         # report 是一次运行的最终摘要；
@@ -646,6 +683,7 @@ class Pico:
             "durable_rejections": list(self.last_durable_rejections),
             "durable_superseded": list(self.last_durable_superseded),
             "redacted_env": self.detected_secret_env_summary(),
+            "repair_summary": self.repair_summary(),
         }
 
     def tool_example(self, name):
@@ -746,7 +784,7 @@ class Pico:
             body = Pico.extract(raw, "tool")
             try:
                 payload = json.loads(body)
-            except Exception:
+            except json.JSONDecodeError:
                 return "retry", Pico.retry_notice("model returned malformed tool JSON")
             if not isinstance(payload, dict):
                 return "retry", Pico.retry_notice("tool payload must be a JSON object")
@@ -787,7 +825,7 @@ class Pico:
 
     @staticmethod
     def parse_xml_tool(raw):
-        match = re.search(r"<tool(?P<attrs>[^>]*)>(?P<body>.*?)</tool>", raw, re.S)
+        match = re.search(r"<tool(?P<attrs>[^>]*)>(?P<body>.*?)</tool>", raw, re.DOTALL)
         if not match:
             return None
         attrs = Pico.parse_attrs(match.group("attrs"))
