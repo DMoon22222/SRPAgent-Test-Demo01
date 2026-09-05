@@ -69,8 +69,9 @@ Snapshot，不挂载或修改 Original Workspace。Phase 4.3 只支持 `pytest`�
 ```
 
 请求发送到 `POST /api/execute-repository`。客户端不能提供任意 command、pytest
-参数或环境变量；测试命令使用固定参数、无网络 Docker 和受限资源执行。当前响应
-中的 `analysis` 固定为 `null`，Repository Diagnosis 将在后续阶段接入。
+参数或环境变量；测试命令使用固定参数、无网络 Docker 和受限资源执行。响应在
+`TEST_FAILED` 与 `TIME_LIMIT_EXCEEDED` 时包含 Rule-first `analysis`；`SUCCESS`、
+`ENVIRONMENT_ERROR` 与 `SANDBOX_ERROR` 的 `analysis` 为 `null`。
 
 ## 启动服务
 

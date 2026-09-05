@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from functools import partial
+from pathlib import Path
 from typing import Any
 
 from pico.integrations.srp_client import (
@@ -18,6 +19,7 @@ from pico.tool_provider import ToolProvider
 from pico.workspace import clip
 
 EXECUTE_AND_DIAGNOSE = "execute_and_diagnose"
+EXECUTE_REPOSITORY_AND_DIAGNOSE = "execute_repository_and_diagnose"
 SUPPORTED_LANGUAGES = {"java", "py", "python", "python3"}
 
 TOOL_SPEC = {
@@ -34,6 +36,20 @@ TOOL_SPEC = {
         "Execute a workspace code file inside the isolated SRP sandbox and "
         "return structured execution diagnostics. Use this for generated or "
         "modified code that needs safe compile, run, or test feedback."
+    ),
+    "execution_isolated": True,
+}
+
+REPOSITORY_TOOL_SPEC = {
+    "schema": {
+        "test_targets": "list[str]=[]",
+        "timeout_seconds": "int=60",
+        "benchmark": "str=''",
+    },
+    "risky": False,
+    "description": (
+        "Execute pytest for the current repository in an isolated SRP snapshot "
+        "and return compact structured execution and diagnosis evidence."
     ),
     "execution_isolated": True,
 }
@@ -60,7 +76,17 @@ class SrpToolProvider(ToolProvider):
                     '<tool>{"name":"execute_and_diagnose","args":'
                     '{"path":"solution.py","language":"python"}}</tool>'
                 ),
-            }
+            },
+            EXECUTE_REPOSITORY_AND_DIAGNOSE: {
+                **REPOSITORY_TOOL_SPEC,
+                "provider": self.name,
+                "validate": self.validate_repository,
+                "run": partial(self.execute_repository, context),
+                "example": (
+                    '<tool>{"name":"execute_repository_and_diagnose","args":'
+                    '{"test_targets":[],"timeout_seconds":60}}</tool>'
+                ),
+            },
         }
 
     @staticmethod
@@ -128,6 +154,77 @@ class SrpToolProvider(ToolProvider):
             metadata=metadata,
         )
 
+    @staticmethod
+    def validate_repository(args: dict[str, Any]) -> None:
+        args = args or {}
+        unexpected = set(args) - {"test_targets", "timeout_seconds", "benchmark"}
+        if unexpected:
+            raise ValueError(f"unsupported arguments: {', '.join(sorted(unexpected))}")
+        targets = args.get("test_targets", [])
+        if not isinstance(targets, list) or any(
+            not isinstance(item, str) or not item.strip() for item in targets
+        ):
+            raise ValueError("test_targets must be a list of non-empty strings")
+        timeout = args.get("timeout_seconds", 60)
+        if isinstance(timeout, bool) or not isinstance(timeout, int):
+            raise TypeError("timeout_seconds must be an integer")
+        if not 1 <= timeout <= 600:
+            raise ValueError("timeout_seconds must be between 1 and 600")
+        if not isinstance(args.get("benchmark", ""), str):
+            raise TypeError("benchmark must be a string")
+
+    def execute_repository(
+        self,
+        context,
+        args: dict[str, Any],
+    ) -> ToolExecutionResult:
+        workspace_path = str(Path(context.root).resolve())
+        try:
+            result = self.client.execute_repository(
+                workspace_path=workspace_path,
+                test_targets=list(args.get("test_targets", [])),
+                timeout_seconds=args.get("timeout_seconds", 60),
+                benchmark=str(args.get("benchmark", "") or ""),
+            )
+        except SrpConnectionError as exc:
+            return _service_failure("srp_unavailable", exc, available=False)
+        except SrpTimeoutError as exc:
+            return _service_failure("srp_timeout", exc, available=False)
+        except SrpHttpError as exc:
+            return _service_failure(
+                "srp_http_error",
+                exc,
+                available=True,
+                http_status=exc.status_code,
+            )
+        except SrpResponseError as exc:
+            return _service_failure("srp_response_error", exc, available=True)
+
+        observation = to_repository_agent_observation(result)
+        execution = result["execution"]
+        analysis = result.get("analysis") or {}
+        status = str(execution.get("status", ""))
+        infrastructure_failure = status in {"ENVIRONMENT_ERROR", "SANDBOX_ERROR"}
+        metadata = {
+            "srp_enabled": True,
+            "srp_available": True,
+            "execution_isolated": True,
+            "execution_status": status,
+            "failed_stage": observation.get("failedStage", ""),
+            "error_type": analysis.get("errorType", ""),
+            "error_subtype": analysis.get("errorSubtype", ""),
+            "need_retrieval": bool(analysis.get("needRetrieval", False)),
+            "diagnosis_available": bool(analysis),
+            "execution_time_ms": execution.get("executionTimeMs", 0),
+            "repository_infrastructure_failure": infrastructure_failure,
+        }
+        if infrastructure_failure:
+            metadata["tool_error_code"] = f"repository_{status.lower()}"
+        return ToolExecutionResult(
+            content=json.dumps(observation, ensure_ascii=False, indent=2),
+            metadata=metadata,
+        )
+
 
 def to_agent_observation(result: dict[str, Any]) -> dict[str, Any]:
     """Compress an SRP response without reclassifying its diagnosis."""
@@ -190,6 +287,93 @@ def to_agent_observation(result: dict[str, Any]) -> dict[str, Any]:
         )
         observation["diagnosis"] = diagnosis
 
+    return observation
+
+
+def to_repository_agent_observation(
+    result: dict[str, Any],
+) -> dict[str, Any]:
+    """Compress repository results and deliberately omit raw stdout/stderr."""
+    execution = result["execution"]
+    analysis = result.get("analysis")
+    if not isinstance(analysis, dict):
+        analysis = {}
+    native = execution.get("observation")
+    if not isinstance(native, dict):
+        native = {}
+    summary = execution.get("summary")
+    if not isinstance(summary, dict):
+        summary = {}
+    failures = execution.get("failures")
+    if not isinstance(failures, list):
+        failures = []
+
+    status = str(execution.get("status") or "UNKNOWN")
+    compact_failures = []
+    for failure in failures[:5]:
+        if not isinstance(failure, dict):
+            continue
+        compact_failures.append(
+            {
+                "testId": _short_text(failure.get("testId"), 240),
+                "location": _short_text(failure.get("location"), 240),
+                "message": _short_text(failure.get("message"), 500),
+                "excerpt": _short_text(failure.get("excerpt"), 500),
+            }
+        )
+    failing_tests = _short_list(
+        native.get("failingTests"), limit=5, item_limit=240
+    )
+    if not failing_tests:
+        failing_tests = [
+            item["testId"] for item in compact_failures if item["testId"]
+        ]
+
+    observation: dict[str, Any] = {
+        "executionStatus": status,
+        "failedStage": str(execution.get("failedStage") or "NONE"),
+        "success": bool(execution.get("success", False)),
+        "timeout": bool(execution.get("timeout", False)),
+        "exitCode": execution.get("exitCode"),
+        "executionTimeMs": execution.get("executionTimeMs", 0),
+        "summary": {
+            key: int(summary.get(key, 0) or 0)
+            for key in ("total", "passed", "failed", "skipped")
+        },
+        "shortSummary": _short_text(
+            native.get("shortSummary") or f"Repository execution result: {status}.",
+            240,
+        ),
+        "importantSignals": _short_list(
+            native.get("importantSignals"), limit=5, item_limit=160
+        ),
+        "failingTests": failing_tests,
+        "failures": compact_failures,
+        "nextActionHint": _short_text(native.get("nextActionHint"), 240),
+    }
+    if status in {"ENVIRONMENT_ERROR", "SANDBOX_ERROR"}:
+        observation["infrastructureFailure"] = True
+    if analysis:
+        diagnosis = {
+            "errorType": analysis.get("errorType", ""),
+            "errorSubtype": analysis.get("errorSubtype", ""),
+            "rootCause": _short_text(analysis.get("rootCause"), 500),
+            "evidence": _short_list(
+                analysis.get("evidence"), limit=5, item_limit=240
+            ),
+            "suspectedLocation": _short_text(
+                analysis.get("suspectedLocation"), 240
+            ),
+            "repairSuggestion": _short_text(
+                analysis.get("repairSuggestion"), 500
+            ),
+            "needRetrieval": bool(analysis.get("needRetrieval", False)),
+            "retrievalQuery": _short_text(
+                analysis.get("retrievalQuery"), 240
+            ),
+            "confidence": analysis.get("confidence", 0),
+        }
+        observation["diagnosis"] = diagnosis
     return observation
 
 

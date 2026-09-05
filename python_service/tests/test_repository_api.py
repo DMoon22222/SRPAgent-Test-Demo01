@@ -2,8 +2,10 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
+import pytest
 from fastapi.testclient import TestClient
 
+from app.config import settings
 from app.main import _execute_repository_request, app
 from app.repository.workspace import (
     RepositoryWorkspaceError,
@@ -30,6 +32,21 @@ def successful_execution():
         executionTimeMs=20,
         summary=RepositoryTestSummary(total=1, passed=1),
         observation=RepositoryObservation(runner="pytest", status="SUCCESS"),
+    )
+
+
+def failed_execution(status="TEST_FAILED"):
+    timeout = status == "TIME_LIMIT_EXCEEDED"
+    return RepositoryExecution(
+        success=False,
+        status=status,
+        failedStage="TEST",
+        runner="pytest",
+        timeout=timeout,
+        exitCode=-1 if timeout else 1,
+        executionTimeMs=20,
+        summary=RepositoryTestSummary(total=1, failed=0 if timeout else 1),
+        stderr="timed out" if timeout else "AssertionError: assert 4 == 5",
     )
 
 
@@ -81,6 +98,32 @@ def test_workspace_error_is_structured_environment_error():
     assert body["execution"]["status"] == "ENVIRONMENT_ERROR"
     assert body["execution"]["failedStage"] == "PRE_CHECK"
     assert body["analysis"] is None
+
+
+@pytest.mark.parametrize("status", ["TEST_FAILED", "TIME_LIMIT_EXCEEDED"])
+def test_repository_code_failures_include_analysis(monkeypatch, status):
+    monkeypatch.setattr(settings, "dashscope_api_key", "")
+    manager = MagicMock()
+    manager.snapshot_workspace.return_value.__enter__.return_value = SimpleNamespace(
+        snapshot_path=Path(r"F:\temp\snapshot")
+    )
+    runner = MagicMock()
+    runner.run.return_value = failed_execution(status)
+
+    with (
+        patch("app.main.RepositoryWorkspaceManager", return_value=manager),
+        patch("app.main.DockerPytestRepositoryRunner", return_value=runner),
+    ):
+        response = client.post(
+            "/api/execute-repository",
+            json={"workspacePath": r"F:\temp\project"},
+        )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["execution"]["status"] == status
+    assert body["analysis"] is not None
+    assert body["analysis"]["failedStage"] == "TEST"
 
 
 def test_repository_endpoint_rejects_invalid_timeout_before_handler():

@@ -326,3 +326,33 @@ snapshot on normal and exceptional exits.
 
 Phase 4.3 does not invoke ErrorAnalyzer, expose a CodePilot repository Tool,
 install repository dependencies, add Maven, or implement SWE-bench semantics.
+
+## Phase 4.4 Repository Diagnosis
+
+`POST /api/execute-repository` now adapts the bounded, structured
+`RepositoryExecution` evidence into the existing rule-first `ErrorAnalyzer`.
+The adapter does not recursively read repository source, reload JUnit XML, or
+send full pytest output to the analysis prompt. It uses at most five existing
+representative failures plus bounded stderr/stdout.
+
+| Repository status | `analysis` |
+| --- | --- |
+| `TEST_FAILED` | `ErrorAnalysisResult` |
+| `TIME_LIMIT_EXCEEDED` | `ErrorAnalysisResult` |
+| `SUCCESS` | `null` |
+| `ENVIRONMENT_ERROR` | `null` |
+| `SANDBOX_ERROR` | `null` |
+
+The repository's structured `failedStage` is authoritative. Thus an import or
+runtime exception discovered by pytest remains at stage `TEST`, while retaining
+the specific existing rule classification such as
+`API_MISUSE/DEPENDENCY_MISSING` or `RUNTIME_ERROR/DIVIDE_BY_ZERO`. An otherwise
+unclassified `TEST_FAILED` result falls back deterministically to
+`TEST/WRONG_ANSWER/ALGORITHM_ERROR`; timeout retains the existing
+`TIME_LIMIT_EXCEEDED/INFINITE_LOOP` rule.
+
+The LLM, when configured, supplies explanation fields only and cannot override
+the rule labels or retrieval decision. Without an API key—or if the LLM call
+fails—the existing deterministic root-cause and repair-suggestion fallback
+still returns a complete diagnosis. Infrastructure failures never invoke this
+code-diagnosis path.

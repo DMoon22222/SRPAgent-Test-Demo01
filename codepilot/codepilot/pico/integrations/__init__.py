@@ -8,7 +8,11 @@ from .srp_client import (
     SrpResponseError,
     SrpTimeoutError,
 )
-from .srp_provider import SrpToolProvider, to_agent_observation
+from .srp_provider import (
+    SrpToolProvider,
+    to_agent_observation,
+    to_repository_agent_observation,
+)
 
 __all__ = [
     "SrpClient",
@@ -19,4 +23,5 @@ __all__ = [
     "SrpTimeoutError",
     "SrpToolProvider",
     "to_agent_observation",
+    "to_repository_agent_observation",
 ]

@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from app.analyzer.error_analyzer import ErrorAnalyzer
 from app.config import settings
 from app.repository.base import RepositoryRunSpec
+from app.repository.diagnosis import diagnose_repository_execution
 from app.repository.docker_runner import (
     DockerPytestRepositoryRunner,
     _execution_error,
@@ -86,7 +87,8 @@ def _execute_repository_request(request, manager, runner):
             message=str(exc),
             execution_time_ms=0,
         )
-    return RepositoryExecuteAndAnalyzeResult(execution=execution, analysis=None)
+    analysis = diagnose_repository_execution(execution)
+    return RepositoryExecuteAndAnalyzeResult(execution=execution, analysis=analysis)
 
 
 @app.post("/api/check-syntax", response_model=Execution)

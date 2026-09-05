@@ -207,3 +207,32 @@ Snapshot path; the Original Workspace is never mounted. JUnit parsing produces
 the existing compact `RepositoryExecution` contract, while repository
 `analysis` remains null. CodePilot Runtime and its Tool registry are unchanged;
 there is still no CodePilot repository Tool until Phase 4.4.
+
+## Phase 4.4 Repository Tool
+
+The existing `SrpToolProvider` now exposes two parallel tools when
+`PICO_SRP_ENABLED=true`:
+
+- `execute_and_diagnose` executes one Python or Java source file.
+- `execute_repository_and_diagnose` executes pytest for the complete current
+  CodePilot workspace through `POST /api/execute-repository`.
+
+The repository Tool schema exposes only `test_targets`, `timeout_seconds`, and
+`benchmark`; it never accepts `workspacePath`, an absolute host path, a runner,
+or a command. The Provider obtains the canonical repository root from the
+existing `ToolContext.root`, fixes the runner to pytest, and the SRP server still
+mounts only its disposable Snapshot in Docker.
+
+The Agent receives summary counts, up to five failing tests and representative
+failures, bounded signals, execution status, and the rule-first diagnosis. Raw
+stdout and stderr are deliberately omitted from Agent history. A pytest failure
+is a successful Tool invocation with a code diagnosis; HTTP/service errors and
+`ENVIRONMENT_ERROR`/`SANDBOX_ERROR` are infrastructure failures and do not count
+as diagnosis transitions.
+
+`RepairTrajectory` treats repository execution as an additional diagnosis
+boundary. All effective files changed since the previous repository boundary
+form one repair attempt, regardless of the number of edits or reads. It retains
+the Phase 3 fingerprint, repeated-diagnosis threshold of two, shared default
+maximum of three rounds, retrieval-signal-only behavior, and model-owned final
+answer. The AgentLoop itself is unchanged.

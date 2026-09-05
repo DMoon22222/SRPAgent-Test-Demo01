@@ -52,6 +52,7 @@ def test_real_success_and_original_workspace_isolation(monkeypatch, tmp_path):
         encoding="utf-8",
     )
     monkeypatch.setattr(settings, "repository_allowed_root", str(allowed))
+    monkeypatch.setattr(settings, "dashscope_api_key", "")
     before = _snapshot_entries()
 
     response = _post_repository(repo)
@@ -83,6 +84,7 @@ def test_real_test_failure_is_structured(monkeypatch, tmp_path):
         encoding="utf-8",
     )
     monkeypatch.setattr(settings, "repository_allowed_root", str(allowed))
+    monkeypatch.setattr(settings, "dashscope_api_key", "")
 
     response = _post_repository(repo)
 
@@ -95,7 +97,9 @@ def test_real_test_failure_is_structured(monkeypatch, tmp_path):
     assert execution["summary"]["failed"] >= 1
     assert execution["failures"]
     assert execution["observation"]["failingTests"]
-    assert body["analysis"] is None
+    assert body["analysis"] is not None
+    assert body["analysis"]["failedStage"] == "TEST"
+    assert body["analysis"]["errorType"] != "UNKNOWN"
 
 
 def test_real_timeout_force_cleans_container(monkeypatch, tmp_path):
@@ -109,6 +113,7 @@ def test_real_timeout_force_cleans_container(monkeypatch, tmp_path):
         encoding="utf-8",
     )
     monkeypatch.setattr(settings, "repository_allowed_root", str(allowed))
+    monkeypatch.setattr(settings, "dashscope_api_key", "")
 
     response = _post_repository(repo, timeout=1)
 
@@ -117,6 +122,8 @@ def test_real_timeout_force_cleans_container(monkeypatch, tmp_path):
     assert execution["status"] == "TIME_LIMIT_EXCEEDED"
     assert execution["failedStage"] == "TEST"
     assert execution["timeout"] is True
+    assert response.json()["analysis"] is not None
+    assert response.json()["analysis"]["errorType"] == "TIME_LIMIT_EXCEEDED"
     containers = subprocess.run(
         [
             "docker",

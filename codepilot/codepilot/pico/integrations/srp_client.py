@@ -101,22 +101,26 @@ class SrpClient:
             "benchmark": benchmark,
         }
         body = self._request("POST", "/api/execute-and-analyze", payload)
-        try:
-            result = json.loads(body.decode("utf-8"))
-        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-            raise SrpResponseError("SRP returned invalid JSON") from exc
+        return _decode_execution_result(body)
 
-        if not isinstance(result, dict):
-            raise SrpResponseError("SRP response must be a JSON object")
-        execution = result.get("execution")
-        if execution is None:
-            raise SrpResponseError("SRP response is missing execution")
-        if not isinstance(execution, dict):
-            raise SrpResponseError("SRP response execution must be an object")
-        analysis = result.get("analysis")
-        if analysis is not None and not isinstance(analysis, dict):
-            raise SrpResponseError("SRP response analysis must be an object or null")
-        return result
+    def execute_repository(
+        self,
+        *,
+        workspace_path: str,
+        test_targets: list[str] | None = None,
+        timeout_seconds: int = 60,
+        benchmark: str = "",
+    ) -> dict[str, Any]:
+        """Execute repository tests through SRP and return its JSON object."""
+        payload = {
+            "workspacePath": workspace_path,
+            "runner": "pytest",
+            "testTargets": list(test_targets or []),
+            "timeoutSeconds": timeout_seconds,
+            "benchmark": benchmark,
+        }
+        body = self._request("POST", "/api/execute-repository", payload)
+        return _decode_execution_result(body)
 
     def _request(
         self,
@@ -163,6 +167,26 @@ class SrpClient:
             raise SrpConnectionError(
                 f"Could not reach SRP service at {self.base_url}: {exc}"
             ) from exc
+
+
+def _decode_execution_result(body: bytes) -> dict[str, Any]:
+    """Validate the response envelope shared by both execution endpoints."""
+    try:
+        result = json.loads(body.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise SrpResponseError("SRP returned invalid JSON") from exc
+
+    if not isinstance(result, dict):
+        raise SrpResponseError("SRP response must be a JSON object")
+    execution = result.get("execution")
+    if execution is None:
+        raise SrpResponseError("SRP response is missing execution")
+    if not isinstance(execution, dict):
+        raise SrpResponseError("SRP response execution must be an object")
+    analysis = result.get("analysis")
+    if analysis is not None and not isinstance(analysis, dict):
+        raise SrpResponseError("SRP response analysis must be an object or null")
+    return result
 
 
 def _decode_error_body(body: bytes) -> str:

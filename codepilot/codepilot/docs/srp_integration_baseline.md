@@ -420,3 +420,31 @@ Original Workspace 内容不变；验收后没有 `srp-repo-*` 容器或 `repo_*
 残留。CodePilot 关键回归 `61 passed`，全量仍为
 `199 passed, 12 failed, 6 warnings`，失败集合与冻结基线一致。Phase 4.3 修改的
 Python 文件 Ruff 为 `0 errors`。
+
+## Phase 4.4 状态
+
+Phase 4.4 在 SRP Server 新增 Repository Diagnosis Adapter，复用现有
+`ErrorAnalyzer` 和 rule-first hard classification。`TEST_FAILED` 与
+`TIME_LIMIT_EXCEEDED` 返回结构化 analysis；`SUCCESS`、`ENVIRONMENT_ERROR`、
+`SANDBOX_ERROR` 保持 `analysis=null`。Repository 的结构化执行阶段优先，普通
+pytest failure 的稳定 fallback 为 `TEST/WRONG_ANSWER/ALGORITHM_ERROR`。
+
+CodePilot 的现有 `SrpClient` 与 `SrpToolProvider` 新增
+`execute_repository_and_diagnose`。Tool schema 不含 host path，Provider 只从
+`ToolContext.root` 取得 canonical workspace root。Observation 保留 summary、
+代表性失败和 diagnosis，但不把 raw stdout/stderr 写入 Agent history。
+
+`RepairTrajectory` 现把一次或多次、多文件 workspace 修改到下一次 repository
+diagnosis 视为一个 repair attempt；HTTP/环境/沙箱基础设施失败不增加 diagnosis
+或 attempt。fingerprint、连续两次重复阈值、默认三轮上限与 retrieval 仅记录语义
+均沿用 Phase 3，AgentLoop 未修改。
+
+SRP 全量为 `118 passed, 3 skipped, 1 warning`；真实 Docker 的 SUCCESS、
+TEST_FAILED diagnosis、TIME_LIMIT_EXCEEDED diagnosis 为 `3 passed, 1 warning`。
+CodePilot Phase 4.4 关键 SRP/Repository 回归为 `90 passed`，全量验收为
+`238 passed, 12 failed, 1 skipped, 6 warnings`（全量运行后的 3 个追加专项已纳入
+90 项关键复验），12 项失败与
+冻结基线数量一致，未新增 failure。真实 SrpClient + Repository Tool 完成一次
+TEST_FAILED → 修改 → SUCCESS，真实 RepairTrajectory 记录 `repairSucceeded=true`。
+验收未使用远程 LLM，验证的是 deterministic rule-first fallback。Phase 4.4 修改的
+Python 文件 Ruff 为 `0 errors`。

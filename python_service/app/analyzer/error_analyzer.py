@@ -3,16 +3,27 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from app.analyzer.enums import normalize_error_subtype, normalize_error_type, normalize_failed_stage
-from app.analyzer.error_signal_extractor import make_rule_decision, summarize_error_signal
+from app.analyzer.enums import (
+    normalize_error_subtype,
+    normalize_error_type,
+    normalize_failed_stage,
+)
+from app.analyzer.error_signal_extractor import (
+    make_rule_decision,
+    summarize_error_signal,
+)
 from app.analyzer.prompts import SYSTEM_PROMPT_RULE_FIRST
 from app.config import settings
 from app.schemas import AnalyzeRequest, ErrorAnalysisResult, RuleDecision
 
 
 class ErrorAnalyzer:
-    def analyze(self, request: AnalyzeRequest) -> ErrorAnalysisResult:
-        rule = make_rule_decision(error_log=request.errorLog)
+    def analyze(
+        self,
+        request: AnalyzeRequest,
+        rule_decision: RuleDecision | None = None,
+    ) -> ErrorAnalysisResult:
+        rule = rule_decision or make_rule_decision(error_log=request.errorLog)
         llm_result: dict[str, Any] = {}
 
         if settings.dashscope_api_key:
@@ -29,7 +40,7 @@ class ErrorAnalyzer:
     def _call_llm(self, request: AnalyzeRequest, rule: RuleDecision) -> dict[str, Any]:
         try:
             from openai import OpenAI
-        except Exception as exc:
+        except ImportError as exc:
             return {"rootCause": f"openai 包不可用，使用规则层基础诊断：{exc}"}
 
         user_prompt = self._build_user_prompt(request, rule)
@@ -48,7 +59,7 @@ class ErrorAnalyzer:
             )
             content = response.choices[0].message.content or ""
             return _parse_json_object(content)
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001 - external SDK boundary
             return {"rootCause": f"DashScope 调用失败，使用规则层基础诊断：{exc}"}
 
     def _build_user_prompt(self, request: AnalyzeRequest, rule: RuleDecision) -> str:
@@ -177,7 +188,7 @@ def _llm_enum_was_normalized(llm_result: dict) -> bool:
 def _safe_float(value: Any) -> float:
     try:
         number = float(value)
-    except Exception:
+    except (TypeError, ValueError):
         return 0.0
     return min(1.0, max(0.0, number))
 

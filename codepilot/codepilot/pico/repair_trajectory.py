@@ -13,6 +13,10 @@ from pico.workspace import clip
 DEFAULT_MAX_REPAIR_ROUNDS = 3
 REPEATED_DIAGNOSIS_THRESHOLD = 2
 REPAIR_SCHEMA_VERSION = "phase3-v1"
+DIAGNOSIS_TOOL_NAMES = {
+    "execute_and_diagnose",
+    "execute_repository_and_diagnose",
+}
 
 
 def resolve_max_repair_rounds(value: int | None = None) -> int:
@@ -52,11 +56,14 @@ class RepairTrajectory:
         if name in {"patch_file", "write_file"}:
             self._record_code_change(metadata)
             return content, {}
-        if name != "execute_and_diagnose":
+        if name not in DIAGNOSIS_TOOL_NAMES:
             return content, {}
-        if metadata.get("tool_status") != "ok":
+        if (
+            metadata.get("tool_status") != "ok"
+            or metadata.get("repository_infrastructure_failure")
+        ):
             return self._record_infrastructure_failure(content, metadata)
-        return self._record_diagnosis(args, content, metadata)
+        return self._record_diagnosis(name, args, content, metadata)
 
     def summary(self) -> dict[str, Any]:
         return {
@@ -160,6 +167,7 @@ class RepairTrajectory:
 
     def _record_diagnosis(
         self,
+        name: str,
         args: dict[str, Any],
         content: str,
         metadata: dict[str, Any],
@@ -172,7 +180,12 @@ class RepairTrajectory:
         self.state["diagnosis_calls"] += 1
         diagnosed_path = _normalize_path(args.get("path", ""))
         pending = self.state["pending_patch_paths"]
-        matched_paths = [path for path in pending if path == diagnosed_path]
+        repository_mode = name == "execute_repository_and_diagnose"
+        matched_paths = (
+            list(pending)
+            if repository_mode
+            else [path for path in pending if path == diagnosed_path]
+        )
         if matched_paths:
             self.state["repair_attempts"] += 1
             self.state["pending_patch_paths"] = [
@@ -199,7 +212,10 @@ class RepairTrajectory:
                 or diagnosis.get("errorSubtype")
                 or ""
             ),
-            "suspected_location": str(diagnosis.get("suspectedLocation") or ""),
+            "suspected_location": _suspected_location(
+                diagnosis,
+                observation,
+            ),
         }
         fingerprint = diagnosis_fingerprint(current)
         previous = copy.deepcopy(self.state.get("last_diagnosis") or {})
@@ -253,6 +269,7 @@ class RepairTrajectory:
         entry = {
             "repair_iteration": self.state["repair_attempts"],
             "diagnosis_id": f"diagnosis-{self.state['diagnosis_calls']}",
+            "diagnosis_mode": "repository" if repository_mode else "file",
             **current,
             "diagnosis_fingerprint": fingerprint,
             "patch_affected_paths": matched_paths,
@@ -328,3 +345,26 @@ def _load_object(content: str) -> dict[str, Any]:
     except json.JSONDecodeError:
         return {"message": clip(content, 500)}
     return value if isinstance(value, dict) else {"message": clip(content, 500)}
+
+
+def _suspected_location(
+    diagnosis: dict[str, Any],
+    observation: dict[str, Any],
+) -> str:
+    direct = str(diagnosis.get("suspectedLocation") or "").strip()
+    if direct:
+        return direct
+    failures = observation.get("failures")
+    if isinstance(failures, list):
+        for failure in failures:
+            if not isinstance(failure, dict):
+                continue
+            location = str(
+                failure.get("location") or failure.get("testId") or ""
+            ).strip()
+            if location:
+                return location
+    failing_tests = observation.get("failingTests")
+    if isinstance(failing_tests, list) and failing_tests:
+        return str(failing_tests[0]).strip()
+    return ""

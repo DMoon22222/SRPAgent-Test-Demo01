@@ -42,7 +42,18 @@ def build_prompt_prefix(workspace, tools, built_at=None):
         tool_lines.append(f"- {name}({fields}) [{risk}] {tool['description']}")
     tool_text = "\n".join(tool_lines)
     repair_rules = ""
-    if "execute_and_diagnose" in tools:
+    if "execute_repository_and_diagnose" in tools:
+        repair_rules = textwrap.dedent(
+            """\
+            SRP repository repair guidance:
+            - Inspect structured repository diagnosis and relevant files before editing.
+            - Apply the smallest justified model-selected changes; runtime never chooses the fix.
+            - After workspace changes, run execute_repository_and_diagnose again.
+            - Do not claim repair success until repository execution reports SUCCESS.
+            - If the same diagnosis repeats, reconsider the approach instead of repeating an equivalent patch.
+            """
+        ).strip()
+    elif "execute_and_diagnose" in tools:
         repair_rules = textwrap.dedent(
             """\
             SRP repair guidance:
