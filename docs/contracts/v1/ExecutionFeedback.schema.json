@@ -1,0 +1,316 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "CaseFeedback": {
+      "additionalProperties": false,
+      "properties": {
+        "caseId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Caseid",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "SUCCESS",
+            "COMPILE_ERROR",
+            "RUNTIME_ERROR",
+            "WRONG_ANSWER",
+            "TIME_LIMIT_EXCEEDED",
+            "ENVIRONMENT_ERROR",
+            "SANDBOX_ERROR",
+            "UNKNOWN"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "failedStage": {
+          "enum": [
+            "NONE",
+            "PRE_CHECK",
+            "COMPILE",
+            "RUNTIME",
+            "TEST",
+            "SANDBOX",
+            "UNKNOWN"
+          ],
+          "title": "Failedstage",
+          "type": "string"
+        },
+        "exitCode": {
+          "title": "Exitcode",
+          "type": "integer"
+        },
+        "stdout": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Stdout",
+          "type": "string"
+        },
+        "stderr": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Stderr",
+          "type": "string"
+        },
+        "errorLog": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Errorlog",
+          "type": "string"
+        },
+        "stdoutTruncated": {
+          "default": false,
+          "title": "Stdouttruncated",
+          "type": "boolean"
+        },
+        "stderrTruncated": {
+          "default": false,
+          "title": "Stderrtruncated",
+          "type": "boolean"
+        },
+        "errorLogTruncated": {
+          "default": false,
+          "title": "Errorlogtruncated",
+          "type": "boolean"
+        },
+        "expectedOutput": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Expectedoutput",
+          "type": "string"
+        },
+        "executionTimeMs": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Executiontimems",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "caseId",
+        "status",
+        "failedStage",
+        "exitCode"
+      ],
+      "title": "CaseFeedback",
+      "type": "object"
+    },
+    "TestSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "total": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Total",
+          "type": "integer"
+        },
+        "passed": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Passed",
+          "type": "integer"
+        },
+        "failed": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Failed",
+          "type": "integer"
+        },
+        "timedOut": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Timedout",
+          "type": "integer"
+        }
+      },
+      "title": "TestSummary",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "runId": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Runid",
+      "type": "string"
+    },
+    "source": {
+      "enum": [
+        "B_SANDBOX",
+        "EXTERNAL"
+      ],
+      "title": "Source",
+      "type": "string"
+    },
+    "codeArtifactId": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Codeartifactid",
+      "type": "string"
+    },
+    "codeRevision": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Coderevision",
+      "type": "string"
+    },
+    "codeDigest": {
+      "anyOf": [
+        {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Codedigest"
+    },
+    "testSuiteId": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Testsuiteid"
+    },
+    "testRevision": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Testrevision"
+    },
+    "testDigest": {
+      "anyOf": [
+        {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Testdigest"
+    },
+    "status": {
+      "enum": [
+        "SUCCESS",
+        "COMPILE_ERROR",
+        "RUNTIME_ERROR",
+        "WRONG_ANSWER",
+        "TIME_LIMIT_EXCEEDED",
+        "ENVIRONMENT_ERROR",
+        "SANDBOX_ERROR",
+        "UNKNOWN"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "failedStage": {
+      "enum": [
+        "NONE",
+        "PRE_CHECK",
+        "COMPILE",
+        "RUNTIME",
+        "TEST",
+        "SANDBOX",
+        "UNKNOWN"
+      ],
+      "title": "Failedstage",
+      "type": "string"
+    },
+    "exitCode": {
+      "title": "Exitcode",
+      "type": "integer"
+    },
+    "validationScope": {
+      "default": "UNKNOWN",
+      "enum": [
+        "STDIO",
+        "SYNTAX_ONLY",
+        "UNKNOWN"
+      ],
+      "title": "Validationscope",
+      "type": "string"
+    },
+    "summary": {
+      "$ref": "#/$defs/TestSummary"
+    },
+    "failures": {
+      "items": {
+        "$ref": "#/$defs/CaseFeedback"
+      },
+      "maxItems": 20,
+      "title": "Failures",
+      "type": "array"
+    },
+    "stdout": {
+      "default": "",
+      "maxLength": 12000,
+      "title": "Stdout",
+      "type": "string"
+    },
+    "stderr": {
+      "default": "",
+      "maxLength": 12000,
+      "title": "Stderr",
+      "type": "string"
+    },
+    "errorLog": {
+      "default": "",
+      "maxLength": 12000,
+      "title": "Errorlog",
+      "type": "string"
+    },
+    "stdoutTruncated": {
+      "default": false,
+      "title": "Stdouttruncated",
+      "type": "boolean"
+    },
+    "stderrTruncated": {
+      "default": false,
+      "title": "Stderrtruncated",
+      "type": "boolean"
+    },
+    "errorLogTruncated": {
+      "default": false,
+      "title": "Errorlogtruncated",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "runId",
+    "source",
+    "codeArtifactId",
+    "codeRevision",
+    "status",
+    "failedStage",
+    "exitCode"
+  ],
+  "title": "ExecutionFeedback",
+  "type": "object"
+}

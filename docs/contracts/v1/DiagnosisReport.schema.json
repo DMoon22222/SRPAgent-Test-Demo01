@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "enum": [
+            "EXECUTION",
+            "RULE",
+            "MODEL"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Path"
+        },
+        "lineStart": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Linestart"
+        },
+        "lineEnd": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lineend"
+        },
+        "excerpt": {
+          "maxLength": 12000,
+          "title": "Excerpt",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "excerpt"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "RetrievalDecision": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "enum": [
+            "REQUIRED",
+            "NOT_REQUIRED",
+            "UNDETERMINED"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "reason": {
+          "maxLength": 12000,
+          "title": "Reason",
+          "type": "string"
+        },
+        "query": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Query",
+          "type": "string"
+        },
+        "knowledgeScope": {
+          "default": "UNKNOWN",
+          "enum": [
+            "DEPENDENCY",
+            "LANGUAGE_API",
+            "ALGORITHM",
+            "UNKNOWN"
+          ],
+          "title": "Knowledgescope",
+          "type": "string"
+        },
+        "confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Confidence",
+          "type": "number"
+        }
+      },
+      "required": [
+        "decision",
+        "reason",
+        "confidence"
+      ],
+      "title": "RetrievalDecision",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "reportId": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Reportid",
+      "type": "string"
+    },
+    "diagnosisStatus": {
+      "enum": [
+        "COMPLETED",
+        "INSUFFICIENT_CONTEXT",
+        "NOT_APPLICABLE"
+      ],
+      "title": "Diagnosisstatus",
+      "type": "string"
+    },
+    "analysisMode": {
+      "enum": [
+        "LLM_ASSISTED",
+        "RULE_ONLY"
+      ],
+      "title": "Analysismode",
+      "type": "string"
+    },
+    "failedStage": {
+      "title": "Failedstage",
+      "type": "string"
+    },
+    "errorType": {
+      "title": "Errortype",
+      "type": "string"
+    },
+    "errorSubtype": {
+      "title": "Errorsubtype",
+      "type": "string"
+    },
+    "rootCause": {
+      "maxLength": 12000,
+      "title": "Rootcause",
+      "type": "string"
+    },
+    "repairSuggestion": {
+      "maxLength": 12000,
+      "title": "Repairsuggestion",
+      "type": "string"
+    },
+    "confidence": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      },
+      "maxItems": 32,
+      "title": "Evidence",
+      "type": "array"
+    },
+    "suspectedLocations": {
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      },
+      "maxItems": 32,
+      "title": "Suspectedlocations",
+      "type": "array"
+    },
+    "retrieval": {
+      "$ref": "#/$defs/RetrievalDecision"
+    }
+  },
+  "required": [
+    "reportId",
+    "diagnosisStatus",
+    "analysisMode",
+    "failedStage",
+    "errorType",
+    "errorSubtype",
+    "rootCause",
+    "repairSuggestion",
+    "confidence",
+    "retrieval"
+  ],
+  "title": "DiagnosisReport",
+  "type": "object"
+}

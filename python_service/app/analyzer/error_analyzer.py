@@ -37,6 +37,16 @@ class ErrorAnalyzer:
 
         return postprocess_analysis(llm_result, rule, request.code)
 
+    def analyze_with_metadata(
+        self, request: AnalyzeRequest, rule: RuleDecision,
+    ) -> tuple[ErrorAnalysisResult, str]:
+        llm_result = self._call_llm(request, rule) if settings.dashscope_api_key else {}
+        assisted = bool(llm_result.get("_llmSucceeded"))
+        # New transports do not expose external SDK exception text to clients.
+        if not assisted:
+            llm_result = {}
+        return postprocess_analysis(llm_result, rule, request.code), "LLM_ASSISTED" if assisted else "RULE_ONLY"
+
     def _call_llm(self, request: AnalyzeRequest, rule: RuleDecision) -> dict[str, Any]:
         try:
             from openai import OpenAI
@@ -48,6 +58,8 @@ class ErrorAnalyzer:
             client = OpenAI(
                 api_key=settings.dashscope_api_key,
                 base_url=settings.dashscope_base_url,
+                timeout=settings.llm_timeout_seconds,
+                max_retries=0,
             )
             response = client.chat.completions.create(
                 model=settings.dashscope_model,
@@ -58,7 +70,9 @@ class ErrorAnalyzer:
                 temperature=0.1,
             )
             content = response.choices[0].message.content or ""
-            return _parse_json_object(content)
+            parsed, valid = _parse_llm_json(content)
+            parsed["_llmSucceeded"] = valid and isinstance(parsed.get("rootCause"), str) and bool(parsed["rootCause"].strip())
+            return parsed
         except Exception as exc:  # noqa: BLE001 - external SDK boundary
             return {"rootCause": f"DashScope 调用失败，使用规则层基础诊断：{exc}"}
 
@@ -158,17 +172,23 @@ def default_repair_suggestion(rule: RuleDecision) -> str:
 
 
 def _parse_json_object(content: str) -> dict[str, Any]:
+    return _parse_llm_json(content)[0]
+
+
+def _parse_llm_json(content: str) -> tuple[dict[str, Any], bool]:
     try:
-        return json.loads(content)
+        value = json.loads(content)
+        return (value, True) if isinstance(value, dict) else ({}, False)
     except json.JSONDecodeError:
         start = content.find("{")
         end = content.rfind("}")
         if start >= 0 and end > start:
             try:
-                return json.loads(content[start : end + 1])
+                value = json.loads(content[start : end + 1])
+                return (value, True) if isinstance(value, dict) else ({}, False)
             except json.JSONDecodeError:
-                return {"rootCause": "模型输出 JSON 解析失败，使用规则层基础诊断。"}
-        return {"rootCause": "模型输出不包含 JSON 对象，使用规则层基础诊断。"}
+                return {"rootCause": "模型输出 JSON 解析失败，使用规则层基础诊断。"}, False
+        return {"rootCause": "模型输出不包含 JSON 对象，使用规则层基础诊断。"}, False
 
 
 def _llm_enum_was_normalized(llm_result: dict) -> bool:

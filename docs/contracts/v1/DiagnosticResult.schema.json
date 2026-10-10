@@ -1,0 +1,701 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "CaseFeedback": {
+      "additionalProperties": false,
+      "properties": {
+        "caseId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Caseid",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "SUCCESS",
+            "COMPILE_ERROR",
+            "RUNTIME_ERROR",
+            "WRONG_ANSWER",
+            "TIME_LIMIT_EXCEEDED",
+            "ENVIRONMENT_ERROR",
+            "SANDBOX_ERROR",
+            "UNKNOWN"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "failedStage": {
+          "enum": [
+            "NONE",
+            "PRE_CHECK",
+            "COMPILE",
+            "RUNTIME",
+            "TEST",
+            "SANDBOX",
+            "UNKNOWN"
+          ],
+          "title": "Failedstage",
+          "type": "string"
+        },
+        "exitCode": {
+          "title": "Exitcode",
+          "type": "integer"
+        },
+        "stdout": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Stdout",
+          "type": "string"
+        },
+        "stderr": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Stderr",
+          "type": "string"
+        },
+        "errorLog": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Errorlog",
+          "type": "string"
+        },
+        "stdoutTruncated": {
+          "default": false,
+          "title": "Stdouttruncated",
+          "type": "boolean"
+        },
+        "stderrTruncated": {
+          "default": false,
+          "title": "Stderrtruncated",
+          "type": "boolean"
+        },
+        "errorLogTruncated": {
+          "default": false,
+          "title": "Errorlogtruncated",
+          "type": "boolean"
+        },
+        "expectedOutput": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Expectedoutput",
+          "type": "string"
+        },
+        "executionTimeMs": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Executiontimems",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "caseId",
+        "status",
+        "failedStage",
+        "exitCode"
+      ],
+      "title": "CaseFeedback",
+      "type": "object"
+    },
+    "DiagnosisReport": {
+      "additionalProperties": false,
+      "properties": {
+        "reportId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Reportid",
+          "type": "string"
+        },
+        "diagnosisStatus": {
+          "enum": [
+            "COMPLETED",
+            "INSUFFICIENT_CONTEXT",
+            "NOT_APPLICABLE"
+          ],
+          "title": "Diagnosisstatus",
+          "type": "string"
+        },
+        "analysisMode": {
+          "enum": [
+            "LLM_ASSISTED",
+            "RULE_ONLY"
+          ],
+          "title": "Analysismode",
+          "type": "string"
+        },
+        "failedStage": {
+          "title": "Failedstage",
+          "type": "string"
+        },
+        "errorType": {
+          "title": "Errortype",
+          "type": "string"
+        },
+        "errorSubtype": {
+          "title": "Errorsubtype",
+          "type": "string"
+        },
+        "rootCause": {
+          "maxLength": 12000,
+          "title": "Rootcause",
+          "type": "string"
+        },
+        "repairSuggestion": {
+          "maxLength": 12000,
+          "title": "Repairsuggestion",
+          "type": "string"
+        },
+        "confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "maxItems": 32,
+          "title": "Evidence",
+          "type": "array"
+        },
+        "suspectedLocations": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "maxItems": 32,
+          "title": "Suspectedlocations",
+          "type": "array"
+        },
+        "retrieval": {
+          "$ref": "#/$defs/RetrievalDecision"
+        }
+      },
+      "required": [
+        "reportId",
+        "diagnosisStatus",
+        "analysisMode",
+        "failedStage",
+        "errorType",
+        "errorSubtype",
+        "rootCause",
+        "repairSuggestion",
+        "confidence",
+        "retrieval"
+      ],
+      "title": "DiagnosisReport",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "enum": [
+            "EXECUTION",
+            "RULE",
+            "MODEL"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Path"
+        },
+        "lineStart": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Linestart"
+        },
+        "lineEnd": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lineend"
+        },
+        "excerpt": {
+          "maxLength": 12000,
+          "title": "Excerpt",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "excerpt"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "ExecutionFeedback": {
+      "additionalProperties": false,
+      "properties": {
+        "runId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Runid",
+          "type": "string"
+        },
+        "source": {
+          "enum": [
+            "B_SANDBOX",
+            "EXTERNAL"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "codeArtifactId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Codeartifactid",
+          "type": "string"
+        },
+        "codeRevision": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Coderevision",
+          "type": "string"
+        },
+        "codeDigest": {
+          "anyOf": [
+            {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Codedigest"
+        },
+        "testSuiteId": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9_.:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Testsuiteid"
+        },
+        "testRevision": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9_.:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Testrevision"
+        },
+        "testDigest": {
+          "anyOf": [
+            {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Testdigest"
+        },
+        "status": {
+          "enum": [
+            "SUCCESS",
+            "COMPILE_ERROR",
+            "RUNTIME_ERROR",
+            "WRONG_ANSWER",
+            "TIME_LIMIT_EXCEEDED",
+            "ENVIRONMENT_ERROR",
+            "SANDBOX_ERROR",
+            "UNKNOWN"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "failedStage": {
+          "enum": [
+            "NONE",
+            "PRE_CHECK",
+            "COMPILE",
+            "RUNTIME",
+            "TEST",
+            "SANDBOX",
+            "UNKNOWN"
+          ],
+          "title": "Failedstage",
+          "type": "string"
+        },
+        "exitCode": {
+          "title": "Exitcode",
+          "type": "integer"
+        },
+        "validationScope": {
+          "default": "UNKNOWN",
+          "enum": [
+            "STDIO",
+            "SYNTAX_ONLY",
+            "UNKNOWN"
+          ],
+          "title": "Validationscope",
+          "type": "string"
+        },
+        "summary": {
+          "$ref": "#/$defs/TestSummary"
+        },
+        "failures": {
+          "items": {
+            "$ref": "#/$defs/CaseFeedback"
+          },
+          "maxItems": 20,
+          "title": "Failures",
+          "type": "array"
+        },
+        "stdout": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Stdout",
+          "type": "string"
+        },
+        "stderr": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Stderr",
+          "type": "string"
+        },
+        "errorLog": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Errorlog",
+          "type": "string"
+        },
+        "stdoutTruncated": {
+          "default": false,
+          "title": "Stdouttruncated",
+          "type": "boolean"
+        },
+        "stderrTruncated": {
+          "default": false,
+          "title": "Stderrtruncated",
+          "type": "boolean"
+        },
+        "errorLogTruncated": {
+          "default": false,
+          "title": "Errorlogtruncated",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "runId",
+        "source",
+        "codeArtifactId",
+        "codeRevision",
+        "status",
+        "failedStage",
+        "exitCode"
+      ],
+      "title": "ExecutionFeedback",
+      "type": "object"
+    },
+    "RetrievalDecision": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "enum": [
+            "REQUIRED",
+            "NOT_REQUIRED",
+            "UNDETERMINED"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "reason": {
+          "maxLength": 12000,
+          "title": "Reason",
+          "type": "string"
+        },
+        "query": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Query",
+          "type": "string"
+        },
+        "knowledgeScope": {
+          "default": "UNKNOWN",
+          "enum": [
+            "DEPENDENCY",
+            "LANGUAGE_API",
+            "ALGORITHM",
+            "UNKNOWN"
+          ],
+          "title": "Knowledgescope",
+          "type": "string"
+        },
+        "confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Confidence",
+          "type": "number"
+        }
+      },
+      "required": [
+        "decision",
+        "reason",
+        "confidence"
+      ],
+      "title": "RetrievalDecision",
+      "type": "object"
+    },
+    "TestSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "total": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Total",
+          "type": "integer"
+        },
+        "passed": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Passed",
+          "type": "integer"
+        },
+        "failed": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Failed",
+          "type": "integer"
+        },
+        "timedOut": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Timedout",
+          "type": "integer"
+        }
+      },
+      "title": "TestSummary",
+      "type": "object"
+    },
+    "WorkflowContext": {
+      "additionalProperties": false,
+      "properties": {
+        "workflowId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Workflowid",
+          "type": "string"
+        },
+        "requestId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Requestid",
+          "type": "string"
+        },
+        "iteration": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Iteration",
+          "type": "integer"
+        },
+        "producerAgentId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Produceragentid",
+          "type": "string"
+        },
+        "previousReportId": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9_.:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Previousreportid"
+        }
+      },
+      "required": [
+        "workflowId",
+        "requestId",
+        "producerAgentId"
+      ],
+      "title": "WorkflowContext",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schemaversion",
+      "type": "string"
+    },
+    "workflow": {
+      "$ref": "#/$defs/WorkflowContext"
+    },
+    "codeArtifactId": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Codeartifactid",
+      "type": "string"
+    },
+    "codeRevision": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Coderevision",
+      "type": "string"
+    },
+    "codeDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Codedigest",
+      "type": "string"
+    },
+    "testSuiteId": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Testsuiteid"
+    },
+    "testRevision": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Testrevision"
+    },
+    "testDigest": {
+      "anyOf": [
+        {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Testdigest"
+    },
+    "execution": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExecutionFeedback"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "diagnosis": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DiagnosisReport"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "warnings": {
+      "items": {
+        "maxLength": 12000,
+        "type": "string"
+      },
+      "maxItems": 32,
+      "title": "Warnings",
+      "type": "array"
+    },
+    "nextAction": {
+      "enum": [
+        "REPAIR",
+        "RETRIEVE_THEN_REPAIR",
+        "PROVIDE_CONTEXT",
+        "ACCEPT",
+        "RUN_TESTS",
+        "REVIEW_EXTERNAL_RESULT",
+        "FIX_ENVIRONMENT"
+      ],
+      "title": "Nextaction",
+      "type": "string"
+    }
+  },
+  "required": [
+    "workflow",
+    "codeArtifactId",
+    "codeRevision",
+    "codeDigest",
+    "nextAction"
+  ],
+  "title": "DiagnosticResult",
+  "type": "object"
+}

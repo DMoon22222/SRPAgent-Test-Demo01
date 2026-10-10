@@ -29,8 +29,8 @@ def normalize_output(text: str) -> str:
     return safe(text).replace("\r\n", "\n").replace("\r", "\n").strip()
 
 
-def expected_output_matched(stdout: str, expected_output: str) -> bool:
-    if not safe(expected_output).strip():
+def expected_output_matched(stdout: str, expected_output: str, *, required: bool = False) -> bool:
+    if not required and not safe(expected_output).strip():
         return True
     return normalize_output(stdout) == normalize_output(expected_output)
 
@@ -100,7 +100,7 @@ def build_run_result(
             return execution(False, "WRONG_ANSWER", "TEST", compile_success, False, exit_code, stdout, stderr, error_log, duration_ms, request.expectedOutput, stdout, command, language_name)
         return execution(False, "RUNTIME_ERROR", "RUNTIME", compile_success, False, exit_code, stdout, stderr, error_log, duration_ms, request.expectedOutput, stdout, command, language_name)
 
-    if not expected_output_matched(stdout, request.expectedOutput):
+    if not expected_output_matched(stdout, request.expectedOutput, required=getattr(request, "compareOutput", False)):
         error_log = (
             f"{language_name} 输出结果与期望不一致。\n"
             "【expectedOutput】\n"

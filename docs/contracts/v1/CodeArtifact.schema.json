@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "SourceFile": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "maxLength": 240,
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        },
+        "content": {
+          "maxLength": 200000,
+          "title": "Content",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "content"
+      ],
+      "title": "SourceFile",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "artifactId": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Artifactid",
+      "type": "string"
+    },
+    "revision": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Revision",
+      "type": "string"
+    },
+    "kind": {
+      "const": "snippet",
+      "default": "snippet",
+      "title": "Kind",
+      "type": "string"
+    },
+    "language": {
+      "enum": [
+        "python",
+        "java"
+      ],
+      "title": "Language",
+      "type": "string"
+    },
+    "entryPoint": {
+      "enum": [
+        "Main.py",
+        "Main.java"
+      ],
+      "title": "Entrypoint",
+      "type": "string"
+    },
+    "files": {
+      "items": {
+        "$ref": "#/$defs/SourceFile"
+      },
+      "maxItems": 1,
+      "minItems": 1,
+      "title": "Files",
+      "type": "array"
+    }
+  },
+  "required": [
+    "artifactId",
+    "revision",
+    "language",
+    "entryPoint",
+    "files"
+  ],
+  "title": "CodeArtifact",
+  "type": "object"
+}

@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "StdioCase": {
+      "additionalProperties": false,
+      "properties": {
+        "caseId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "title": "Caseid",
+          "type": "string"
+        },
+        "stdin": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Stdin",
+          "type": "string"
+        },
+        "expectedOutput": {
+          "maxLength": 12000,
+          "title": "Expectedoutput",
+          "type": "string"
+        }
+      },
+      "required": [
+        "caseId",
+        "expectedOutput"
+      ],
+      "title": "StdioCase",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "suiteId": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Suiteid",
+      "type": "string"
+    },
+    "revision": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "title": "Revision",
+      "type": "string"
+    },
+    "origin": {
+      "enum": [
+        "GENERATED",
+        "PROVIDED",
+        "BENCHMARK"
+      ],
+      "title": "Origin",
+      "type": "string"
+    },
+    "kind": {
+      "const": "STDIO",
+      "default": "STDIO",
+      "title": "Kind",
+      "type": "string"
+    },
+    "cases": {
+      "items": {
+        "$ref": "#/$defs/StdioCase"
+      },
+      "maxItems": 20,
+      "minItems": 1,
+      "title": "Cases",
+      "type": "array"
+    }
+  },
+  "required": [
+    "suiteId",
+    "revision",
+    "origin",
+    "cases"
+  ],
+  "title": "TestSuite",
+  "type": "object"
+}

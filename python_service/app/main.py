@@ -1,4 +1,18 @@
-from fastapi import FastAPI
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.exception_handlers import request_validation_exception_handler
+from a2a.server.routes.jsonrpc_dispatcher import JsonRpcDispatcher
+from a2a.server.request_handlers.response_helpers import agent_card_to_dict
+from starlette.routing import Route
+
+from app.adapters.a2a.server import ContextBuilder, DiagnosisHandler, agent_card
+from app.adapters.mcp.server import McpEndpoint, ToolAdapter, create_http_app, create_server
+from app.api.security import InteropBoundary
+from app.api.v1 import error_response, router as v1_router
+from app.services.diagnosis_service import DiagnosisService
+from app.tasks.store import TaskStore
 
 from app.analyzer.error_analyzer import ErrorAnalyzer
 from app.config import settings
@@ -28,7 +42,56 @@ from app.schemas import (
     RepositoryExecutionRequest,
 )
 
-app = FastAPI(title="SRP B Group Python Service")
+@asynccontextmanager
+async def lifespan(application):
+    store = TaskStore(settings.a2a_store_path)
+    service = DiagnosisService(registry=store)
+    handler = DiagnosisHandler(service=service, store=store)
+    await handler.start()
+    application.state.a2a_handler = handler
+    application.state.diagnosis_service = service
+    application.state.a2a_dispatcher = JsonRpcDispatcher(handler, ContextBuilder())
+    adapter = ToolAdapter(service.process, workers=settings.mcp_workers)
+    server = create_server(adapter)
+    application.state.mcp_http_app = create_http_app(server)
+    try:
+        async with server.session_manager.run():
+            yield
+    finally:
+        adapter.close()
+        await handler.close()
+
+
+app = FastAPI(title="SRP B Group Python Service", lifespan=lifespan)
+app.add_middleware(InteropBoundary)
+app.include_router(v1_router)
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_error(request: Request, exc: RequestValidationError):
+    if not request.url.path.startswith("/api/v1/"):
+        return await request_validation_exception_handler(request, exc)
+    body = exc.body if isinstance(exc.body, dict) else {}
+    workflow = body.get("workflow", {})
+    request_id = workflow.get("requestId") if isinstance(workflow, dict) else None
+    if not isinstance(request_id, str):
+        request_id = None
+    details = [{"location": list(e["loc"]), "type": e["type"]} for e in exc.errors()][:32]
+    return error_response(request_id, "INVALID_REQUEST", "Request does not match the v1 contract", 422, details=details)
+
+
+@app.get("/.well-known/agent-card.json", tags=["A2A"])
+def get_agent_card():
+    return agent_card_to_dict(agent_card())
+
+
+# The SDK dispatcher resolves the lifespan-created handler for each request.
+async def a2a_endpoint(request):
+    return await request.app.state.a2a_dispatcher.handle_requests(request)
+
+
+app.router.routes.append(Route("/a2a", a2a_endpoint, methods=["POST"]))
+app.router.routes.append(Route("/mcp", McpEndpoint()))
 
 
 @app.get("/api/ping")

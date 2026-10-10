@@ -5,6 +5,9 @@ pydantic-settings
 python-dotenv
 openai
 pytest
+a2a-sdk[http-server]==1.0.3
+httpx>=0.28.1
+mcp==2.3.0
 # Optional report/runtime helpers. Current evaluation code uses only the
 # standard library for HTTP, CSV, JSONL, and Markdown output.
 # requests

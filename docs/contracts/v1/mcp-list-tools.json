@@ -1,0 +1,15 @@
+{
+  "jsonrpc": "2.0",
+  "id": "mcp-002",
+  "method": "tools/list",
+  "params": {
+    "_meta": {
+      "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+      "io.modelcontextprotocol/clientInfo": {
+        "name": "integration-client",
+        "version": "1.0"
+      },
+      "io.modelcontextprotocol/clientCapabilities": {}
+    }
+  }
+}

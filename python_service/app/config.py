@@ -34,6 +34,14 @@ class Settings(BaseSettings):
     sandbox_docker_pids_limit: str = "64"
     sandbox_max_output_chars: int = 12000
     repository_allowed_root: str = ""
+    llm_timeout_seconds: float = Field(default=30, gt=0, le=120)
+    interop_api_token: str = ""
+    interop_allow_local_execution: bool = False
+    interop_public_url: str = "http://127.0.0.1:8000"
+    a2a_store_path: str = ".interop/tasks.sqlite3"
+    a2a_workers: int = Field(default=2, ge=1, le=8)
+    a2a_max_pending: int = Field(default=32, ge=1, le=128)
+    mcp_workers: int = Field(default=2, ge=1, le=8)
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -93,6 +101,14 @@ def _fallback_settings_data() -> dict[str, str]:
         "sandbox_docker_pids_limit": pick("SANDBOX_DOCKER_PIDS_LIMIT"),
         "sandbox_max_output_chars": pick("SANDBOX_MAX_OUTPUT_CHARS"),
         "repository_allowed_root": pick("REPOSITORY_ALLOWED_ROOT"),
+        "llm_timeout_seconds": pick("LLM_TIMEOUT_SECONDS"),
+        "interop_api_token": pick("INTEROP_API_TOKEN"),
+        "interop_allow_local_execution": pick("INTEROP_ALLOW_LOCAL_EXECUTION"),
+        "interop_public_url": pick("INTEROP_PUBLIC_URL"),
+        "a2a_store_path": pick("A2A_STORE_PATH"),
+        "a2a_workers": pick("A2A_WORKERS"),
+        "a2a_max_pending": pick("A2A_MAX_PENDING"),
+        "mcp_workers": pick("MCP_WORKERS"),
     }
     return {key: value for key, value in values.items() if value != ""}
 

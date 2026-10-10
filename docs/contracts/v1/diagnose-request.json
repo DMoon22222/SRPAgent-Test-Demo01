@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "1.0",
+  "workflow": {
+    "workflowId": "srp-demo-001",
+    "requestId": "request-001",
+    "iteration": 0,
+    "producerAgentId": "generation-agent"
+  },
+  "problem": {
+    "description": "Print the sum of two input integers.",
+    "constraints": [],
+    "acceptanceCriteria": []
+  },
+  "code": {
+    "artifactId": "code-001",
+    "revision": "r0",
+    "kind": "snippet",
+    "language": "python",
+    "entryPoint": "Main.py",
+    "files": [
+      {
+        "path": "Main.py",
+        "content": "a, b = map(int, input().split())\nprint(a - b)\n"
+      }
+    ]
+  },
+  "operation": "diagnose_error",
+  "tests": {
+    "suiteId": "suite-001",
+    "revision": "r0",
+    "origin": "PROVIDED",
+    "kind": "STDIO",
+    "cases": [
+      {
+        "caseId": "sum-positive",
+        "stdin": "2 3\n",
+        "expectedOutput": "5\n"
+      }
+    ]
+  },
+  "feedback": {
+    "runId": "run-001",
+    "source": "EXTERNAL",
+    "codeArtifactId": "code-001",
+    "codeRevision": "r0",
+    "codeDigest": "sha256:c89779fdbe152261c210d74d544be3400eab5f9ba36b390ef020e170d03924ca",
+    "testSuiteId": "suite-001",
+    "testRevision": "r0",
+    "testDigest": "sha256:2012680bc08833444eb2faf1614a3a882710dd3ceb0b51e1261f9272e92edff4",
+    "status": "WRONG_ANSWER",
+    "failedStage": "TEST",
+    "exitCode": 0,
+    "validationScope": "STDIO",
+    "summary": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "timedOut": 0
+    },
+    "stdout": "-1\n",
+    "stderr": "",
+    "errorLog": "expectedOutput: 5; actualOutput: -1; output mismatch"
+  }
+}

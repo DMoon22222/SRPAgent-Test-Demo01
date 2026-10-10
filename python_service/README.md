@@ -4,6 +4,8 @@
 
 ## 安装
 
+多 Agent 新入口已提供 REST `/api/v1/*`、A2A 1.0 `/a2a` 和 MCP `/mcp`，接入与安全边界见 [接入说明](../docs/agent_interoperability.md) 和 [MCP 接入说明](../docs/mcp_integration.md)。MCP 支持现有 CodePilot 的 stdio 桥接，附三种协议的模拟修复闭环。JSON Schema 和请求示例见 `../docs/contracts/v1/`。旧接口仍供本机可信调用。包含持久化任务库的服务须使用单个 Uvicorn worker。
+
 Windows：
 
 ```bash

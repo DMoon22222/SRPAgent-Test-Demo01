@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0",
+  "workflow": {
+    "workflowId": "srp-demo-001",
+    "requestId": "request-001",
+    "iteration": 0,
+    "producerAgentId": "generation-agent"
+  },
+  "problem": {
+    "description": "Print the sum of two input integers.",
+    "constraints": [],
+    "acceptanceCriteria": []
+  },
+  "code": {
+    "artifactId": "code-001",
+    "revision": "r0",
+    "kind": "snippet",
+    "language": "python",
+    "entryPoint": "Main.py",
+    "files": [
+      {
+        "path": "Main.py",
+        "content": "a, b = map(int, input().split())\nprint(a - b)\n"
+      }
+    ]
+  },
+  "operation": "check_syntax"
+}
