@@ -1,0 +1,2096 @@
+{
+  "kind": "public_synthetic_samples",
+  "samples": [
+    {
+      "operation": "/api/v2/validate/static",
+      "request": {
+        "schema_version": "2.0",
+        "message_id": "msg-19439b30d5a043918b6467c2e533d561",
+        "request_id": "request-bba7b75fba86479c8b45e615a923e539",
+        "in_reply_to": null,
+        "call_id": "call-f02164cfc8e6465f81d7f7a32f360f7b",
+        "parent_call_id": null,
+        "trace_id": "sample-trace",
+        "task_id": "verify-static",
+        "run_id": "verify-static-run",
+        "attempt_id": "sample-attempt",
+        "producer": "O",
+        "consumer": "B",
+        "payload_type": "StaticValidationRequest",
+        "created_at": "2026-10-13T02:00:00Z",
+        "visibility": "public",
+        "payload": {
+          "task_spec": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "O",
+            "task_id": "verify-static",
+            "language": "python",
+            "runtime": {
+              "name": "python",
+              "version": "3.11"
+            },
+            "instruction": "Implement add(a, b), returning the sum. Fixed tests must remain unchanged.",
+            "constraints": [
+              "保持公开测试不变"
+            ],
+            "entry_point": "src/main.py",
+            "task_type": "function_generation",
+            "input_context": {
+              "target_file": null,
+              "prefix": null,
+              "suffix": null,
+              "cursor": null,
+              "workspace_snapshot_ref": null
+            }
+          },
+          "code_artifact": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "A",
+            "artifact_id": "sample-code",
+            "task_id": "verify-static",
+            "attempt_id": "sample-attempt",
+            "revision": "r0",
+            "parent_artifact_id": null,
+            "language": "python",
+            "files": [
+              {
+                "path": "src/main.py",
+                "content": "def add(a, b)\n    return a + b\n",
+                "sha256": "f6174ed4a0c7abd6f002ee7de4b9d210865d92ced2eab11365420b84595b436d"
+              }
+            ],
+            "content_hash": "00ba256446b9f3280e8ca04c16304be43ab4362626f569f2c8581c38e2dc18ef",
+            "dependencies": [],
+            "generation_provenance": {
+              "model_id": null,
+              "prompt_version": "fixture-prompt",
+              "decoding_config": {},
+              "finish_reason": null,
+              "truncated": null,
+              "raw_response_ref": null,
+              "prompt_hash": null,
+              "tokenizer_id": null,
+              "input_tokens": null,
+              "output_tokens": null,
+              "content_status": "unknown"
+            }
+          },
+          "build_manifest": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "A",
+            "manifest_id": "manifest-0",
+            "language": "python",
+            "runtime": {
+              "name": "python",
+              "version": "3.11"
+            },
+            "dependencies": [
+              "pytest==8.3.5"
+            ],
+            "entry_point": "src/main.py",
+            "test_command": [
+              "python",
+              "-m",
+              "pytest",
+              "tests"
+            ]
+          },
+          "validation_policy": {
+            "policy_version": "static-v2",
+            "checks": [
+              "syntax",
+              "entry_point"
+            ]
+          },
+          "budget": {
+            "budget_id": "budget-1",
+            "revision": 1,
+            "limits": {
+              "tokens": 8192,
+              "model_calls": 8,
+              "retrieval_calls": 4,
+              "execution_calls": 4,
+              "wall_time_ms": 120000
+            },
+            "used": {
+              "tokens": 0,
+              "model_calls": 0,
+              "retrieval_calls": 0,
+              "execution_calls": 0,
+              "wall_time_ms": 0
+            },
+            "reserved": {
+              "tokens": 0,
+              "model_calls": 0,
+              "retrieval_calls": 0,
+              "execution_calls": 0,
+              "wall_time_ms": 0
+            },
+            "remaining": {
+              "tokens": 8192,
+              "model_calls": 8,
+              "retrieval_calls": 4,
+              "execution_calls": 4,
+              "wall_time_ms": 120000
+            },
+            "deadline_at": "2026-10-16T12:35:33.317572Z",
+            "policy_version": "budget-v2"
+          },
+          "call_grant": {
+            "grant_id": "grant-e3a28381b98d4f6cbbcf593316361173",
+            "call_id": "call-f02164cfc8e6465f81d7f7a32f360f7b",
+            "parent_call_id": null,
+            "budget_id": "budget-1",
+            "budget_revision": 1,
+            "deadline_at": "2026-10-16T12:35:33.317572Z",
+            "max_model_calls": 4,
+            "max_retrieval_calls": 2,
+            "max_execution_calls": 1,
+            "max_rounds": 1,
+            "max_input_tokens": 6144,
+            "max_output_tokens": 1024,
+            "max_evidence_tokens": 512,
+            "tokenizer_id": "fixture-unicode-codepoint"
+          }
+        },
+        "deadline_at": "2026-10-16T12:35:33.317572Z"
+      },
+      "response": {
+        "schema_version": "2.0",
+        "request_id": "request-bba7b75fba86479c8b45e615a923e539",
+        "call_id": "call-f02164cfc8e6465f81d7f7a32f360f7b",
+        "parent_call_id": null,
+        "trace_id": "sample-trace",
+        "task_id": "verify-static",
+        "run_id": "verify-static-run",
+        "attempt_id": "sample-attempt",
+        "visibility": "public",
+        "message_id": "msg-8e531946dd194f35bd80727c542bf4bd",
+        "in_reply_to": "msg-19439b30d5a043918b6467c2e533d561",
+        "producer": "B",
+        "consumer": "O",
+        "payload_type": "StaticCheckReport",
+        "created_at": "2026-10-16T12:30:33.325Z",
+        "payload": {
+          "status": "completed",
+          "data": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-16T12:30:33.323Z",
+            "producer": "B",
+            "report_id": "static-73d755472db94166826958e6bce4918d",
+            "task_id": "verify-static",
+            "attempt_id": "sample-attempt",
+            "code_artifact_id": "sample-code",
+            "revision": "r0",
+            "code_hash": "00ba256446b9f3280e8ca04c16304be43ab4362626f569f2c8581c38e2dc18ef",
+            "status": "failed",
+            "findings": [
+              {
+                "check": "syntax",
+                "status": "failed",
+                "message": "SyntaxError: expected ':'",
+                "location": {
+                  "file": "src/main.py",
+                  "line_start": 1,
+                  "line_end": 1,
+                  "symbol": null
+                }
+              },
+              {
+                "check": "entry_point",
+                "status": "passed",
+                "message": "Build entry point identifies the supplied source file.",
+                "location": null
+              }
+            ],
+            "policy_version": "static-v2"
+          },
+          "error": null,
+          "usage": {
+            "usage_id": "usage-b2536c95f02c4f1eae0b508b4ade3988",
+            "call_id": "call-f02164cfc8e6465f81d7f7a32f360f7b",
+            "parent_call_id": null,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "model_calls": 0,
+            "retrieval_calls": 0,
+            "execution_calls": 0,
+            "latency_ms": 0.0,
+            "estimated_cost_usd": null,
+            "measurement_status": "complete",
+            "measurement": "exact",
+            "aggregation": "leaf",
+            "children_usage_ids": [],
+            "notes": [
+              "Local rules only; no model or retrieval was invoked. Cost is not priced."
+            ]
+          },
+          "warnings": []
+        },
+        "extensions": {
+          "srp_b": {
+            "implementation_version": "0.3.0",
+            "operation": "/api/v2/validate/static"
+          }
+        }
+      }
+    },
+    {
+      "operation": "/api/v2/diagnose",
+      "request": {
+        "schema_version": "2.0",
+        "message_id": "msg-3f01f10ebdf341b9ba7555ba2edc23f9",
+        "request_id": "request-74e1753ff0ed4f979fd6242169824bc4",
+        "in_reply_to": null,
+        "call_id": "call-79e11ce1bb704963b6b1b5e578486b17",
+        "parent_call_id": null,
+        "trace_id": "sample-trace",
+        "task_id": "verify-static",
+        "run_id": "verify-static-run",
+        "attempt_id": "sample-attempt",
+        "producer": "O",
+        "consumer": "B",
+        "payload_type": "DiagnosticRequest",
+        "created_at": "2026-10-13T02:00:00Z",
+        "visibility": "public",
+        "payload": {
+          "task_spec": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "O",
+            "task_id": "verify-static",
+            "language": "python",
+            "runtime": {
+              "name": "python",
+              "version": "3.11"
+            },
+            "instruction": "Implement add(a, b), returning the sum. Fixed tests must remain unchanged.",
+            "constraints": [
+              "保持公开测试不变"
+            ],
+            "entry_point": "src/main.py",
+            "task_type": "function_generation",
+            "input_context": {
+              "target_file": null,
+              "prefix": null,
+              "suffix": null,
+              "cursor": null,
+              "workspace_snapshot_ref": null
+            }
+          },
+          "code_artifact": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "A",
+            "artifact_id": "sample-code",
+            "task_id": "verify-static",
+            "attempt_id": "sample-attempt",
+            "revision": "r0",
+            "parent_artifact_id": null,
+            "language": "python",
+            "files": [
+              {
+                "path": "src/main.py",
+                "content": "def add(a, b)\n    return a + b\n",
+                "sha256": "f6174ed4a0c7abd6f002ee7de4b9d210865d92ced2eab11365420b84595b436d"
+              }
+            ],
+            "content_hash": "00ba256446b9f3280e8ca04c16304be43ab4362626f569f2c8581c38e2dc18ef",
+            "dependencies": [],
+            "generation_provenance": {
+              "model_id": null,
+              "prompt_version": "fixture-prompt",
+              "decoding_config": {},
+              "finish_reason": null,
+              "truncated": null,
+              "raw_response_ref": null,
+              "prompt_hash": null,
+              "tokenizer_id": null,
+              "input_tokens": null,
+              "output_tokens": null,
+              "content_status": "unknown"
+            }
+          },
+          "test_artifact": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "dataset-adapter",
+            "artifact_id": "sample-tests",
+            "task_id": "verify-static",
+            "kind": "public",
+            "revision": "t0",
+            "files": [
+              {
+                "path": "tests/test_main.py",
+                "content": "from src.main import add\n\ndef test_add():\n    assert add(2, 3) == 5\n",
+                "sha256": "ffaac4fb1b938f8016dc7d3aafb8d64e767b85cb5d63739423119f16ea7a3099"
+              }
+            ],
+            "test_hash": "5729e7d3ee8a426edef6071d2e04a9d6bdfd896c5aa741b2d8e3de2bc31b6031"
+          },
+          "input_mode": "static_feedback",
+          "failure_source": {
+            "kind": "static",
+            "static_report": {
+              "schema_version": "2.0",
+              "created_at": "2026-10-16T12:30:33.323Z",
+              "producer": "B",
+              "report_id": "static-73d755472db94166826958e6bce4918d",
+              "task_id": "verify-static",
+              "attempt_id": "sample-attempt",
+              "code_artifact_id": "sample-code",
+              "revision": "r0",
+              "code_hash": "00ba256446b9f3280e8ca04c16304be43ab4362626f569f2c8581c38e2dc18ef",
+              "status": "failed",
+              "findings": [
+                {
+                  "check": "syntax",
+                  "status": "failed",
+                  "message": "SyntaxError: expected ':'",
+                  "location": {
+                    "file": "src/main.py",
+                    "line_start": 1,
+                    "line_end": 1,
+                    "symbol": null
+                  }
+                },
+                {
+                  "check": "entry_point",
+                  "status": "passed",
+                  "message": "Build entry point identifies the supplied source file.",
+                  "location": null
+                }
+              ],
+              "policy_version": "static-v2"
+            }
+          },
+          "execution_context": {
+            "context_id": "exec-context-0",
+            "build_manifest": {
+              "schema_version": "2.0",
+              "created_at": "2026-10-13T02:00:00Z",
+              "producer": "A",
+              "manifest_id": "manifest-0",
+              "language": "python",
+              "runtime": {
+                "name": "python",
+                "version": "3.11"
+              },
+              "dependencies": [
+                "pytest==8.3.5"
+              ],
+              "entry_point": "src/main.py",
+              "test_command": [
+                "python",
+                "-m",
+                "pytest",
+                "tests"
+              ]
+            },
+            "execution_policy": {
+              "policy_id": "runner-policy-1",
+              "timeout_ms": 5000,
+              "memory_mb": 256,
+              "cpu_limit": 1,
+              "max_processes": 16,
+              "network_policy": "disabled",
+              "root_read_only": true,
+              "allowed_write_paths": [
+                "tmp"
+              ]
+            },
+            "execution_config_hash": "a9c855c8f0b4905690af2bf178b5795e83d40d8b288e934ec0fd65a4e2b0b8d5",
+            "requested_runtime": {
+              "name": "python",
+              "version": "3.11"
+            },
+            "actual_runtime": {
+              "name": "python",
+              "version": "3.11"
+            },
+            "package_versions": [],
+            "image_digest": null,
+            "dependency_lock_ref": null,
+            "isolation_guarantees": {},
+            "measurement_status": "unknown"
+          },
+          "history_view": {
+            "history_id": "history-0",
+            "task_id": "verify-static",
+            "run_id": "verify-static-run",
+            "visibility": "public",
+            "source_refs": [],
+            "attempt_summaries": [],
+            "truncation": {
+              "truncated": false,
+              "omitted_attempt_ids": [],
+              "reason": null
+            }
+          },
+          "prior_diagnosis_ref": null,
+          "budget": {
+            "budget_id": "budget-1",
+            "revision": 1,
+            "limits": {
+              "tokens": 8192,
+              "model_calls": 8,
+              "retrieval_calls": 4,
+              "execution_calls": 4,
+              "wall_time_ms": 120000
+            },
+            "used": {
+              "tokens": 0,
+              "model_calls": 0,
+              "retrieval_calls": 0,
+              "execution_calls": 0,
+              "wall_time_ms": 0
+            },
+            "reserved": {
+              "tokens": 0,
+              "model_calls": 0,
+              "retrieval_calls": 0,
+              "execution_calls": 0,
+              "wall_time_ms": 0
+            },
+            "remaining": {
+              "tokens": 8192,
+              "model_calls": 8,
+              "retrieval_calls": 4,
+              "execution_calls": 4,
+              "wall_time_ms": 120000
+            },
+            "deadline_at": "2026-10-16T12:35:33.334468Z",
+            "policy_version": "budget-v2"
+          },
+          "call_grant": {
+            "grant_id": "grant-10b069ae045e492998b6e4388eb6ff48",
+            "call_id": "call-79e11ce1bb704963b6b1b5e578486b17",
+            "parent_call_id": null,
+            "budget_id": "budget-1",
+            "budget_revision": 1,
+            "deadline_at": "2026-10-16T12:35:33.334468Z",
+            "max_model_calls": 4,
+            "max_retrieval_calls": 2,
+            "max_execution_calls": 1,
+            "max_rounds": 1,
+            "max_input_tokens": 6144,
+            "max_output_tokens": 1024,
+            "max_evidence_tokens": 512,
+            "tokenizer_id": "fixture-unicode-codepoint"
+          }
+        },
+        "deadline_at": "2026-10-16T12:35:33.334468Z"
+      },
+      "response": {
+        "schema_version": "2.0",
+        "request_id": "request-74e1753ff0ed4f979fd6242169824bc4",
+        "call_id": "call-79e11ce1bb704963b6b1b5e578486b17",
+        "parent_call_id": null,
+        "trace_id": "sample-trace",
+        "task_id": "verify-static",
+        "run_id": "verify-static-run",
+        "attempt_id": "sample-attempt",
+        "visibility": "public",
+        "message_id": "msg-e35fab6a9dc8476da5b3092d2be2554c",
+        "in_reply_to": "msg-3f01f10ebdf341b9ba7555ba2edc23f9",
+        "producer": "B",
+        "consumer": "O",
+        "payload_type": "DiagnosticResult",
+        "created_at": "2026-10-16T12:30:33.342Z",
+        "payload": {
+          "status": "completed",
+          "data": {
+            "failure_source": {
+              "kind": "static",
+              "static_report": {
+                "schema_version": "2.0",
+                "created_at": "2026-10-16T12:30:33.323Z",
+                "producer": "B",
+                "report_id": "static-73d755472db94166826958e6bce4918d",
+                "task_id": "verify-static",
+                "attempt_id": "sample-attempt",
+                "code_artifact_id": "sample-code",
+                "revision": "r0",
+                "code_hash": "00ba256446b9f3280e8ca04c16304be43ab4362626f569f2c8581c38e2dc18ef",
+                "status": "failed",
+                "findings": [
+                  {
+                    "check": "syntax",
+                    "status": "failed",
+                    "message": "SyntaxError: expected ':'",
+                    "location": {
+                      "file": "src/main.py",
+                      "line_start": 1,
+                      "line_end": 1,
+                      "symbol": null
+                    }
+                  },
+                  {
+                    "check": "entry_point",
+                    "status": "passed",
+                    "message": "Build entry point identifies the supplied source file.",
+                    "location": null
+                  }
+                ],
+                "policy_version": "static-v2"
+              }
+            },
+            "diagnosis_report": {
+              "schema_version": "2.0",
+              "created_at": "2026-10-16T12:30:33.340Z",
+              "producer": "B",
+              "diagnosis_id": "diagnosis-90c51215424e41ad93a666287312fde0",
+              "task_id": "verify-static",
+              "code_artifact_id": "sample-code",
+              "revision": "r0",
+              "execution_result_id": null,
+              "test_hash": "5729e7d3ee8a426edef6071d2e04a9d6bdfd896c5aa741b2d8e3de2bc31b6031",
+              "failure_class": "syntax_error",
+              "raw_failure_class": "SYNTAX_ERROR",
+              "failure_stage": "static",
+              "root_cause": "规则层检测到 Python 语法错误。",
+              "confidence": 0.95,
+              "evidence_refs": [
+                {
+                  "kind": "source_location",
+                  "artifact_id": "static-73d755472db94166826958e6bce4918d",
+                  "pointer": "/findings/0",
+                  "summary": "SyntaxError: expected ':'"
+                }
+              ],
+              "suggestions": [
+                "Use the supplied code, fixed tests and recorded evidence to produce a new candidate."
+              ],
+              "retrieval_hint": "not_needed",
+              "next_action": "repair",
+              "prior_diagnosis_id": null,
+              "failure_source": {
+                "kind": "static",
+                "static_report": {
+                  "schema_version": "2.0",
+                  "created_at": "2026-10-16T12:30:33.323Z",
+                  "producer": "B",
+                  "report_id": "static-73d755472db94166826958e6bce4918d",
+                  "task_id": "verify-static",
+                  "attempt_id": "sample-attempt",
+                  "code_artifact_id": "sample-code",
+                  "revision": "r0",
+                  "code_hash": "00ba256446b9f3280e8ca04c16304be43ab4362626f569f2c8581c38e2dc18ef",
+                  "status": "failed",
+                  "findings": [
+                    {
+                      "check": "syntax",
+                      "status": "failed",
+                      "message": "SyntaxError: expected ':'",
+                      "location": {
+                        "file": "src/main.py",
+                        "line_start": 1,
+                        "line_end": 1,
+                        "symbol": null
+                      }
+                    },
+                    {
+                      "check": "entry_point",
+                      "status": "passed",
+                      "message": "Build entry point identifies the supplied source file.",
+                      "location": null
+                    }
+                  ],
+                  "policy_version": "static-v2"
+                }
+              },
+              "failure_domain": "code",
+              "hypotheses": [
+                {
+                  "hypothesis_id": "hypothesis-c9cebc3c10ac4b419050affeec294bba",
+                  "statement": "规则层检测到 Python 语法错误。",
+                  "confidence": 0.95,
+                  "evidence_refs": [
+                    {
+                      "kind": "source_location",
+                      "artifact_id": "static-73d755472db94166826958e6bce4918d",
+                      "pointer": "/findings/0",
+                      "summary": "SyntaxError: expected ':'"
+                    }
+                  ],
+                  "locations": [
+                    {
+                      "file": "src/main.py",
+                      "line_start": 1,
+                      "line_end": 1,
+                      "symbol": null
+                    }
+                  ]
+                }
+              ],
+              "locations": [
+                {
+                  "file": "src/main.py",
+                  "line_start": 1,
+                  "line_end": 1,
+                  "symbol": null
+                }
+              ],
+              "context_gap": [],
+              "local_context_sufficiency": "sufficient",
+              "query_hints": [],
+              "failure_signature": "6987556d01ca9f37094a744c5cab18367ea3d3c0f34149e4ddd0557893913f94",
+              "extensions": {
+                "srp_b": {
+                  "algorithm": "existing-rule-extractor-v1",
+                  "model_calls": 0,
+                  "retrieval_hint_is_advisory": true
+                }
+              }
+            },
+            "retrieval_hint": "not_needed",
+            "next_action": "repair"
+          },
+          "error": null,
+          "usage": {
+            "usage_id": "usage-66830e47978a46af8b15f76bd13ff64a",
+            "call_id": "call-79e11ce1bb704963b6b1b5e578486b17",
+            "parent_call_id": null,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "model_calls": 0,
+            "retrieval_calls": 0,
+            "execution_calls": 0,
+            "latency_ms": 0.0,
+            "estimated_cost_usd": null,
+            "measurement_status": "complete",
+            "measurement": "exact",
+            "aggregation": "leaf",
+            "children_usage_ids": [],
+            "notes": [
+              "Local rules only; no model or retrieval was invoked. Cost is not priced."
+            ]
+          },
+          "warnings": []
+        },
+        "extensions": {
+          "srp_b": {
+            "implementation_version": "0.3.0",
+            "operation": "/api/v2/diagnose"
+          }
+        }
+      }
+    },
+    {
+      "operation": "/api/v2/execute",
+      "request": {
+        "schema_version": "2.0",
+        "message_id": "msg-b45443d7e9a34bde93b67651ab6fa6f1",
+        "request_id": "request-166f46115827481383604c02ab6f3146",
+        "in_reply_to": null,
+        "call_id": "call-f3f4f451a72e49179927846e6e17d687",
+        "parent_call_id": null,
+        "trace_id": "sample-trace",
+        "task_id": "verify-failure",
+        "run_id": "verify-failure-run",
+        "attempt_id": "sample-attempt",
+        "producer": "O",
+        "consumer": "B",
+        "payload_type": "ExecutionRequest",
+        "created_at": "2026-10-13T02:00:00Z",
+        "visibility": "public",
+        "payload": {
+          "code_artifact": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "A",
+            "artifact_id": "sample-code",
+            "task_id": "verify-failure",
+            "attempt_id": "sample-attempt",
+            "revision": "r0",
+            "parent_artifact_id": null,
+            "language": "python",
+            "files": [
+              {
+                "path": "src/main.py",
+                "content": "def add(a,b):\n    return a-b\n",
+                "sha256": "6571991a4a56f6c10e2ddf35769fda73abf00ad68c65fa0d7f32f564315cf734"
+              }
+            ],
+            "content_hash": "188e8f2e0367f8d523f92d4565f01d017a99af64eb843b4aced9187882186222",
+            "dependencies": [],
+            "generation_provenance": {
+              "model_id": null,
+              "prompt_version": "fixture-prompt",
+              "decoding_config": {},
+              "finish_reason": null,
+              "truncated": null,
+              "raw_response_ref": null,
+              "prompt_hash": null,
+              "tokenizer_id": null,
+              "input_tokens": null,
+              "output_tokens": null,
+              "content_status": "unknown"
+            }
+          },
+          "test_artifact": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "dataset-adapter",
+            "artifact_id": "sample-tests",
+            "task_id": "verify-failure",
+            "kind": "public",
+            "revision": "t0",
+            "files": [
+              {
+                "path": "tests/test_main.py",
+                "content": "from src.main import add\n\ndef test_add():\n    assert add(2, 3) == 5\n",
+                "sha256": "ffaac4fb1b938f8016dc7d3aafb8d64e767b85cb5d63739423119f16ea7a3099"
+              }
+            ],
+            "test_hash": "5729e7d3ee8a426edef6071d2e04a9d6bdfd896c5aa741b2d8e3de2bc31b6031"
+          },
+          "build_manifest": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "A",
+            "manifest_id": "manifest-0",
+            "language": "python",
+            "runtime": {
+              "name": "python",
+              "version": "3.11"
+            },
+            "dependencies": [
+              "pytest==8.3.5"
+            ],
+            "entry_point": "src/main.py",
+            "test_command": [
+              "python",
+              "-m",
+              "pytest",
+              "tests"
+            ]
+          },
+          "execution_policy": {
+            "policy_id": "runner-policy-1",
+            "timeout_ms": 5000,
+            "memory_mb": 256,
+            "cpu_limit": 1,
+            "max_processes": 16,
+            "network_policy": "disabled",
+            "root_read_only": true,
+            "allowed_write_paths": [
+              "tmp"
+            ]
+          },
+          "purpose": "feedback",
+          "budget": {
+            "budget_id": "budget-1",
+            "revision": 1,
+            "limits": {
+              "tokens": 8192,
+              "model_calls": 8,
+              "retrieval_calls": 4,
+              "execution_calls": 4,
+              "wall_time_ms": 120000
+            },
+            "used": {
+              "tokens": 0,
+              "model_calls": 0,
+              "retrieval_calls": 0,
+              "execution_calls": 0,
+              "wall_time_ms": 0
+            },
+            "reserved": {
+              "tokens": 0,
+              "model_calls": 0,
+              "retrieval_calls": 0,
+              "execution_calls": 0,
+              "wall_time_ms": 0
+            },
+            "remaining": {
+              "tokens": 8192,
+              "model_calls": 8,
+              "retrieval_calls": 4,
+              "execution_calls": 4,
+              "wall_time_ms": 120000
+            },
+            "deadline_at": "2026-10-16T12:35:33.352513Z",
+            "policy_version": "budget-v2"
+          },
+          "call_grant": {
+            "grant_id": "grant-0ebad9e1b14d4ded81975d5311925082",
+            "call_id": "call-f3f4f451a72e49179927846e6e17d687",
+            "parent_call_id": null,
+            "budget_id": "budget-1",
+            "budget_revision": 1,
+            "deadline_at": "2026-10-16T12:35:33.352513Z",
+            "max_model_calls": 4,
+            "max_retrieval_calls": 2,
+            "max_execution_calls": 1,
+            "max_rounds": 1,
+            "max_input_tokens": 6144,
+            "max_output_tokens": 1024,
+            "max_evidence_tokens": 512,
+            "tokenizer_id": "fixture-unicode-codepoint"
+          }
+        },
+        "deadline_at": "2026-10-16T12:35:33.352513Z"
+      },
+      "response": {
+        "schema_version": "2.0",
+        "request_id": "request-166f46115827481383604c02ab6f3146",
+        "call_id": "call-f3f4f451a72e49179927846e6e17d687",
+        "parent_call_id": null,
+        "trace_id": "sample-trace",
+        "task_id": "verify-failure",
+        "run_id": "verify-failure-run",
+        "attempt_id": "sample-attempt",
+        "visibility": "public",
+        "message_id": "msg-368d963418644ec3bde1e9282ae147a8",
+        "in_reply_to": "msg-b45443d7e9a34bde93b67651ab6fa6f1",
+        "producer": "B",
+        "consumer": "O",
+        "payload_type": "ExecutionResult",
+        "created_at": "2026-10-16T12:30:35.499Z",
+        "payload": {
+          "status": "completed",
+          "data": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-16T12:30:35.493Z",
+            "producer": "B",
+            "execution_id": "execution-abd86bd4aeaa48d29b0dbb1b3c9ec57a",
+            "task_id": "verify-failure",
+            "attempt_id": "sample-attempt",
+            "code_artifact_id": "sample-code",
+            "revision": "r0",
+            "code_hash": "188e8f2e0367f8d523f92d4565f01d017a99af64eb843b4aced9187882186222",
+            "test_artifact_id": "sample-tests",
+            "test_hash": "5729e7d3ee8a426edef6071d2e04a9d6bdfd896c5aa741b2d8e3de2bc31b6031",
+            "execution_config_hash": "a9c855c8f0b4905690af2bf178b5795e83d40d8b288e934ec0fd65a4e2b0b8d5",
+            "purpose": "feedback",
+            "execution_context": {
+              "context_id": "execution-context-9d56663a9fe140b8b0a181af2c7d1b02",
+              "build_manifest": {
+                "schema_version": "2.0",
+                "created_at": "2026-10-13T02:00:00Z",
+                "producer": "A",
+                "manifest_id": "manifest-0",
+                "language": "python",
+                "runtime": {
+                  "name": "python",
+                  "version": "3.11"
+                },
+                "dependencies": [
+                  "pytest==8.3.5"
+                ],
+                "entry_point": "src/main.py",
+                "test_command": [
+                  "python",
+                  "-m",
+                  "pytest",
+                  "tests"
+                ]
+              },
+              "execution_policy": {
+                "policy_id": "runner-policy-1",
+                "timeout_ms": 5000,
+                "memory_mb": 256,
+                "cpu_limit": 1,
+                "max_processes": 16,
+                "network_policy": "disabled",
+                "root_read_only": true,
+                "allowed_write_paths": [
+                  "tmp"
+                ]
+              },
+              "execution_config_hash": "a9c855c8f0b4905690af2bf178b5795e83d40d8b288e934ec0fd65a4e2b0b8d5",
+              "requested_runtime": {
+                "name": "python",
+                "version": "3.11"
+              },
+              "actual_runtime": {
+                "name": "python",
+                "version": "3.11.5"
+              },
+              "package_versions": [
+                {
+                  "name": "pytest",
+                  "version": "8.3.5",
+                  "source": "observed"
+                }
+              ],
+              "image_digest": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+              "dependency_lock_ref": null,
+              "isolation_guarantees": {
+                "network": "none",
+                "root_read_only": true,
+                "workspace_read_only": true,
+                "allowed_write_paths": [
+                  "tmp"
+                ],
+                "memory_mb": 256,
+                "cpu_limit": 1,
+                "max_processes": 16,
+                "user": "65534:65534",
+                "capabilities": "dropped",
+                "output_limit_bytes": 1048576,
+                "init_process": true,
+                "write_storage": "bounded tmpfs plus a private report file",
+                "container_cleanup_confirmed": true
+              },
+              "measurement_status": "partial"
+            },
+            "visibility": "public",
+            "execution_status": "completed",
+            "test_outcome": "failed",
+            "exit_code": 1,
+            "tests_passed": 0,
+            "tests_total": 1,
+            "failure_stage": "test",
+            "stdout": {
+              "text": "F                                                                        [100%]\n=================================== FAILURES ===================================\n___________________________________ test_add ___________________________________\ntests/test_main.py:4: in test_add\n    assert add(2, 3) == 5\nE   assert -1 == 5\nE    +  where -1 = add(2, 3)\n---------------- generated xml file: /workspace/tmp/b-junit.xml ----------------\n=========================== short test summary info ============================\nFAILED tests/test_main.py::test_add - assert -1 == 5\n1 failed in 0.08s\n",
+              "sha256": "13855adf7261fc914fcc3b1354040318ec66c5fc260058b730ff6377a9f8d8b0",
+              "truncated": false
+            },
+            "stderr": {
+              "text": "",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "truncated": false
+            },
+            "resource_usage": {
+              "wall_time_ms": 2140.0,
+              "cpu_time_ms": null,
+              "peak_memory_bytes": null,
+              "measurement_status": "unknown",
+              "notes": [
+                "Target resource measurements are unavailable."
+              ]
+            },
+            "test_case_results": [
+              {
+                "test_id": "tests.test_main::test_add",
+                "status": "failed",
+                "oracle_level": "public",
+                "expected": null,
+                "actual": null,
+                "error_type": null,
+                "message": "assert -1 == 5\n +  where -1 = add(2, 3)\ntests/test_main.py:4: in test_add\n    assert add(2, 3) == 5\nE   assert -1 == 5\nE    +  where -1 = add(2, 3)",
+                "location": null
+              }
+            ],
+            "traceback": [],
+            "signal": null,
+            "termination_reason": "normal"
+          },
+          "error": null,
+          "usage": {
+            "usage_id": "usage-f214927ad81d40939693b771c46044a0",
+            "call_id": "call-f3f4f451a72e49179927846e6e17d687",
+            "parent_call_id": null,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "model_calls": 0,
+            "retrieval_calls": 0,
+            "execution_calls": 1,
+            "latency_ms": 2140.0,
+            "estimated_cost_usd": null,
+            "measurement_status": "complete",
+            "measurement": "exact",
+            "aggregation": "leaf",
+            "children_usage_ids": [],
+            "notes": [
+              "Local rules only; no model or retrieval was invoked. Cost is not priced."
+            ]
+          },
+          "warnings": []
+        },
+        "extensions": {
+          "srp_b": {
+            "implementation_version": "0.3.0",
+            "operation": "/api/v2/execute"
+          }
+        }
+      }
+    },
+    {
+      "operation": "/api/v2/diagnose",
+      "request": {
+        "schema_version": "2.0",
+        "message_id": "msg-47e33611afaa4b6283ad129025d6105c",
+        "request_id": "request-d3bcd5a0a29444eaa117ce7539b8d62d",
+        "in_reply_to": null,
+        "call_id": "call-26c67c47d0914ba699cb012bfc373716",
+        "parent_call_id": null,
+        "trace_id": "sample-trace",
+        "task_id": "verify-failure",
+        "run_id": "verify-failure-run",
+        "attempt_id": "sample-attempt",
+        "producer": "O",
+        "consumer": "B",
+        "payload_type": "DiagnosticRequest",
+        "created_at": "2026-10-13T02:00:00Z",
+        "visibility": "public",
+        "payload": {
+          "task_spec": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "O",
+            "task_id": "verify-failure",
+            "language": "python",
+            "runtime": {
+              "name": "python",
+              "version": "3.11"
+            },
+            "instruction": "Implement add(a, b), returning the sum. Fixed tests must remain unchanged.",
+            "constraints": [
+              "保持公开测试不变"
+            ],
+            "entry_point": "src/main.py",
+            "task_type": "function_generation",
+            "input_context": {
+              "target_file": null,
+              "prefix": null,
+              "suffix": null,
+              "cursor": null,
+              "workspace_snapshot_ref": null
+            }
+          },
+          "code_artifact": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "A",
+            "artifact_id": "sample-code",
+            "task_id": "verify-failure",
+            "attempt_id": "sample-attempt",
+            "revision": "r0",
+            "parent_artifact_id": null,
+            "language": "python",
+            "files": [
+              {
+                "path": "src/main.py",
+                "content": "def add(a,b):\n    return a-b\n",
+                "sha256": "6571991a4a56f6c10e2ddf35769fda73abf00ad68c65fa0d7f32f564315cf734"
+              }
+            ],
+            "content_hash": "188e8f2e0367f8d523f92d4565f01d017a99af64eb843b4aced9187882186222",
+            "dependencies": [],
+            "generation_provenance": {
+              "model_id": null,
+              "prompt_version": "fixture-prompt",
+              "decoding_config": {},
+              "finish_reason": null,
+              "truncated": null,
+              "raw_response_ref": null,
+              "prompt_hash": null,
+              "tokenizer_id": null,
+              "input_tokens": null,
+              "output_tokens": null,
+              "content_status": "unknown"
+            }
+          },
+          "test_artifact": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "dataset-adapter",
+            "artifact_id": "sample-tests",
+            "task_id": "verify-failure",
+            "kind": "public",
+            "revision": "t0",
+            "files": [
+              {
+                "path": "tests/test_main.py",
+                "content": "from src.main import add\n\ndef test_add():\n    assert add(2, 3) == 5\n",
+                "sha256": "ffaac4fb1b938f8016dc7d3aafb8d64e767b85cb5d63739423119f16ea7a3099"
+              }
+            ],
+            "test_hash": "5729e7d3ee8a426edef6071d2e04a9d6bdfd896c5aa741b2d8e3de2bc31b6031"
+          },
+          "input_mode": "feedback_only",
+          "failure_source": {
+            "kind": "execution",
+            "execution_result": {
+              "schema_version": "2.0",
+              "created_at": "2026-10-16T12:30:35.493Z",
+              "producer": "B",
+              "execution_id": "execution-abd86bd4aeaa48d29b0dbb1b3c9ec57a",
+              "task_id": "verify-failure",
+              "attempt_id": "sample-attempt",
+              "code_artifact_id": "sample-code",
+              "revision": "r0",
+              "code_hash": "188e8f2e0367f8d523f92d4565f01d017a99af64eb843b4aced9187882186222",
+              "test_artifact_id": "sample-tests",
+              "test_hash": "5729e7d3ee8a426edef6071d2e04a9d6bdfd896c5aa741b2d8e3de2bc31b6031",
+              "execution_config_hash": "a9c855c8f0b4905690af2bf178b5795e83d40d8b288e934ec0fd65a4e2b0b8d5",
+              "purpose": "feedback",
+              "execution_context": {
+                "context_id": "execution-context-9d56663a9fe140b8b0a181af2c7d1b02",
+                "build_manifest": {
+                  "schema_version": "2.0",
+                  "created_at": "2026-10-13T02:00:00Z",
+                  "producer": "A",
+                  "manifest_id": "manifest-0",
+                  "language": "python",
+                  "runtime": {
+                    "name": "python",
+                    "version": "3.11"
+                  },
+                  "dependencies": [
+                    "pytest==8.3.5"
+                  ],
+                  "entry_point": "src/main.py",
+                  "test_command": [
+                    "python",
+                    "-m",
+                    "pytest",
+                    "tests"
+                  ]
+                },
+                "execution_policy": {
+                  "policy_id": "runner-policy-1",
+                  "timeout_ms": 5000,
+                  "memory_mb": 256,
+                  "cpu_limit": 1,
+                  "max_processes": 16,
+                  "network_policy": "disabled",
+                  "root_read_only": true,
+                  "allowed_write_paths": [
+                    "tmp"
+                  ]
+                },
+                "execution_config_hash": "a9c855c8f0b4905690af2bf178b5795e83d40d8b288e934ec0fd65a4e2b0b8d5",
+                "requested_runtime": {
+                  "name": "python",
+                  "version": "3.11"
+                },
+                "actual_runtime": {
+                  "name": "python",
+                  "version": "3.11.5"
+                },
+                "package_versions": [
+                  {
+                    "name": "pytest",
+                    "version": "8.3.5",
+                    "source": "observed"
+                  }
+                ],
+                "image_digest": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+                "dependency_lock_ref": null,
+                "isolation_guarantees": {
+                  "network": "none",
+                  "root_read_only": true,
+                  "workspace_read_only": true,
+                  "allowed_write_paths": [
+                    "tmp"
+                  ],
+                  "memory_mb": 256,
+                  "cpu_limit": 1,
+                  "max_processes": 16,
+                  "user": "65534:65534",
+                  "capabilities": "dropped",
+                  "output_limit_bytes": 1048576,
+                  "init_process": true,
+                  "write_storage": "bounded tmpfs plus a private report file",
+                  "container_cleanup_confirmed": true
+                },
+                "measurement_status": "partial"
+              },
+              "visibility": "public",
+              "execution_status": "completed",
+              "test_outcome": "failed",
+              "exit_code": 1,
+              "tests_passed": 0,
+              "tests_total": 1,
+              "failure_stage": "test",
+              "stdout": {
+                "text": "F                                                                        [100%]\n=================================== FAILURES ===================================\n___________________________________ test_add ___________________________________\ntests/test_main.py:4: in test_add\n    assert add(2, 3) == 5\nE   assert -1 == 5\nE    +  where -1 = add(2, 3)\n---------------- generated xml file: /workspace/tmp/b-junit.xml ----------------\n=========================== short test summary info ============================\nFAILED tests/test_main.py::test_add - assert -1 == 5\n1 failed in 0.08s\n",
+                "sha256": "13855adf7261fc914fcc3b1354040318ec66c5fc260058b730ff6377a9f8d8b0",
+                "truncated": false
+              },
+              "stderr": {
+                "text": "",
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "truncated": false
+              },
+              "resource_usage": {
+                "wall_time_ms": 2140.0,
+                "cpu_time_ms": null,
+                "peak_memory_bytes": null,
+                "measurement_status": "unknown",
+                "notes": [
+                  "Target resource measurements are unavailable."
+                ]
+              },
+              "test_case_results": [
+                {
+                  "test_id": "tests.test_main::test_add",
+                  "status": "failed",
+                  "oracle_level": "public",
+                  "expected": null,
+                  "actual": null,
+                  "error_type": null,
+                  "message": "assert -1 == 5\n +  where -1 = add(2, 3)\ntests/test_main.py:4: in test_add\n    assert add(2, 3) == 5\nE   assert -1 == 5\nE    +  where -1 = add(2, 3)",
+                  "location": null
+                }
+              ],
+              "traceback": [],
+              "signal": null,
+              "termination_reason": "normal"
+            }
+          },
+          "execution_context": {
+            "context_id": "execution-context-9d56663a9fe140b8b0a181af2c7d1b02",
+            "build_manifest": {
+              "schema_version": "2.0",
+              "created_at": "2026-10-13T02:00:00Z",
+              "producer": "A",
+              "manifest_id": "manifest-0",
+              "language": "python",
+              "runtime": {
+                "name": "python",
+                "version": "3.11"
+              },
+              "dependencies": [
+                "pytest==8.3.5"
+              ],
+              "entry_point": "src/main.py",
+              "test_command": [
+                "python",
+                "-m",
+                "pytest",
+                "tests"
+              ]
+            },
+            "execution_policy": {
+              "policy_id": "runner-policy-1",
+              "timeout_ms": 5000,
+              "memory_mb": 256,
+              "cpu_limit": 1,
+              "max_processes": 16,
+              "network_policy": "disabled",
+              "root_read_only": true,
+              "allowed_write_paths": [
+                "tmp"
+              ]
+            },
+            "execution_config_hash": "a9c855c8f0b4905690af2bf178b5795e83d40d8b288e934ec0fd65a4e2b0b8d5",
+            "requested_runtime": {
+              "name": "python",
+              "version": "3.11"
+            },
+            "actual_runtime": {
+              "name": "python",
+              "version": "3.11.5"
+            },
+            "package_versions": [
+              {
+                "name": "pytest",
+                "version": "8.3.5",
+                "source": "observed"
+              }
+            ],
+            "image_digest": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+            "dependency_lock_ref": null,
+            "isolation_guarantees": {
+              "network": "none",
+              "root_read_only": true,
+              "workspace_read_only": true,
+              "allowed_write_paths": [
+                "tmp"
+              ],
+              "memory_mb": 256,
+              "cpu_limit": 1,
+              "max_processes": 16,
+              "user": "65534:65534",
+              "capabilities": "dropped",
+              "output_limit_bytes": 1048576,
+              "init_process": true,
+              "write_storage": "bounded tmpfs plus a private report file",
+              "container_cleanup_confirmed": true
+            },
+            "measurement_status": "partial"
+          },
+          "history_view": {
+            "history_id": "history-0",
+            "task_id": "verify-failure",
+            "run_id": "verify-failure-run",
+            "visibility": "public",
+            "source_refs": [],
+            "attempt_summaries": [],
+            "truncation": {
+              "truncated": false,
+              "omitted_attempt_ids": [],
+              "reason": null
+            }
+          },
+          "prior_diagnosis_ref": null,
+          "budget": {
+            "budget_id": "budget-1",
+            "revision": 1,
+            "limits": {
+              "tokens": 8192,
+              "model_calls": 8,
+              "retrieval_calls": 4,
+              "execution_calls": 4,
+              "wall_time_ms": 120000
+            },
+            "used": {
+              "tokens": 0,
+              "model_calls": 0,
+              "retrieval_calls": 0,
+              "execution_calls": 0,
+              "wall_time_ms": 0
+            },
+            "reserved": {
+              "tokens": 0,
+              "model_calls": 0,
+              "retrieval_calls": 0,
+              "execution_calls": 0,
+              "wall_time_ms": 0
+            },
+            "remaining": {
+              "tokens": 8192,
+              "model_calls": 8,
+              "retrieval_calls": 4,
+              "execution_calls": 4,
+              "wall_time_ms": 120000
+            },
+            "deadline_at": "2026-10-16T12:35:35.510536Z",
+            "policy_version": "budget-v2"
+          },
+          "call_grant": {
+            "grant_id": "grant-933cdf1a4160461fad59017cc609f3f0",
+            "call_id": "call-26c67c47d0914ba699cb012bfc373716",
+            "parent_call_id": null,
+            "budget_id": "budget-1",
+            "budget_revision": 1,
+            "deadline_at": "2026-10-16T12:35:35.510536Z",
+            "max_model_calls": 4,
+            "max_retrieval_calls": 2,
+            "max_execution_calls": 1,
+            "max_rounds": 1,
+            "max_input_tokens": 6144,
+            "max_output_tokens": 1024,
+            "max_evidence_tokens": 512,
+            "tokenizer_id": "fixture-unicode-codepoint"
+          }
+        },
+        "deadline_at": "2026-10-16T12:35:35.510536Z"
+      },
+      "response": {
+        "schema_version": "2.0",
+        "request_id": "request-d3bcd5a0a29444eaa117ce7539b8d62d",
+        "call_id": "call-26c67c47d0914ba699cb012bfc373716",
+        "parent_call_id": null,
+        "trace_id": "sample-trace",
+        "task_id": "verify-failure",
+        "run_id": "verify-failure-run",
+        "attempt_id": "sample-attempt",
+        "visibility": "public",
+        "message_id": "msg-b2aebbf6f59e495888f9ac57de80b688",
+        "in_reply_to": "msg-47e33611afaa4b6283ad129025d6105c",
+        "producer": "B",
+        "consumer": "O",
+        "payload_type": "DiagnosticResult",
+        "created_at": "2026-10-16T12:30:35.520Z",
+        "payload": {
+          "status": "completed",
+          "data": {
+            "failure_source": {
+              "kind": "execution",
+              "execution_result": {
+                "schema_version": "2.0",
+                "created_at": "2026-10-16T12:30:35.493Z",
+                "producer": "B",
+                "execution_id": "execution-abd86bd4aeaa48d29b0dbb1b3c9ec57a",
+                "task_id": "verify-failure",
+                "attempt_id": "sample-attempt",
+                "code_artifact_id": "sample-code",
+                "revision": "r0",
+                "code_hash": "188e8f2e0367f8d523f92d4565f01d017a99af64eb843b4aced9187882186222",
+                "test_artifact_id": "sample-tests",
+                "test_hash": "5729e7d3ee8a426edef6071d2e04a9d6bdfd896c5aa741b2d8e3de2bc31b6031",
+                "execution_config_hash": "a9c855c8f0b4905690af2bf178b5795e83d40d8b288e934ec0fd65a4e2b0b8d5",
+                "purpose": "feedback",
+                "execution_context": {
+                  "context_id": "execution-context-9d56663a9fe140b8b0a181af2c7d1b02",
+                  "build_manifest": {
+                    "schema_version": "2.0",
+                    "created_at": "2026-10-13T02:00:00Z",
+                    "producer": "A",
+                    "manifest_id": "manifest-0",
+                    "language": "python",
+                    "runtime": {
+                      "name": "python",
+                      "version": "3.11"
+                    },
+                    "dependencies": [
+                      "pytest==8.3.5"
+                    ],
+                    "entry_point": "src/main.py",
+                    "test_command": [
+                      "python",
+                      "-m",
+                      "pytest",
+                      "tests"
+                    ]
+                  },
+                  "execution_policy": {
+                    "policy_id": "runner-policy-1",
+                    "timeout_ms": 5000,
+                    "memory_mb": 256,
+                    "cpu_limit": 1,
+                    "max_processes": 16,
+                    "network_policy": "disabled",
+                    "root_read_only": true,
+                    "allowed_write_paths": [
+                      "tmp"
+                    ]
+                  },
+                  "execution_config_hash": "a9c855c8f0b4905690af2bf178b5795e83d40d8b288e934ec0fd65a4e2b0b8d5",
+                  "requested_runtime": {
+                    "name": "python",
+                    "version": "3.11"
+                  },
+                  "actual_runtime": {
+                    "name": "python",
+                    "version": "3.11.5"
+                  },
+                  "package_versions": [
+                    {
+                      "name": "pytest",
+                      "version": "8.3.5",
+                      "source": "observed"
+                    }
+                  ],
+                  "image_digest": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+                  "dependency_lock_ref": null,
+                  "isolation_guarantees": {
+                    "network": "none",
+                    "root_read_only": true,
+                    "workspace_read_only": true,
+                    "allowed_write_paths": [
+                      "tmp"
+                    ],
+                    "memory_mb": 256,
+                    "cpu_limit": 1,
+                    "max_processes": 16,
+                    "user": "65534:65534",
+                    "capabilities": "dropped",
+                    "output_limit_bytes": 1048576,
+                    "init_process": true,
+                    "write_storage": "bounded tmpfs plus a private report file",
+                    "container_cleanup_confirmed": true
+                  },
+                  "measurement_status": "partial"
+                },
+                "visibility": "public",
+                "execution_status": "completed",
+                "test_outcome": "failed",
+                "exit_code": 1,
+                "tests_passed": 0,
+                "tests_total": 1,
+                "failure_stage": "test",
+                "stdout": {
+                  "text": "F                                                                        [100%]\n=================================== FAILURES ===================================\n___________________________________ test_add ___________________________________\ntests/test_main.py:4: in test_add\n    assert add(2, 3) == 5\nE   assert -1 == 5\nE    +  where -1 = add(2, 3)\n---------------- generated xml file: /workspace/tmp/b-junit.xml ----------------\n=========================== short test summary info ============================\nFAILED tests/test_main.py::test_add - assert -1 == 5\n1 failed in 0.08s\n",
+                  "sha256": "13855adf7261fc914fcc3b1354040318ec66c5fc260058b730ff6377a9f8d8b0",
+                  "truncated": false
+                },
+                "stderr": {
+                  "text": "",
+                  "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                  "truncated": false
+                },
+                "resource_usage": {
+                  "wall_time_ms": 2140.0,
+                  "cpu_time_ms": null,
+                  "peak_memory_bytes": null,
+                  "measurement_status": "unknown",
+                  "notes": [
+                    "Target resource measurements are unavailable."
+                  ]
+                },
+                "test_case_results": [
+                  {
+                    "test_id": "tests.test_main::test_add",
+                    "status": "failed",
+                    "oracle_level": "public",
+                    "expected": null,
+                    "actual": null,
+                    "error_type": null,
+                    "message": "assert -1 == 5\n +  where -1 = add(2, 3)\ntests/test_main.py:4: in test_add\n    assert add(2, 3) == 5\nE   assert -1 == 5\nE    +  where -1 = add(2, 3)",
+                    "location": null
+                  }
+                ],
+                "traceback": [],
+                "signal": null,
+                "termination_reason": "normal"
+              }
+            },
+            "diagnosis_report": {
+              "schema_version": "2.0",
+              "created_at": "2026-10-16T12:30:35.518Z",
+              "producer": "B",
+              "diagnosis_id": "diagnosis-8737eba8a4bd4d08a98a1a61c36e48bc",
+              "task_id": "verify-failure",
+              "code_artifact_id": "sample-code",
+              "revision": "r0",
+              "execution_result_id": "execution-abd86bd4aeaa48d29b0dbb1b3c9ec57a",
+              "test_hash": "5729e7d3ee8a426edef6071d2e04a9d6bdfd896c5aa741b2d8e3de2bc31b6031",
+              "failure_class": "test_failure",
+              "raw_failure_class": "UNKNOWN",
+              "failure_stage": "test",
+              "root_cause": "The supplied fixed tests failed; inspect the recorded assertions before changing the implementation.",
+              "confidence": null,
+              "evidence_refs": [
+                {
+                  "kind": "test_result",
+                  "artifact_id": "execution-abd86bd4aeaa48d29b0dbb1b3c9ec57a",
+                  "pointer": "/test_case_results/0",
+                  "summary": "assert -1 == 5\n +  where -1 = add(2, 3)\ntests/test_main.py:4: in test_add\n    assert add(2, 3) == 5\nE   assert -1 == 5\nE    +  where -1 = add(2, 3)"
+                },
+                {
+                  "kind": "log_span",
+                  "artifact_id": "execution-abd86bd4aeaa48d29b0dbb1b3c9ec57a",
+                  "pointer": "/stderr",
+                  "summary": "Observed execution logs; interpretation is a hypothesis."
+                }
+              ],
+              "suggestions": [
+                "Use the supplied code, fixed tests and recorded evidence to produce a new candidate."
+              ],
+              "retrieval_hint": "not_needed",
+              "next_action": "repair",
+              "prior_diagnosis_id": null,
+              "failure_source": {
+                "kind": "execution",
+                "execution_result": {
+                  "schema_version": "2.0",
+                  "created_at": "2026-10-16T12:30:35.493Z",
+                  "producer": "B",
+                  "execution_id": "execution-abd86bd4aeaa48d29b0dbb1b3c9ec57a",
+                  "task_id": "verify-failure",
+                  "attempt_id": "sample-attempt",
+                  "code_artifact_id": "sample-code",
+                  "revision": "r0",
+                  "code_hash": "188e8f2e0367f8d523f92d4565f01d017a99af64eb843b4aced9187882186222",
+                  "test_artifact_id": "sample-tests",
+                  "test_hash": "5729e7d3ee8a426edef6071d2e04a9d6bdfd896c5aa741b2d8e3de2bc31b6031",
+                  "execution_config_hash": "a9c855c8f0b4905690af2bf178b5795e83d40d8b288e934ec0fd65a4e2b0b8d5",
+                  "purpose": "feedback",
+                  "execution_context": {
+                    "context_id": "execution-context-9d56663a9fe140b8b0a181af2c7d1b02",
+                    "build_manifest": {
+                      "schema_version": "2.0",
+                      "created_at": "2026-10-13T02:00:00Z",
+                      "producer": "A",
+                      "manifest_id": "manifest-0",
+                      "language": "python",
+                      "runtime": {
+                        "name": "python",
+                        "version": "3.11"
+                      },
+                      "dependencies": [
+                        "pytest==8.3.5"
+                      ],
+                      "entry_point": "src/main.py",
+                      "test_command": [
+                        "python",
+                        "-m",
+                        "pytest",
+                        "tests"
+                      ]
+                    },
+                    "execution_policy": {
+                      "policy_id": "runner-policy-1",
+                      "timeout_ms": 5000,
+                      "memory_mb": 256,
+                      "cpu_limit": 1,
+                      "max_processes": 16,
+                      "network_policy": "disabled",
+                      "root_read_only": true,
+                      "allowed_write_paths": [
+                        "tmp"
+                      ]
+                    },
+                    "execution_config_hash": "a9c855c8f0b4905690af2bf178b5795e83d40d8b288e934ec0fd65a4e2b0b8d5",
+                    "requested_runtime": {
+                      "name": "python",
+                      "version": "3.11"
+                    },
+                    "actual_runtime": {
+                      "name": "python",
+                      "version": "3.11.5"
+                    },
+                    "package_versions": [
+                      {
+                        "name": "pytest",
+                        "version": "8.3.5",
+                        "source": "observed"
+                      }
+                    ],
+                    "image_digest": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+                    "dependency_lock_ref": null,
+                    "isolation_guarantees": {
+                      "network": "none",
+                      "root_read_only": true,
+                      "workspace_read_only": true,
+                      "allowed_write_paths": [
+                        "tmp"
+                      ],
+                      "memory_mb": 256,
+                      "cpu_limit": 1,
+                      "max_processes": 16,
+                      "user": "65534:65534",
+                      "capabilities": "dropped",
+                      "output_limit_bytes": 1048576,
+                      "init_process": true,
+                      "write_storage": "bounded tmpfs plus a private report file",
+                      "container_cleanup_confirmed": true
+                    },
+                    "measurement_status": "partial"
+                  },
+                  "visibility": "public",
+                  "execution_status": "completed",
+                  "test_outcome": "failed",
+                  "exit_code": 1,
+                  "tests_passed": 0,
+                  "tests_total": 1,
+                  "failure_stage": "test",
+                  "stdout": {
+                    "text": "F                                                                        [100%]\n=================================== FAILURES ===================================\n___________________________________ test_add ___________________________________\ntests/test_main.py:4: in test_add\n    assert add(2, 3) == 5\nE   assert -1 == 5\nE    +  where -1 = add(2, 3)\n---------------- generated xml file: /workspace/tmp/b-junit.xml ----------------\n=========================== short test summary info ============================\nFAILED tests/test_main.py::test_add - assert -1 == 5\n1 failed in 0.08s\n",
+                    "sha256": "13855adf7261fc914fcc3b1354040318ec66c5fc260058b730ff6377a9f8d8b0",
+                    "truncated": false
+                  },
+                  "stderr": {
+                    "text": "",
+                    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                    "truncated": false
+                  },
+                  "resource_usage": {
+                    "wall_time_ms": 2140.0,
+                    "cpu_time_ms": null,
+                    "peak_memory_bytes": null,
+                    "measurement_status": "unknown",
+                    "notes": [
+                      "Target resource measurements are unavailable."
+                    ]
+                  },
+                  "test_case_results": [
+                    {
+                      "test_id": "tests.test_main::test_add",
+                      "status": "failed",
+                      "oracle_level": "public",
+                      "expected": null,
+                      "actual": null,
+                      "error_type": null,
+                      "message": "assert -1 == 5\n +  where -1 = add(2, 3)\ntests/test_main.py:4: in test_add\n    assert add(2, 3) == 5\nE   assert -1 == 5\nE    +  where -1 = add(2, 3)",
+                      "location": null
+                    }
+                  ],
+                  "traceback": [],
+                  "signal": null,
+                  "termination_reason": "normal"
+                }
+              },
+              "failure_domain": "code",
+              "hypotheses": [
+                {
+                  "hypothesis_id": "hypothesis-3fbcc96df9d64b45a350a241c6c6fe3f",
+                  "statement": "The supplied fixed tests failed; inspect the recorded assertions before changing the implementation.",
+                  "confidence": null,
+                  "evidence_refs": [
+                    {
+                      "kind": "test_result",
+                      "artifact_id": "execution-abd86bd4aeaa48d29b0dbb1b3c9ec57a",
+                      "pointer": "/test_case_results/0",
+                      "summary": "assert -1 == 5\n +  where -1 = add(2, 3)\ntests/test_main.py:4: in test_add\n    assert add(2, 3) == 5\nE   assert -1 == 5\nE    +  where -1 = add(2, 3)"
+                    },
+                    {
+                      "kind": "log_span",
+                      "artifact_id": "execution-abd86bd4aeaa48d29b0dbb1b3c9ec57a",
+                      "pointer": "/stderr",
+                      "summary": "Observed execution logs; interpretation is a hypothesis."
+                    }
+                  ],
+                  "locations": []
+                }
+              ],
+              "locations": [],
+              "context_gap": [],
+              "local_context_sufficiency": "sufficient",
+              "query_hints": [],
+              "failure_signature": "538e6e84d110604301a6945ee0092da8da815141ffdca916668d7571e741d9d1",
+              "extensions": {
+                "srp_b": {
+                  "algorithm": "existing-rule-extractor-v1",
+                  "model_calls": 0,
+                  "retrieval_hint_is_advisory": true
+                }
+              }
+            },
+            "retrieval_hint": "not_needed",
+            "next_action": "repair"
+          },
+          "error": null,
+          "usage": {
+            "usage_id": "usage-4950e2b551b64a1f8dd698020bbf58b9",
+            "call_id": "call-26c67c47d0914ba699cb012bfc373716",
+            "parent_call_id": null,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "model_calls": 0,
+            "retrieval_calls": 0,
+            "execution_calls": 0,
+            "latency_ms": 0.0,
+            "estimated_cost_usd": null,
+            "measurement_status": "complete",
+            "measurement": "exact",
+            "aggregation": "leaf",
+            "children_usage_ids": [],
+            "notes": [
+              "Local rules only; no model or retrieval was invoked. Cost is not priced."
+            ]
+          },
+          "warnings": []
+        },
+        "extensions": {
+          "srp_b": {
+            "implementation_version": "0.3.0",
+            "operation": "/api/v2/diagnose"
+          }
+        }
+      }
+    },
+    {
+      "operation": "/api/v2/execute",
+      "request": {
+        "schema_version": "2.0",
+        "message_id": "msg-4bde1732d33d450c91713c0b4d6dfa66",
+        "request_id": "request-436f4a9f25114759a37b9d48838ea81f",
+        "in_reply_to": null,
+        "call_id": "call-2c5184b0e0fd40c9b535d82ca0b357b4",
+        "parent_call_id": null,
+        "trace_id": "sample-trace",
+        "task_id": "verify-success",
+        "run_id": "verify-success-run",
+        "attempt_id": "sample-attempt",
+        "producer": "O",
+        "consumer": "B",
+        "payload_type": "ExecutionRequest",
+        "created_at": "2026-10-13T02:00:00Z",
+        "visibility": "public",
+        "payload": {
+          "code_artifact": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "A",
+            "artifact_id": "sample-code",
+            "task_id": "verify-success",
+            "attempt_id": "sample-attempt",
+            "revision": "r0",
+            "parent_artifact_id": null,
+            "language": "python",
+            "files": [
+              {
+                "path": "src/main.py",
+                "content": "def add(a, b):\n    return a + b\n",
+                "sha256": "ba1a531f581d2e6094e978ed6f7aca7a8d92eeb62c6e7ad73ee692f7f18bc772"
+              }
+            ],
+            "content_hash": "d7a21898a23011ca7ed4c66206cf94ff230326c9dc0ecbf548ca923d975cc1cd",
+            "dependencies": [],
+            "generation_provenance": {
+              "model_id": null,
+              "prompt_version": "fixture-prompt",
+              "decoding_config": {},
+              "finish_reason": null,
+              "truncated": null,
+              "raw_response_ref": null,
+              "prompt_hash": null,
+              "tokenizer_id": null,
+              "input_tokens": null,
+              "output_tokens": null,
+              "content_status": "unknown"
+            }
+          },
+          "test_artifact": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "dataset-adapter",
+            "artifact_id": "sample-tests",
+            "task_id": "verify-success",
+            "kind": "public",
+            "revision": "t0",
+            "files": [
+              {
+                "path": "tests/test_main.py",
+                "content": "from src.main import add\n\ndef test_add():\n    assert add(2, 3) == 5\n",
+                "sha256": "ffaac4fb1b938f8016dc7d3aafb8d64e767b85cb5d63739423119f16ea7a3099"
+              }
+            ],
+            "test_hash": "5729e7d3ee8a426edef6071d2e04a9d6bdfd896c5aa741b2d8e3de2bc31b6031"
+          },
+          "build_manifest": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "A",
+            "manifest_id": "manifest-0",
+            "language": "python",
+            "runtime": {
+              "name": "python",
+              "version": "3.11"
+            },
+            "dependencies": [
+              "pytest==8.3.5"
+            ],
+            "entry_point": "src/main.py",
+            "test_command": [
+              "python",
+              "-m",
+              "pytest",
+              "tests"
+            ]
+          },
+          "execution_policy": {
+            "policy_id": "runner-policy-1",
+            "timeout_ms": 5000,
+            "memory_mb": 256,
+            "cpu_limit": 1,
+            "max_processes": 16,
+            "network_policy": "disabled",
+            "root_read_only": true,
+            "allowed_write_paths": [
+              "tmp"
+            ]
+          },
+          "purpose": "feedback",
+          "budget": {
+            "budget_id": "budget-1",
+            "revision": 1,
+            "limits": {
+              "tokens": 8192,
+              "model_calls": 8,
+              "retrieval_calls": 4,
+              "execution_calls": 4,
+              "wall_time_ms": 120000
+            },
+            "used": {
+              "tokens": 0,
+              "model_calls": 0,
+              "retrieval_calls": 0,
+              "execution_calls": 0,
+              "wall_time_ms": 0
+            },
+            "reserved": {
+              "tokens": 0,
+              "model_calls": 0,
+              "retrieval_calls": 0,
+              "execution_calls": 0,
+              "wall_time_ms": 0
+            },
+            "remaining": {
+              "tokens": 8192,
+              "model_calls": 8,
+              "retrieval_calls": 4,
+              "execution_calls": 4,
+              "wall_time_ms": 120000
+            },
+            "deadline_at": "2026-10-16T12:35:35.546179Z",
+            "policy_version": "budget-v2"
+          },
+          "call_grant": {
+            "grant_id": "grant-5c7819dd0f884f7787f40633ff85dd3f",
+            "call_id": "call-2c5184b0e0fd40c9b535d82ca0b357b4",
+            "parent_call_id": null,
+            "budget_id": "budget-1",
+            "budget_revision": 1,
+            "deadline_at": "2026-10-16T12:35:35.546179Z",
+            "max_model_calls": 4,
+            "max_retrieval_calls": 2,
+            "max_execution_calls": 1,
+            "max_rounds": 1,
+            "max_input_tokens": 6144,
+            "max_output_tokens": 1024,
+            "max_evidence_tokens": 512,
+            "tokenizer_id": "fixture-unicode-codepoint"
+          }
+        },
+        "deadline_at": "2026-10-16T12:35:35.546179Z"
+      },
+      "response": {
+        "schema_version": "2.0",
+        "request_id": "request-436f4a9f25114759a37b9d48838ea81f",
+        "call_id": "call-2c5184b0e0fd40c9b535d82ca0b357b4",
+        "parent_call_id": null,
+        "trace_id": "sample-trace",
+        "task_id": "verify-success",
+        "run_id": "verify-success-run",
+        "attempt_id": "sample-attempt",
+        "visibility": "public",
+        "message_id": "msg-758f5e43ef9b49ecbcf550f84fdc2991",
+        "in_reply_to": "msg-4bde1732d33d450c91713c0b4d6dfa66",
+        "producer": "B",
+        "consumer": "O",
+        "payload_type": "ExecutionResult",
+        "created_at": "2026-10-16T12:30:37.831Z",
+        "payload": {
+          "status": "completed",
+          "data": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-16T12:30:37.825Z",
+            "producer": "B",
+            "execution_id": "execution-28d409bb884c4b869c76e1c71c04d254",
+            "task_id": "verify-success",
+            "attempt_id": "sample-attempt",
+            "code_artifact_id": "sample-code",
+            "revision": "r0",
+            "code_hash": "d7a21898a23011ca7ed4c66206cf94ff230326c9dc0ecbf548ca923d975cc1cd",
+            "test_artifact_id": "sample-tests",
+            "test_hash": "5729e7d3ee8a426edef6071d2e04a9d6bdfd896c5aa741b2d8e3de2bc31b6031",
+            "execution_config_hash": "a9c855c8f0b4905690af2bf178b5795e83d40d8b288e934ec0fd65a4e2b0b8d5",
+            "purpose": "feedback",
+            "execution_context": {
+              "context_id": "execution-context-87bf6bc076344941ace53dddfefec36e",
+              "build_manifest": {
+                "schema_version": "2.0",
+                "created_at": "2026-10-13T02:00:00Z",
+                "producer": "A",
+                "manifest_id": "manifest-0",
+                "language": "python",
+                "runtime": {
+                  "name": "python",
+                  "version": "3.11"
+                },
+                "dependencies": [
+                  "pytest==8.3.5"
+                ],
+                "entry_point": "src/main.py",
+                "test_command": [
+                  "python",
+                  "-m",
+                  "pytest",
+                  "tests"
+                ]
+              },
+              "execution_policy": {
+                "policy_id": "runner-policy-1",
+                "timeout_ms": 5000,
+                "memory_mb": 256,
+                "cpu_limit": 1,
+                "max_processes": 16,
+                "network_policy": "disabled",
+                "root_read_only": true,
+                "allowed_write_paths": [
+                  "tmp"
+                ]
+              },
+              "execution_config_hash": "a9c855c8f0b4905690af2bf178b5795e83d40d8b288e934ec0fd65a4e2b0b8d5",
+              "requested_runtime": {
+                "name": "python",
+                "version": "3.11"
+              },
+              "actual_runtime": {
+                "name": "python",
+                "version": "3.11.5"
+              },
+              "package_versions": [
+                {
+                  "name": "pytest",
+                  "version": "8.3.5",
+                  "source": "observed"
+                }
+              ],
+              "image_digest": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+              "dependency_lock_ref": null,
+              "isolation_guarantees": {
+                "network": "none",
+                "root_read_only": true,
+                "workspace_read_only": true,
+                "allowed_write_paths": [
+                  "tmp"
+                ],
+                "memory_mb": 256,
+                "cpu_limit": 1,
+                "max_processes": 16,
+                "user": "65534:65534",
+                "capabilities": "dropped",
+                "output_limit_bytes": 1048576,
+                "init_process": true,
+                "write_storage": "bounded tmpfs plus a private report file",
+                "container_cleanup_confirmed": true
+              },
+              "measurement_status": "partial"
+            },
+            "visibility": "public",
+            "execution_status": "completed",
+            "test_outcome": "passed",
+            "exit_code": 0,
+            "tests_passed": 1,
+            "tests_total": 1,
+            "failure_stage": "none",
+            "stdout": {
+              "text": ".                                                                        [100%]\n---------------- generated xml file: /workspace/tmp/b-junit.xml ----------------\n1 passed in 0.22s\n",
+              "sha256": "21a19298e6f8e120c57a7a985bcb41afbc2b3e83c39ede0f201054a6a0f1f485",
+              "truncated": false
+            },
+            "stderr": {
+              "text": "",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "truncated": false
+            },
+            "resource_usage": {
+              "wall_time_ms": 2266.0,
+              "cpu_time_ms": null,
+              "peak_memory_bytes": null,
+              "measurement_status": "unknown",
+              "notes": [
+                "Target resource measurements are unavailable."
+              ]
+            },
+            "test_case_results": [
+              {
+                "test_id": "tests.test_main::test_add",
+                "status": "passed",
+                "oracle_level": "public",
+                "expected": null,
+                "actual": null,
+                "error_type": null,
+                "message": null,
+                "location": null
+              }
+            ],
+            "traceback": [],
+            "signal": null,
+            "termination_reason": "normal"
+          },
+          "error": null,
+          "usage": {
+            "usage_id": "usage-fea581dcb2324196a570c54b2315b855",
+            "call_id": "call-2c5184b0e0fd40c9b535d82ca0b357b4",
+            "parent_call_id": null,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "model_calls": 0,
+            "retrieval_calls": 0,
+            "execution_calls": 1,
+            "latency_ms": 2281.0,
+            "estimated_cost_usd": null,
+            "measurement_status": "complete",
+            "measurement": "exact",
+            "aggregation": "leaf",
+            "children_usage_ids": [],
+            "notes": [
+              "Local rules only; no model or retrieval was invoked. Cost is not priced."
+            ]
+          },
+          "warnings": []
+        },
+        "extensions": {
+          "srp_b": {
+            "implementation_version": "0.3.0",
+            "operation": "/api/v2/execute"
+          }
+        }
+      }
+    }
+  ]
+}

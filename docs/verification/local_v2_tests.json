@@ -1,0 +1,40 @@
+{
+  "result": "passed",
+  "scope": "Existing B regression, shared framework regression, and local adapter tests; synthetic backends unless separately recorded in Docker verification",
+  "suites": {
+    "local_adapter": {
+      "tests": 33,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "case_groups": {
+        "local_adapter": 33
+      }
+    },
+    "core_and_adapter": {
+      "tests": 130,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "case_groups": {
+        "framework": 99,
+        "local_adapter": 31
+      }
+    },
+    "b_regression": {
+      "tests": 216,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3,
+      "case_groups": {
+        "existing_suite": 185,
+        "local_adapter": 31
+      }
+    }
+  },
+  "notes": [
+    "The B regression run included 31 adapter cases; two additional boundary cases are in the final 33-case adapter run.",
+    "Core regression contains 99 shared framework cases.",
+    "Three legacy repository Docker smoke cases remain skipped; the new runner has its own 15-check real verification."
+  ]
+}

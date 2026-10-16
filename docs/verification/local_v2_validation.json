@@ -1,0 +1,114 @@
+{
+  "verified_at": "2026-10-16T12:30:59.249Z",
+  "result": "passed",
+  "implementation_version": "0.3.0",
+  "scope": "Synthetic real B Docker verification plus mixed O/A-Mock/B-real/C-Mock local flow",
+  "model_calls": 0,
+  "a_c_real_modules_validated": false,
+  "contract_sha256": "07382d82cce2c748b39110b6107575acc87af2ed86e15abaddd208f84b8aceae",
+  "host_python": "3.12.4",
+  "host_packages": {
+    "pydantic": "2.14.1",
+    "jsonschema": "4.26.0",
+    "pytest": "9.1.1"
+  },
+  "image_digest": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+  "actual_runtime": {
+    "name": "python",
+    "version": "3.11.5"
+  },
+  "package_versions": [
+    {
+      "name": "pytest",
+      "version": "8.3.5",
+      "source": "observed"
+    }
+  ],
+  "source_hashes": {
+    "srp_b/__init__.py": "41a39f41e164573eb85bae9444e76dbb87c42d52504443e462ce5b00bcf4684d",
+    "srp_b/diagnosis.py": "d6435d8d057ecbe416b236ef328c56fe50624a9f11fb39a77b58687bfc9655d0",
+    "srp_b/module.py": "131e183b10712a2c08d90f32dede83b34077b6f1a4bd29f7648e18f265877c7e",
+    "srp_b/samples.py": "540a19a823ca069bd1192c8be5601cb9f66748e06151a9da2835ee1604d5fb95",
+    "srp_b/sandbox.py": "cdc9651de3980434faf82b79c325aa7b9574bf56c3cd8003bec9e3aea2eed834",
+    "srp_b/state.py": "7a9d6b834e82ccc11698603867ea75561c0b4b80e53702cac35cf2b3045802e3",
+    "app/analyzer/error_signal_extractor.py": "e72616c2e28d4887f93ce118f34981fef7e0d9ae5414894fe27e52fe74948e5e",
+    "app/schemas.py": "ad970badd6dfa8a01279ec9d93c3da62c99b8e8359df38bd99b6c3fbbe0b29ce",
+    "pyproject.toml": "07c6825d5d6d033113f7e1c4cbb6428d8fc35e625b384951c1d6223bfdb1433b",
+    "requirements-local-v2.lock": "cb24640ba84d52aa89d4b40836830e28eb8d5ecd2cd11ff31bce205ca476d3b0",
+    "scripts/verify_local_v2.py": "673d9a55caed338bc03c5bdfa30aa7b33f513e1080855572c58d56ec683a827b"
+  },
+  "checks": [
+    {
+      "name": "capabilities",
+      "result": "passed"
+    },
+    {
+      "name": "real_static_failure_and_static_feedback",
+      "result": "passed"
+    },
+    {
+      "name": "real_public_failure_and_feedback_only",
+      "result": "passed"
+    },
+    {
+      "name": "durable_replay_and_conflict",
+      "result": "passed"
+    },
+    {
+      "name": "real_success_and_observed_environment",
+      "result": "passed",
+      "runtime": {
+        "name": "python",
+        "version": "3.11.5"
+      },
+      "image_digest": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32"
+    },
+    {
+      "name": "real_final_acceptance_and_public_diagnosis_rejection",
+      "result": "passed"
+    },
+    {
+      "name": "real_final_acceptance_failure_kept_restricted",
+      "result": "passed"
+    },
+    {
+      "name": "real_timeout_and_container_cleanup",
+      "result": "passed"
+    },
+    {
+      "name": "real_oom_distinguished_from_code_failure",
+      "result": "passed"
+    },
+    {
+      "name": "real_signal_termination",
+      "result": "passed"
+    },
+    {
+      "name": "real_readonly_source_write_scope_nonroot_and_network_namespace",
+      "result": "passed"
+    },
+    {
+      "name": "observed_runtime_mismatch_rejected_without_target_execution",
+      "result": "passed"
+    },
+    {
+      "name": "execution_grant_enforced",
+      "result": "passed"
+    },
+    {
+      "name": "local_o_with_real_b_and_mock_a_c",
+      "result": "passed",
+      "terminal": "accepted",
+      "evidence_kind": "mixed",
+      "routing_mode": "no_rag"
+    },
+    {
+      "name": "no_remaining_verification_containers",
+      "result": "passed"
+    }
+  ],
+  "raw_records": "Private .interop/validation directory; not committed",
+  "resource_measurement_limit": "CPU time and peak memory are unknown; host wall time is observed",
+  "image_build_note": "Local validation image uses an existing Python 3.11.5 base plus fixed offline pytest wheels; deployment Dockerfile uses python:3.11-slim. No benchmark score is claimed.",
+  "metadata_hash_algorithm": "SHA-256 of original file bytes, without newline conversion"
+}
