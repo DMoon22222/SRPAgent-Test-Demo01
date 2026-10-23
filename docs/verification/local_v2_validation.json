@@ -1,0 +1,316 @@
+{
+  "verified_at": "2026-10-23T16:08:07.581Z",
+  "result": "passed",
+  "implementation_version": "0.3.1",
+  "scope": "Synthetic real B Docker verification plus mixed O/A-Mock/B-real/C-Mock local flow",
+  "model_calls": 0,
+  "a_c_real_modules_validated": false,
+  "contract_sha256": "07382d82cce2c748b39110b6107575acc87af2ed86e15abaddd208f84b8aceae",
+  "git_base_commit": "eb13d3b86c58497f671d1c4e313c5953c713d1a6",
+  "git_branch": "b/local-v2-adapter",
+  "source_state": "Uncommitted candidate; source_hashes identify the verified workspace files",
+  "source_hashes": {
+    "srp_b/__init__.py": "a1cff9924d90c316bc6d0b1242ceaa957859d3a838c5a2c4df092ee910b6874e",
+    "srp_b/diagnosis.py": "45d7a360d6026f33244f38acb9c92fc27055886dfae4ff47a36abefc337f917b",
+    "srp_b/module.py": "2915a789cae633e581a95752fad4dcf980399c1bb279a52a0e1dd8f36b3e0968",
+    "srp_b/samples.py": "bba00bfeba324fc83bbd1814ad0e0c3adac51a201edd1101f43f32fc8c72da30",
+    "srp_b/sandbox.py": "cdc9651de3980434faf82b79c325aa7b9574bf56c3cd8003bec9e3aea2eed834",
+    "srp_b/state.py": "7a9d6b834e82ccc11698603867ea75561c0b4b80e53702cac35cf2b3045802e3",
+    "app/analyzer/error_signal_extractor.py": "e72616c2e28d4887f93ce118f34981fef7e0d9ae5414894fe27e52fe74948e5e",
+    "app/schemas.py": "ad970badd6dfa8a01279ec9d93c3da62c99b8e8359df38bd99b6c3fbbe0b29ce",
+    "pyproject.toml": "1996527eda958bf3b7de12090a9b2cc07d8508880f1d1bcc70c145506076086d",
+    "requirements-local-v2.lock": "cb24640ba84d52aa89d4b40836830e28eb8d5ecd2cd11ff31bce205ca476d3b0",
+    "scripts/verify_local_v2.py": "694ea1910fe0aeda590102311512045c03c028be3470ded1de979831a790cbf0",
+    "scripts/check_local_v2.py": "38e3af55b2c3a7fd001623dea785a48c770d216a1b04bbc2ac45e7798c2efead",
+    "scripts/run_local_v2_tests.py": "83357c45079a6ea0bf71ca9b931c9d043353a34aec339cae2eaaa1e1d718b1dd",
+    "tests/test_local_v2.py": "42f292802a27a2ae8c60a8ce2ce3f7860b4c31beb559fa19765b84769be97940",
+    "tests/test_local_v2_samples.py": "94ed7ba737256bc8079dfda1e453839d1f167b39f61ea376cfd2db8f5f5b74d4"
+  },
+  "source_snapshot_sha256": "57492c8b2de0821cf0ce3c5e6582ceecb7f07032bd361f8c17e40933f04383bb",
+  "metadata_hash_algorithm": "SHA-256 of original file bytes, without newline conversion",
+  "host_python": "3.12.4",
+  "host_packages": {
+    "pydantic": "2.14.1",
+    "jsonschema": "4.26.0",
+    "pytest": "9.1.1"
+  },
+  "image_digest": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+  "actual_runtime": {
+    "name": "python",
+    "version": "3.11.5"
+  },
+  "package_versions": [
+    {
+      "name": "pytest",
+      "version": "8.3.5",
+      "source": "observed"
+    }
+  ],
+  "checks": [
+    {
+      "name": "capabilities",
+      "result": "passed",
+      "evidence_kind": "real_adapter"
+    },
+    {
+      "name": "real_static_failure_and_static_feedback",
+      "result": "passed",
+      "evidence_kind": "real_static_and_rules"
+    },
+    {
+      "name": "real_public_failure_and_feedback_only",
+      "result": "passed",
+      "evidence_kind": "real_docker_and_rules"
+    },
+    {
+      "name": "durable_replay_and_conflict",
+      "result": "passed",
+      "evidence_kind": "real_adapter"
+    },
+    {
+      "name": "real_success_and_observed_environment",
+      "result": "passed",
+      "evidence_kind": "real_docker",
+      "runtime": {
+        "name": "python",
+        "version": "3.11.5"
+      },
+      "image_digest": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32"
+    },
+    {
+      "name": "real_final_acceptance_and_public_diagnosis_rejection",
+      "result": "passed",
+      "evidence_kind": "real_docker_and_rejection"
+    },
+    {
+      "name": "real_final_acceptance_failure_kept_restricted",
+      "result": "passed",
+      "evidence_kind": "real_docker"
+    },
+    {
+      "name": "real_timeout_and_container_cleanup",
+      "result": "passed",
+      "evidence_kind": "real_docker"
+    },
+    {
+      "name": "real_oom_distinguished_from_code_failure",
+      "result": "passed",
+      "evidence_kind": "real_docker"
+    },
+    {
+      "name": "real_signal_termination",
+      "result": "passed",
+      "evidence_kind": "real_docker"
+    },
+    {
+      "name": "real_readonly_source_write_scope_nonroot_and_network_namespace",
+      "result": "passed",
+      "evidence_kind": "real_docker"
+    },
+    {
+      "name": "observed_runtime_mismatch_rejected_without_target_execution",
+      "result": "passed",
+      "evidence_kind": "real_docker_environment_probe"
+    },
+    {
+      "name": "execution_grant_enforced",
+      "result": "passed",
+      "evidence_kind": "fault_injection"
+    },
+    {
+      "name": "public_synthetic_protected_diagnosis_rejection_sample",
+      "result": "passed",
+      "evidence_kind": "fault_injection"
+    },
+    {
+      "name": "injected_diagnosis_failure_preserves_real_execution_fact",
+      "result": "passed",
+      "evidence_kind": "fault_injection"
+    },
+    {
+      "name": "local_o_with_real_b_and_mock_a_c",
+      "result": "passed",
+      "evidence_kind": "mixed",
+      "terminal": "accepted",
+      "routing_mode": "adaptive_rag",
+      "config_file": "config.b-local.example.json",
+      "config_sha256": "02a8df62dec0f97b4a1301f0d41a6f18ad254018ca4b5f5cd2d01a33153bdb5b",
+      "factories": {
+        "A": "reliable_codegen.mocks:create_mock_module",
+        "B": "srp_b:create_module",
+        "C": "reliable_codegen.mocks:create_mock_module"
+      },
+      "overrides": [
+        "B.options.state_dir (private run directory)",
+        "B.options.image (explicit verifier selection)"
+      ],
+      "o_signoff": "not_received",
+      "run_id": "run-f6b0ac8612d84361aa7793945ec01797",
+      "trace_id": "trace-9283d7486888480982952550504e2536",
+      "iterations": 1,
+      "unknown_usage_ids": []
+    },
+    {
+      "name": "no_remaining_verification_containers",
+      "result": "passed",
+      "evidence_kind": "real_adapter"
+    }
+  ],
+  "raw_records": "Private .interop/validation directory; not committed",
+  "invocations": [
+    {
+      "task_id": "verify-static",
+      "run_id": "verify-static-run",
+      "trace_id": "sample-trace",
+      "call_id": "call-f2a6b738ab9a494cb225bc81eb09b6b8",
+      "attempt_id": "sample-attempt",
+      "operation": "/api/v2/validate/static",
+      "request_sha256": "d2f49bd6719875683f5a99729bb7c24df06f3d2627494a45a1fc4b85811614ed",
+      "execution_id": null,
+      "execution_calls": 0,
+      "code_hash": "00ba256446b9f3280e8ca04c16304be43ab4362626f569f2c8581c38e2dc18ef"
+    },
+    {
+      "task_id": "verify-static",
+      "run_id": "verify-static-run",
+      "trace_id": "sample-trace",
+      "call_id": "call-63270b98f7784acda8647ee186485793",
+      "attempt_id": "sample-attempt",
+      "operation": "/api/v2/diagnose",
+      "request_sha256": "326e9f0fb213c8866bbea5faa64df0d387285d855f8027c536dbea3fa11bd084",
+      "execution_id": null,
+      "execution_calls": 0,
+      "code_hash": "00ba256446b9f3280e8ca04c16304be43ab4362626f569f2c8581c38e2dc18ef"
+    },
+    {
+      "task_id": "verify-failure",
+      "run_id": "verify-failure-run",
+      "trace_id": "sample-trace",
+      "call_id": "call-716fe9e072184c7495849005532efac6",
+      "attempt_id": "sample-attempt",
+      "operation": "/api/v2/execute",
+      "request_sha256": "0738450b626b104d77284f2caa2fa74a92057f61142c73b5e0605a553c67403a",
+      "execution_id": "execution-afee8ec835ae488cbfb3f2fca48e5d81",
+      "execution_calls": 1,
+      "code_hash": "188e8f2e0367f8d523f92d4565f01d017a99af64eb843b4aced9187882186222"
+    },
+    {
+      "task_id": "verify-failure",
+      "run_id": "verify-failure-run",
+      "trace_id": "sample-trace",
+      "call_id": "call-458a346377594f3f85bfeb1112e86c75",
+      "attempt_id": "sample-attempt",
+      "operation": "/api/v2/diagnose",
+      "request_sha256": "b39f45700056c9913d4322fb38766a09d1d4774ac1ed4ff7aa5283a1d7afcb0f",
+      "execution_id": null,
+      "execution_calls": 0,
+      "code_hash": "188e8f2e0367f8d523f92d4565f01d017a99af64eb843b4aced9187882186222"
+    },
+    {
+      "task_id": "verify-success",
+      "run_id": "verify-success-run",
+      "trace_id": "sample-trace",
+      "call_id": "call-b913d977b1eb449d9a42359e9119f22d",
+      "attempt_id": "sample-attempt",
+      "operation": "/api/v2/execute",
+      "request_sha256": "f3f59463c1a4d18f6abb9671dd12f9736c1f2cf149505b690ccf07f1d551fc5f",
+      "execution_id": "execution-e6f2380527ba4c01943941d33740b3df",
+      "execution_calls": 1,
+      "code_hash": "d7a21898a23011ca7ed4c66206cf94ff230326c9dc0ecbf548ca923d975cc1cd"
+    },
+    {
+      "task_id": "verify-protected",
+      "run_id": "verify-protected-run",
+      "trace_id": "sample-trace",
+      "call_id": "call-97910a641c8841da84b81d8b448b78dd",
+      "attempt_id": "sample-attempt",
+      "operation": "/api/v2/execute",
+      "request_sha256": "26c18a22544bb3f0919f8ffdcbaf65bbe9043fc69b906547bd3dcb3c496ded6f",
+      "execution_id": "execution-e7fcad8a7da04c4384e6d034cc73b186",
+      "execution_calls": 1,
+      "code_hash": "d7a21898a23011ca7ed4c66206cf94ff230326c9dc0ecbf548ca923d975cc1cd"
+    },
+    {
+      "task_id": "verify-protected-failure",
+      "run_id": "verify-protected-failure-run",
+      "trace_id": "sample-trace",
+      "call_id": "call-fc1b6155882f4cc7aa829faa1767740c",
+      "attempt_id": "sample-attempt",
+      "operation": "/api/v2/execute",
+      "request_sha256": "9024da07f2bda8139ef789c1b11a775c33363d4da8accc8c88d784c90c934495",
+      "execution_id": "execution-c35c744fe45e4278a9089f1628f414c9",
+      "execution_calls": 1,
+      "code_hash": "7879e14b5e1679ce14666745219a06507aaf1e2a75bcac89b5a8e87f28f988a4"
+    },
+    {
+      "task_id": "verify-timeout",
+      "run_id": "verify-timeout-run",
+      "trace_id": "sample-trace",
+      "call_id": "call-6efa3a674ad0422a8ff48f1a628fa255",
+      "attempt_id": "sample-attempt",
+      "operation": "/api/v2/execute",
+      "request_sha256": "8e994f695e9611dfb9dd59c5ad3d69e9ed01fbf3b059d9b2ad8c04f09b681083",
+      "execution_id": "execution-54264d62d4164332bb901c0bbc32ea86",
+      "execution_calls": 1,
+      "code_hash": "af998c6c47a53a76120d4290f35b7b85f3206d21e0a1663adb3b5ba2adeac172"
+    },
+    {
+      "task_id": "verify-oom",
+      "run_id": "verify-oom-run",
+      "trace_id": "sample-trace",
+      "call_id": "call-e74892dd85e74bfb80a1847649c74e17",
+      "attempt_id": "sample-attempt",
+      "operation": "/api/v2/execute",
+      "request_sha256": "49f3398fdcf7e2bb66fe21db9293101c99977c45dbdae2b39ea4cc58d805ab13",
+      "execution_id": "execution-0e6ef57108ee498c91b06c2c69853ffe",
+      "execution_calls": 1,
+      "code_hash": "0c8d0e51c48826f70b658796fe902ab7d2442111aee7eeae2a5eb76a20825d88"
+    },
+    {
+      "task_id": "verify-signal",
+      "run_id": "verify-signal-run",
+      "trace_id": "sample-trace",
+      "call_id": "call-c16eb42875574e1b9133221d2b654b74",
+      "attempt_id": "sample-attempt",
+      "operation": "/api/v2/execute",
+      "request_sha256": "a203f5425bcc9a99463860dd49ebe482b62dda56b05a928be8274330ad3a2255",
+      "execution_id": "execution-4713be5527a443cba311331a9b13f7cd",
+      "execution_calls": 1,
+      "code_hash": "8314321dc6e879c1bbb315558ae65c88e8ef537674fcc2b3b12c39ccb8b039fb"
+    },
+    {
+      "task_id": "verify-isolation",
+      "run_id": "verify-isolation-run",
+      "trace_id": "sample-trace",
+      "call_id": "call-047c405e761c4f5698c31925631a6790",
+      "attempt_id": "sample-attempt",
+      "operation": "/api/v2/execute",
+      "request_sha256": "cd6e63a92d1cb279def06531a7f26cc8c53ece6040fb7f64aab2c8b5cacc322a",
+      "execution_id": "execution-a5eff4f8690044b2b1e5ec88b50d0276",
+      "execution_calls": 1,
+      "code_hash": "d7a21898a23011ca7ed4c66206cf94ff230326c9dc0ecbf548ca923d975cc1cd"
+    },
+    {
+      "task_id": "verify-runtime",
+      "run_id": "verify-runtime-run",
+      "trace_id": "sample-trace",
+      "call_id": "call-a1cc6704cb9444768b33041f180080c3",
+      "attempt_id": "sample-attempt",
+      "operation": "/api/v2/execute",
+      "request_sha256": "45f7f135706cd2200414479fb32657494e335e2aa06bce01dcfd0f30c572a8f1",
+      "execution_id": "execution-f26496847c5c4f7ea94df1e83ab9e80e",
+      "execution_calls": 0,
+      "code_hash": "d7a21898a23011ca7ed4c66206cf94ff230326c9dc0ecbf548ca923d975cc1cd"
+    }
+  ],
+  "configured_image": "srp-b-python:0.3.0",
+  "framework_git_commit": "d3f46741bab412886ad39e5f7c8fac52741e506e",
+  "unverified": [
+    "Real A/C modules and full ABC chain",
+    "O group formal receipt",
+    "Algorithm benefit experiments",
+    "CPU time and peak memory"
+  ],
+  "resource_measurement_limit": "CPU time and peak memory are unknown; host wall time is observed",
+  "image_build_note": "This run uses an existing local image, identified by the observed immutable ID and runtime. The deployment Dockerfile uses python:3.11-slim; no benchmark score is claimed."
+}

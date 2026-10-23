@@ -1,5 +1,7 @@
 # SRP B 组 Python FastAPI 服务
 
+> 团队当前接入入口为 `srp_b:create_module`（架构 v0.3、schema 2.0、同进程 LocalTransport）。安装、三项能力、独立沙箱及验证见 [本地 v2 交付说明](../docs/local_v2_handoff.md)。下文保留原 FastAPI/local/docker 工具的 v1 使用说明和历史功能范围。
+
 这个目录是 B 组执行反馈与错误根因分析模块的 Python 版实现。它保留 Java 版的主要 HTTP 语义，新增 FastAPI 服务、local/docker 执行模式、DashScope 根因分析、HumanEval 风格批量用例执行，以及 SWE-agent 风格的 `AgentObservation`。
 
 ## 安装
