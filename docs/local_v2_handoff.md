@@ -1,6 +1,6 @@
 # B 本地模块 v0.3.1 候选交付
 
-本次更新：2026-10-24，Asia/Shanghai。公共契约保持 schema 2.0，未修改共同 OpenAPI、守卫或 O 调度实现。参考共同基线 commit `55e9f3a945d58df60bd59ab8c57f206e3ebb67bd`，公共 OpenAPI SHA-256 为 `07382d82cce2c748b39110b6107575acc87af2ed86e15abaddd208f84b8aceae`。本轮代码位于 `b/local-v2-adapter` 的未提交工作区，以本次源码摘要和固定 wheel 标识；原实现固定提交 `ebb9406` 保持为历史版本。详细变更、验收及待签收状态见 [P1 报告](p1_delivery_review_20261024.md)。
+本次更新：2026-10-24，Asia/Shanghai。公共契约保持 schema 2.0，未修改共同 OpenAPI、守卫或 O 调度实现。参考共同基线 commit `55e9f3a945d58df60bd59ab8c57f206e3ebb67bd`，公共 OpenAPI SHA-256 为 `07382d82cce2c748b39110b6107575acc87af2ed86e15abaddd208f84b8aceae`。本轮 0.3.1 源码已固定至 `b/local-v2-adapter` 提交 `c1f52e8ed321616a8e364c1d43c22568c27fe17c`，15 份源码与测试时的工作区快照原始字节一致；验证记录中的基准提交及当时工作区状态保留其历史含义，不改写为提交后重跑。固定版本核对见 [记录](verification/local_v2_publication.json)，原实现 `ebb9406` 保持为历史版本。详细变更、验收及待签收状态见 [P1 报告](p1_delivery_review_20261024.md)。
 
 ## 安装与入口
 
@@ -90,6 +90,6 @@ ExecutionContext 保留原 manifest/policy 及规范 config hash，区分 reques
 
 本机共同仓库 `b/local-v2-handoff`、提交 `d3f4674` 提供单独的 `config.b-local.example.json` 选择真实 B，其余 A/C 保留 Mock；该示例尚未进入远端 main。本次通过共同框架正式 `build_transport` 加载该配置，使用原 `adaptive_rag`、两次修复上限和 15 秒传输时限，仅覆盖 B 私有状态目录和显式选定镜像。真实 O 完成一次修复并进入 accepted，不能据此宣称真实 A/C 验证、O 配置签收或共同默认已切换。原 config.example.json 保持不变。
 
-共同 `collaboration/groups/B.json`、`integration/services.json` 与 `modules/b/` 当前仍登记历史 0.3.0 固定提交。本轮未修改共同仓库；审核本次候选、形成固定源码提交后，应将新版本和本次证据更新到这些登记位置，并填写实际接收状态。当前未提交工作区不能冒充已登记的远程 0.3.1 发布版本。
+共同 `collaboration/groups/B.json`、`integration/services.json` 与 `modules/b/` 当前仍登记历史 0.3.0 固定提交。本轮未修改共同仓库；0.3.1 已有上述固定源码提交，待将新版本和本次证据更新到共同登记位置，并填写实际接收状态。分支上传及 PR 评审不等于共同登记完成或 O 签收。
 
 实际回归数量与分支记录见 [验证摘要](verification/local_v2_validation.json) 和相邻测试摘要；UTC 时间戳对应本地 2026-10-24。CPU/峰值内存、A/C 真实模块、组间签收和算法收益未验证。轮子安装独立检查见 [wheel 摘要](verification/local_v2_wheel.json)。
