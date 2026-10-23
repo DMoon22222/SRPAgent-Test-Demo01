@@ -2,7 +2,7 @@
 
 本项目是“面向可靠代码生成的多模块协同和闭环优化系统”的 B 组实现，为生成代码提供静态检查、受控执行结果和错误诊断，供其他模块决定后续检索与修复。
 
-当前团队接入版本为 **`srp-b-local 0.3.0`**，对应架构 v0.3、共同框架 v0.2.1、公共 `schema_version=2.0`。公开工厂入口为 **`srp_b:create_module`**，由 O 通过同进程 LocalTransport 调用；`/api/v2/*` 是逻辑能力标识。详细契约和交付边界见 [本地 v2 接入说明](docs/local_v2_handoff.md)。
+当前工作区候选为 **`srp-b-local 0.3.1`**，对应架构 v0.3、共同框架 v0.2.1、公共 `schema_version=2.0`。公开工厂入口为 **`srp_b:create_module`**，由 O 通过同进程 LocalTransport 调用；`/api/v2/*` 是逻辑能力标识。修复、精简审查、验证及待签收状态见 [P1 交付核对报告](docs/p1_delivery_review_20261024.md)，完整接入说明见 [本地 v2 交付](docs/local_v2_handoff.md)。
 
 ## 主要功能
 
@@ -76,10 +76,10 @@ descriptor = module.capabilities()
 & '.\.venv-local-v2\Scripts\python.exe' -B scripts/check_local_v2.py
 
 # 本地适配回归使用合成执行后端，不启动真实沙箱。
-& '.\.venv-local-v2\Scripts\python.exe' -m pytest tests/test_local_v2.py -q
+& '.\.venv-local-v2\Scripts\python.exe' -m pytest tests/test_local_v2.py tests/test_local_v2_samples.py -q
 ```
 
-2026-10-16 的交付记录包含 33 项本地适配测试、15 项真实 Docker 验证和真实 B + A/C Mock 的混合流程。具体环境、源码哈希和覆盖范围见 [执行验证摘要](docs/verification/local_v2_validation.json) 与 [回归测试摘要](docs/verification/local_v2_tests.json)。该记录不代表全真实 A/B/C 联调完成或算法收益已验证；换机与更换镜像后应重新核验实际运行环境。
+2026-10-24（Asia/Shanghai）的本次验证包含 46 项适配测试、99 项共同框架测试和 182 项旧 B 服务测试通过，另有 3 项旧版 Docker 冒烟测试跳过。执行验证程序的 17 项检查包括真实 Docker、规则诊断、显式故障注入和按正式配置加载的真实 B + A/C Mock 混合流程；11 个公开样例逐项注明来源。具体环境、源码哈希和覆盖范围见 [执行验证摘要](docs/verification/local_v2_validation.json) 与 [回归测试摘要](docs/verification/local_v2_tests.json)。本次尚未提交或推送，固定 wheel 及工作区摘要见 [P1 报告](docs/p1_delivery_review_20261024.md)；O 正式签收、全真实 A/B/C 联调和算法收益仍待验证。
 
 显式运行真实沙箱验证的方法见 [交付说明](docs/local_v2_handoff.md)。原始日志和私有状态保存在 `.interop/`，不提交到 Git。
 

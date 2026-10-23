@@ -127,7 +127,7 @@ class BModule:
                     partial = self.journal.save(fact, "StaticCheckReport" if static else "ExecutionResult",
                                                 fact["report_id" if static else "execution_id"])
                     prior, logs = self._context(snapshot)
-                    data = diagnose(snapshot, prior=prior, log_text=logs)
+                    data = diagnose(snapshot, prior=prior, logs=logs)
                     self.journal.save(data["diagnosis_report"], "DiagnosisReport", data["diagnosis_report"]["diagnosis_id"])
                 response = self._response(operation, snapshot, started, counters, data=data)
             except Blocked as error:
@@ -265,13 +265,13 @@ class BModule:
         if payload["prior_diagnosis_ref"]:
             prior = resolved[canonical(payload["prior_diagnosis_ref"])]
             self.registry.validate("DiagnosisReport", prior)
-        logs = []
+        logs = {}
         source = payload["failure_source"]
         if source["kind"] == "execution":
             for name in ("stdout", "stderr"):
                 stream = source["execution_result"][name]
                 if "text" in stream:
-                    logs.append(stream["text"])
+                    logs[name] = stream["text"]
                 else:
                     if resolver is None:
                         raise Blocked("AUTHORIZED_ARTIFACT_RESOLVER_REQUIRED")
@@ -279,8 +279,8 @@ class BModule:
                     if record["artifact_ref"] != stream["content_ref"] or digest(record["body_utf8"]) != stream["sha256"]:
                         raise ContractError("Referenced log hash mismatch")
                     check_public(record)
-                    logs.append(record["body_utf8"])
-        return prior, "\n".join(logs)
+                    logs[name] = record["body_utf8"]
+        return prior, logs
 
     def _static(self, request):
         payload = request["payload"]

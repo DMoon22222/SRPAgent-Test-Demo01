@@ -1,6 +1,6 @@
-# B 本地模块 v0.3.0 交付
+# B 本地模块 v0.3.1 候选交付
 
-日期：2026-10-16，Asia/Shanghai。公共契约保持 schema 2.0，未修改共同 OpenAPI、守卫或 O 调度实现。参考共同基线 commit `55e9f3a945d58df60bd59ab8c57f206e3ebb67bd`，公共 OpenAPI SHA-256 为 `07382d82cce2c748b39110b6107575acc87af2ed86e15abaddd208f84b8aceae`。
+本次更新：2026-10-24，Asia/Shanghai。公共契约保持 schema 2.0，未修改共同 OpenAPI、守卫或 O 调度实现。参考共同基线 commit `55e9f3a945d58df60bd59ab8c57f206e3ebb67bd`，公共 OpenAPI SHA-256 为 `07382d82cce2c748b39110b6107575acc87af2ed86e15abaddd208f84b8aceae`。本轮代码位于 `b/local-v2-adapter` 的未提交工作区，以本次源码摘要和固定 wheel 标识；原实现固定提交 `ebb9406` 保持为历史版本。详细变更、验收及待签收状态见 [P1 报告](p1_delivery_review_20261024.md)。
 
 ## 安装与入口
 
@@ -35,6 +35,8 @@ response_envelope = module.call(operation, request_envelope)
 
 当前诊断使用既有规则提取器，产出带证据指针的根因假设、上下文缺口和 `retrieval_hint/query_hints`。正式检索决策由 C 负责。`execute_then_diagnose` 不在此入口的能力声明中。
 
+0.3.1 修复了日志来源引用：失败测试优先引用 `/test_case_results/<index>`，非空日志按真实来源引用 `/stdout` 或 `/stderr`，引用解析后仍保留流名称；不因合并分析文本而引用空 stderr。证据不足时不生成根因假设。`failure_source` 保持输入原文，诊断不重新执行代码。
+
 未知静态检查返回 blocked 报告；缺少引用解析器、缺少诊断必需测试或不支持的任务范围明确阻塞。依赖、入口、哈希和上下文不通过时不执行目标。
 
 ## 独立沙箱与政策
@@ -47,7 +49,7 @@ docker build -t srp-b-python:0.3.0 -f docker/b-local/Dockerfile docker/b-local
 
 部署 Dockerfile 使用 Python 3.11 和固定 pytest 8.3.5，在镜像构建阶段安装依赖。每次调用先解析本地镜像为不可变 image ID，探测实际 Python/pytest 版本，与 BuildManifest 比较；不匹配时返回真实环境故障且不启动目标。执行阶段不拉取镜像、不联网、不安装依赖。
 
-本机验证时 Docker Hub 两次连接中断，采用已有 Python 3.11.5 镜像和固定离线 wheel 构建验证镜像。其实际 image ID、Python/pytest 和验证范围保存在 [摘要](verification/local_v2_validation.json)。验证镜像用于本地兼容性验证；其他机器按部署 Dockerfile 构建后仍须重新验证实际环境。
+本次重新使用本机已缓存的验证镜像，观察到 Python 3.11.5、pytest 8.3.5，未将部署 Dockerfile 描述为本次重新构建通过。该镜像在此前 Docker Hub 连接中断时通过已有基础镜像与固定离线 wheel 构建。其本次实际 image ID、Python/pytest 和验证范围保存在 [摘要](verification/local_v2_validation.json)。其他机器按部署 Dockerfile 构建后仍须重新验证实际环境。
 
 受支持的政策为 `network_policy=disabled`、`root_read_only=true`、正数的 CPU/内存/PID/执行时间限制，以及规范相对 `allowed_write_paths`。写目录必须包含 `tmp`，不能覆盖代码、测试、支持文件或互相嵌套。网络 allowlist、任意 shell 命令及执行期安装依赖明确拒绝。
 
@@ -70,16 +72,24 @@ ExecutionContext 保留原 manifest/policy 及规范 config hash，区分 reques
 
 ## 验证和共同接入
 
-公开合成样例见 [local_samples.json](contracts/v2/local_samples.json)，结构与实际响应由验证程序生成，包含静态失败、执行通过/失败、两种诊断模式。样例中的日期和编号只用于结构复核，重新调用须刷新身份、期限并重算实际内容哈希。
+公开合成样例见 [local_samples.json](contracts/v2/local_samples.json)，11 个场景包含静态失败及诊断、执行通过/失败及诊断、运行环境不匹配、超时、授权不足、完成重放、保护反馈拒绝和诊断故障后的事实保留。每项标记真实工具／执行、故障注入或重放，保存实际响应。保护反馈拒绝用公开基础请求与两个标量修改描述被拒绝的合成请求，`sample_request(sample)` 可重建；不导出保护对象正文。重建后的非法请求必须被公共诊断 Schema/Guard 拒绝，其实际标准错误响应通过 TransportErrorResponse 校验，不能当成正常业务结果。日期和编号仅供结构复核，重新调用须刷新身份、期限并重算实际内容哈希。
 
 ```powershell
 # B 的本地适配回归，使用新安装的主应用环境
-& '.\.venv-local-v2\Scripts\python.exe' -m pytest tests/test_local_v2.py -q
+& '.\.venv-local-v2\Scripts\python.exe' -m pytest tests/test_local_v2.py tests/test_local_v2_samples.py -q
+
+# 适配、共同框架、旧 B 服务三组回归；实际 JUnit 数量进入公开摘要
+& '.\.venv-local-v2\Scripts\python.exe' -B scripts/run_local_v2_tests.py
 
 # 显式执行自建合成目标；原始记录只写 .interop/validation
-& '.\.venv-local-v2\Scripts\python.exe' -B scripts/verify_local_v2.py --docker --output ../docs/verification/local_v2_validation.json --public-samples ../docs/contracts/v2/local_samples.json
+& '.\.venv-local-v2\Scripts\python.exe' -B scripts/verify_local_v2.py --docker --output ../docs/verification/local_v2_validation.json --public-samples ../docs/contracts/v2/local_samples.json --framework-config ../../reliable_codegen_framework/config.b-local.example.json
+
+# 所有材料生成后检查源码、样例与证据一致性
+& '.\.venv-local-v2\Scripts\python.exe' -B scripts/check_local_v2.py
 ```
 
-共同仓库提供单独的 `config.b-local.example.json` 选择真实 B，其余 A/C 保留 Mock；原 config.example.json 的默认示例保持原配置。服务索引只登记交付版本，实际选择由运行配置决定。源码固定版本和验证引用登记在共同 `collaboration/groups/B.json`、`integration/services.json` 与 `modules/b/` 交付索引。
+本机共同仓库 `b/local-v2-handoff`、提交 `d3f4674` 提供单独的 `config.b-local.example.json` 选择真实 B，其余 A/C 保留 Mock；该示例尚未进入远端 main。本次通过共同框架正式 `build_transport` 加载该配置，使用原 `adaptive_rag`、两次修复上限和 15 秒传输时限，仅覆盖 B 私有状态目录和显式选定镜像。真实 O 完成一次修复并进入 accepted，不能据此宣称真实 A/C 验证、O 配置签收或共同默认已切换。原 config.example.json 保持不变。
 
-实际回归数量与分支记录见 [验证摘要](verification/local_v2_validation.json) 和相邻测试摘要。本次验证为本地 B 能力与混合调用流程；A/C 真实模块、组间签收、远程发布和算法收益实验分别记录其实际状态。
+共同 `collaboration/groups/B.json`、`integration/services.json` 与 `modules/b/` 当前仍登记历史 0.3.0 固定提交。本轮未修改共同仓库；审核本次候选、形成固定源码提交后，应将新版本和本次证据更新到这些登记位置，并填写实际接收状态。当前未提交工作区不能冒充已登记的远程 0.3.1 发布版本。
+
+实际回归数量与分支记录见 [验证摘要](verification/local_v2_validation.json) 和相邻测试摘要；UTC 时间戳对应本地 2026-10-24。CPU/峰值内存、A/C 真实模块、组间签收和算法收益未验证。轮子安装独立检查见 [wheel 摘要](verification/local_v2_wheel.json)。

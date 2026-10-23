@@ -8,7 +8,7 @@ from app.analyzer.error_signal_extractor import make_rule_decision
 from reliable_codegen.utils import canonical, digest, uid, utcnow
 
 
-def diagnose(request, *, prior=None, log_text=None):
+def diagnose(request, *, prior=None, logs=None):
     payload = request["payload"]
     source = payload["failure_source"]
     static = source["kind"] == "static"
@@ -28,7 +28,9 @@ def diagnose(request, *, prior=None, log_text=None):
                 evidence.append({"kind": "source_location", "artifact_id": fact["report_id"],
                                  "pointer": f"/findings/{index}", "summary": finding["message"]})
     else:
-        text = log_text if log_text is not None else "\n".join(fact[k].get("text", "") for k in ("stdout", "stderr"))
+        # Keep each resolved stream's identity; combined text has no /stderr provenance.
+        streams = logs if logs is not None else {name: fact[name].get("text", "") for name in ("stdout", "stderr")}
+        text_parts = []
         failed = fact["test_outcome"] != "passed"
         stage = fact["failure_stage"]
         domain = "code"
@@ -47,10 +49,15 @@ def diagnose(request, *, prior=None, log_text=None):
                                  "pointer": f"/test_case_results/{index}", "summary": case["message"] or case["status"]})
                 if case["location"]:
                     locations.append(deepcopy(case["location"]))
-                text += "\n" + (case["message"] or "")
-        if text:
-            evidence.append({"kind": "log_span", "artifact_id": fact["execution_id"],
-                             "pointer": "/stderr", "summary": "Observed execution logs; interpretation is a hypothesis."})
+                text_parts.append("\n".join(filter(None, (case["error_type"], case["message"]))))
+        # Test facts precede logs, so assertion evidence also survives the analysis limit.
+        for name in ("stdout", "stderr"):
+            content = streams.get(name, "")
+            if content.strip():
+                evidence.append({"kind": "log_span", "artifact_id": fact["execution_id"],
+                                 "pointer": f"/{name}", "summary": content[:512]})
+                text_parts.append(content)
+        text = "\n".join(text_parts)
     rule = make_rule_decision(error_log=text[:24000])
     if failed and domain == "code" and not static and failure_class not in {"timeout", "resource_limit"}:
         failure_class = {"COMPILE_ERROR": "syntax_error", "RUNTIME_ERROR": "runtime_error",
@@ -82,7 +89,7 @@ def diagnose(request, *, prior=None, log_text=None):
         "prior_diagnosis_id": prior["diagnosis_id"] if prior else None,
         "failure_source": deepcopy(source), "failure_domain": domain,
         "hypotheses": [{"hypothesis_id": uid("hypothesis"), "statement": root_cause,
-                        "confidence": confidence, "evidence_refs": deepcopy(evidence), "locations": deepcopy(locations)}] if failed else [],
+                        "confidence": confidence, "evidence_refs": deepcopy(evidence), "locations": deepcopy(locations)}] if failed and evidence else [],
         "locations": locations, "context_gap": gap,
         "local_context_sufficiency": "sufficient" if sufficient or not failed else "insufficient",
         "query_hints": [rule.retrievalQuery] if rule.needRetrieval and rule.retrievalQuery else [],

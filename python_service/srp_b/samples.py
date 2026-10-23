@@ -45,6 +45,21 @@ def request(operation=EXECUTE, *, source=SOURCE, tests=TESTS, task_id="sample-ta
     return value
 
 
+def sample_request(sample):
+    """Rebuild a rejection fixture from public input plus explicit scalar patches.
+
+    Protected facts are never exported. This sample encoding is not a wire format.
+    """
+    value = deepcopy(sample["request"])
+    for change in sample.get("request_patches", []):
+        keys = change["pointer"].strip("/").split("/")
+        target = value
+        for key in keys[:-1]:
+            target = target[key]
+        target[keys[-1]] = change["value"]
+    return value
+
+
 def diagnostic(fact, original, *, static=False):
     value = request(DIAGNOSE, task_id=original["task_id"], run_id=original["run_id"])
     p = value["payload"]

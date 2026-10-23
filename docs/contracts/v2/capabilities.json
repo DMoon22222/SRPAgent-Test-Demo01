@@ -32,7 +32,7 @@
   },
   "extensions": {
     "srp_b": {
-      "implementation_version": "0.3.0",
+      "implementation_version": "0.3.1",
       "diagnosis": "rule_based",
       "model_calls": 0,
       "configured_image": "srp-b-python:0.3.0",

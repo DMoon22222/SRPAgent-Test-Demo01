@@ -4,19 +4,21 @@ from unittest.mock import patch
 import pytest
 
 from reliable_codegen.contracts import ContractRegistry
-from reliable_codegen.guards import check_execution_cases, check_response
+from reliable_codegen.guards import check_execution_cases, check_public, check_response
 from reliable_codegen.storage import ArtifactStore
 from reliable_codegen.transport import LocalTransport, TransportError
 from reliable_codegen.utils import canonical, digest, file_entry, files_hash
 from srp_b import create_module
 from srp_b.module import BModule, DIAGNOSE, EXECUTE, STATIC
 from srp_b.samples import diagnostic, request
-from srp_b.sandbox import Command, DockerRunner, empty_observation, log_stream, parse_cases
+from srp_b.sandbox import DockerRunner, empty_observation, log_stream, parse_cases
 
 
 class SyntheticRunner:
     def __init__(self):
         self.calls = 0
+        self.overrides = {}
+        self.case_message = "assert -1 == 5"
 
     def execute(self, payload, **kwargs):
         self.calls += 1
@@ -26,7 +28,8 @@ class SyntheticRunner:
                       stderr=log_stream("AssertionError: assert -1 == 5"), execution_calls=1,
                       test_case_results=[{"test_id": "test_add", "status": "failed", "oracle_level": payload["test_artifact"]["kind"],
                                           "expected": None, "actual": None, "error_type": "AssertionError",
-                                          "message": "assert -1 == 5", "location": None}])
+                                          "message": self.case_message, "location": None}])
+        result.update(deepcopy(self.overrides))
         return result
 
 
@@ -142,6 +145,74 @@ def test_execution_and_feedback_diagnosis_preserve_original(module):
     assert diagnosis["data"]["failure_source"]["execution_result"] == before == fact
     assert diagnosis["data"]["diagnosis_report"]["failure_domain"] == "code"
     assert diagnosis["usage"]["execution_calls"] == diagnosis["usage"]["model_calls"] == 0
+    assert module.runner.calls == 1
+
+
+@pytest.mark.parametrize("stdout,stderr,case_message", [
+    ("AssertionError: assert -1 == 5", "", "assert -1 == 5"),
+    ("", "AssertionError: assert -1 == 5", "assert -1 == 5"),
+    ("pytest collected 1 test", "AssertionError: assert -1 == 5", "assert -1 == 5"),
+    ("", "", "AssertionError: assert -1 == 5"),
+])
+def test_diagnosis_evidence_points_to_actual_streams_and_tests(module, stdout, stderr, case_message):
+    envelope = request(EXECUTE)
+    module.runner.overrides.update(stdout=log_stream(stdout), stderr=log_stream(stderr))
+    module.runner.case_message = case_message
+    fact = call(module, EXECUTE, envelope)["data"]
+    original = deepcopy(fact)
+    current = diagnostic(fact, envelope)
+    outcome = call(module, DIAGNOSE, current)
+    result = outcome["data"]
+    report = result["diagnosis_report"]
+    refs = report["evidence_refs"]
+    assert refs[0]["kind"] == "test_result"
+    assert refs[0]["pointer"] == "/test_case_results/0"
+    assert refs[0]["summary"] == case_message
+    assert {ref["pointer"] for ref in refs if ref["kind"] == "log_span"} == {
+        "/" + name for name, value in (("stdout", stdout), ("stderr", stderr)) if value.strip()
+    }
+    for ref in refs:
+        assert ref["artifact_id"] == fact["execution_id"]
+        if ref["kind"] == "log_span":
+            assert ref["summary"] == fact[ref["pointer"][1:]]["text"][:512]
+    assert result["failure_source"]["execution_result"] == original
+    assert current["payload"]["failure_source"]["execution_result"] == original
+    assert report["failure_source"]["execution_result"] == original
+    assert report["hypotheses"][0]["evidence_refs"] == refs
+    check_public(result)
+    assert outcome["usage"]["execution_calls"] == 0 and module.runner.calls == 1
+
+
+def test_diagnosis_without_observable_evidence_does_not_invent_references(module):
+    envelope = request(EXECUTE)
+    module.runner.overrides.update(stdout=log_stream(" \n"), stderr=log_stream(), test_case_results=[],
+                                   tests_total=None, tests_passed=None, test_outcome="unknown")
+    fact = call(module, EXECUTE, envelope)["data"]
+    report = call(module, DIAGNOSE, diagnostic(fact, envelope))["data"]["diagnosis_report"]
+    assert report["evidence_refs"] == report["hypotheses"] == []
+    assert report["confidence"] is None
+    assert report["local_context_sufficiency"] == "insufficient"
+    assert report["next_action"] == "collect_information"
+    assert report["failure_class"] == "unknown"
+    assert module.runner.calls == 1
+
+
+def test_diagnosis_resolved_stdout_retains_its_stream_identity(module, tmp_path):
+    envelope = request(EXECUTE)
+    store = ArtifactStore(tmp_path / "logs")
+    # O's store owns the public log; B receives only a scoped resolver for this call.
+    log_ref = store.put("AssertionError: public stdout only", "Log", "public-stdout")
+    module.runner.overrides.update(
+        stdout={"content_ref": log_ref, "sha256": log_ref["sha256"], "truncated": False}, stderr=log_stream())
+    fact = call(module, EXECUTE, envelope)["data"]
+    current = diagnostic(fact, envelope)
+    transport = LocalTransport({"B": module})
+    transport.bind_artifact_store(store)
+    result = transport.call("B", DIAGNOSE, current)
+    refs = result["payload"]["data"]["diagnosis_report"]["evidence_refs"]
+    assert [ref["pointer"] for ref in refs if ref["kind"] == "log_span"] == ["/stdout"]
+    assert result["payload"]["data"]["failure_source"]["execution_result"] == fact
+    assert getattr(module._bindings, "resolver", None) is None
     assert module.runner.calls == 1
 
 
