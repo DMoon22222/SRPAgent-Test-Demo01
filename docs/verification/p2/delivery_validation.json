@@ -1,0 +1,66 @@
+{
+  "verified_at": "2026-10-26T06:55:46.478Z",
+  "result": "passed",
+  "scope": "B-owned local artifact assembly and independent-directory receiver smoke; not O receipt",
+  "audit": {
+    "result": "passed",
+    "files_checked": 46,
+    "runtime_version": "0.3.1",
+    "phase_case_counts": {
+      "bootstrap": 8,
+      "lineage": 11,
+      "boundaries": 25,
+      "protected": 6
+    },
+    "latest_recorded_tests": {
+      "tests": 95,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 95
+    },
+    "formal_p2_acceptance": "blocked",
+    "remaining": [
+      "formal.TEST-001_material_lock",
+      "formal.actual_target_a_context",
+      "formal.consumer_confirmation",
+      "formal.independent_o_receipt"
+    ],
+    "snapshot_sha256": "e2e90892c48b6f09d54262a473d54bccd510670a3ea8b7d6360b52f7b4b6bcb8",
+    "scope": "Read-only evidence/source integrity; does not rerun historical tests, Docker or models"
+  },
+  "archive": {
+    "result": "passed",
+    "archive_filename": "b-p2-0.3.1-candidate.zip",
+    "archive_sha256": "ae640d4adbe889e7665d715974b2bdb315b96dd5b8f4075d54838853f0529c1e",
+    "archive_entries": 66,
+    "snapshot_sha256": "e2e90892c48b6f09d54262a473d54bccd510670a3ea8b7d6360b52f7b4b6bcb8",
+    "framework_snapshot_files": 16,
+    "wheel_sha256": "950887b755b347cfccfec77a4d6f4c9d0428e62041934cad180d88e3dec844c2",
+    "formal_p2_acceptance": "blocked"
+  },
+  "consumer": {
+    "result": "passed",
+    "inventory_files_checked": 65,
+    "delivery_files_checked": 46,
+    "wheel_factory_loaded": true,
+    "framework_snapshot_loaded": true,
+    "git_checkout_required": false,
+    "real_ast_and_rules": true,
+    "actual_target_executions": 0,
+    "actual_model_calls": 0,
+    "dependency_environment": "Existing local-v2 venv dependencies reused; no clean dependency install claimed",
+    "formal_p2_acceptance": "blocked",
+    "o_receipt": "not_received"
+  },
+  "formal_p2_acceptance": "blocked",
+  "o_receipt": "not_received",
+  "runtime_version": "0.3.1",
+  "source_revision": "441077ac5b54d122469845bce41ef62dfd0f24fe",
+  "snapshot_sha256": "e2e90892c48b6f09d54262a473d54bccd510670a3ea8b7d6360b52f7b4b6bcb8",
+  "catalog_file_sha256": "db5817b06456944d7c10a5fa851b1c6eb8919fa865b8ce48964d951960f7ba13",
+  "candidate_location": "Private python_service/.interop/p2-delivery; no archive or raw records committed",
+  "publication": "local_uncommitted_candidate",
+  "new_docker_runs": 0,
+  "actual_model_calls": 0
+}

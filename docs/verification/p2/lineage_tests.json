@@ -1,0 +1,43 @@
+{
+  "verified_at": "2026-10-26T03:34:05.055Z",
+  "result": "passed",
+  "scope": "53 existing adapter/bootstrap tests plus 11 history/lineage tests; execution outcomes in unit tests are explicitly synthetic, actual Docker verification is separate",
+  "counts": {
+    "tests": 64,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 64
+  },
+  "junit_sha256": "710b599f8b0d3d2d91cba403adbe87c1a8b17ae3f535787b889c148a69872aef",
+  "command": [
+    "<local-v2-python>",
+    "-B",
+    "-m",
+    "pytest",
+    "tests/test_local_v2.py",
+    "tests/test_local_v2_samples.py",
+    "tests/test_local_v2_p2.py",
+    "tests/test_local_v2_p2_lineage.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--tb=short",
+    "--basetemp",
+    "<new-short-private-temp>",
+    "--junitxml",
+    ".interop/p2-lineage-tests.xml"
+  ],
+  "preliminary_attempts": [
+    {
+      "scope": "Initial 11-case synthetic lineage run",
+      "passed": 10,
+      "failures": 1,
+      "errors": 0,
+      "reason": "Reused target attempt was rejected by the earlier Patch target attempt mismatch guard, rather than the later distinct-attempt guard expected by the fixture.",
+      "resolution": "Corrected the fixture expected error to the actual earlier guard; shared O/Guard and B runtime were unchanged."
+    }
+  ],
+  "formal_p2_acceptance": "not_claimed",
+  "raw_records": "Private pytest temporary directories and python_service/.interop/p2-lineage-tests.xml"
+}

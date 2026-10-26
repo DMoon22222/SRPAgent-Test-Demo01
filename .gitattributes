@@ -1,4 +1,5 @@
 /mvnw text eol=lf
+.gitattributes text eol=lf
 *.cmd text eol=crlf
 
 # Stable B local-module sources and byte-preserved public verification records.
@@ -12,3 +13,7 @@ python_service/app/schemas.py text eol=lf
 docker/b-local/Dockerfile text eol=lf
 docs/contracts/v2/** -text
 docs/verification/local_v2_*.json -text
+
+# Keep P2 input/overlay/evidence byte hashes stable across Windows checkouts.
+docs/integration/*.json -text
+docs/verification/p2/*.json -text

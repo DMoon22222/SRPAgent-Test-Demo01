@@ -83,6 +83,14 @@ descriptor = module.capabilities()
 
 显式运行真实沙箱验证的方法见 [交付说明](docs/local_v2_handoff.md)。原始日志和私有状态保存在 `.interop/`，不提交到 Git。
 
+10 月 30 日 P2 的接入准备见 [第一步记录](docs/p2_progress_20261026.md)，多轮历史、父子版本与固定测试验证见 [第二步记录](docs/p2_lineage_progress_20261026.md)。本轮提供 [可移植配置](docs/integration/config.b-local.p2.example.json)、[固定版本清单](docs/integration/p2_handoff_manifest.json) 和 [外部依赖清单](docs/integration/p2_external_dependencies.json)，不改变 0.3.1 运行核心。第二步回归 64 项及真实 Docker/O 场景 11 项通过，候选由明确标记的 A Mock 适配器提供；完整 P2 矩阵、正式材料锁定及 O 接收仍待完成，工具与共同登记暂为本地草案。
+
+第三步的引用生命周期、预算/持久重放与未知/迟到/部分失败验证见 [执行报告](docs/p2_boundaries_progress_20261026.md)。本轮 89 项定向回归、25 个边界场景通过，含 6 次真实 Docker 目标执行；完成重放不新增执行或结算。B 核心仍为固定 0.3.1。下一步补保护接收视图，正式 P2 与 O 接收仍待完成；新增工具和共同登记未提交、未推送。
+
+第四步的 [保护接收视图报告](docs/p2_protected_progress_20261026.md) 已补齐：95 项定向回归通过，六条真实 Docker/O 流程符合预期，含 18 次目标执行；公开视图无保护标记泄露，最终失败不再进入修复。B 侧技术矩阵已有证据，汇总见 [P2 交付草案](docs/p2_handoff_20261030.md)。正式材料锁定、消费方确认与 O 独立接收仍待完成，新增工具和共同登记继续保留本地草案状态。
+
+第五步的 [候选交付报告](docs/p2_delivery_progress_20261026.md) 已整理：新增统一只读检查和白名单打包工具，105 项回归通过，46 份文件摘要一致；独立目录离线 wheel 安装与静态烟测通过。本轮未重跑 Docker，正式材料和接收仍待完成。可在 `python_service` 运行 `python -B scripts/check_p2_delivery.py` 核对当前交付快照。
+
 ## 目录与其他工具
 
 | 位置 | 内容 |

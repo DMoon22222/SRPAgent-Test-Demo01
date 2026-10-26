@@ -1,0 +1,55 @@
+{
+  "record_version": "1.0",
+  "implementation_version": "0.3.1",
+  "schema_version": "2.0",
+  "source": {
+    "repository": "https://github.com/DMoon22222/SRPAgent-Test-Demo01.git",
+    "revision": "441077ac5b54d122469845bce41ef62dfd0f24fe",
+    "runtime_fix_revision": "c1f52e8ed321616a8e364c1d43c22568c27fe17c"
+  },
+  "framework": {
+    "repository": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop.git",
+    "revision": "55e9f3a945d58df60bd59ab8c57f206e3ebb67bd",
+    "version": "0.2.1"
+  },
+  "public_contract_sha256": "07382d82cce2c748b39110b6107575acc87af2ed86e15abaddd208f84b8aceae",
+  "factory": "srp_b:create_module",
+  "config_ref": "docs/integration/config.b-local.p2.example.json",
+  "config_canonical_sha256": "643eeb7473dea785a5dd0fe4c61d5804400dcc47fcc6f13c63d19b4298267c0e",
+  "runtime_source_hashes": {
+    "srp_b/__init__.py": "a1cff9924d90c316bc6d0b1242ceaa957859d3a838c5a2c4df092ee910b6874e",
+    "srp_b/diagnosis.py": "45d7a360d6026f33244f38acb9c92fc27055886dfae4ff47a36abefc337f917b",
+    "srp_b/module.py": "2915a789cae633e581a95752fad4dcf980399c1bb279a52a0e1dd8f36b3e0968",
+    "srp_b/samples.py": "bba00bfeba324fc83bbd1814ad0e0c3adac51a201edd1101f43f32fc8c72da30",
+    "srp_b/sandbox.py": "cdc9651de3980434faf82b79c325aa7b9574bf56c3cd8003bec9e3aea2eed834",
+    "srp_b/state.py": "7a9d6b834e82ccc11698603867ea75561c0b4b80e53702cac35cf2b3045802e3",
+    "app/analyzer/error_signal_extractor.py": "e72616c2e28d4887f93ce118f34981fef7e0d9ae5414894fe27e52fe74948e5e",
+    "app/schemas.py": "ad970badd6dfa8a01279ec9d93c3da62c99b8e8359df38bd99b6c3fbbe0b29ce"
+  },
+  "image": {
+    "configured_name": "srp-b-python:0.3.0",
+    "expected_id": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+    "expected_runtime": {
+      "name": "python",
+      "version": "3.11.5"
+    },
+    "package_versions": [
+      {
+        "name": "pytest",
+        "version": "8.3.5",
+        "source": "observed"
+      }
+    ],
+    "availability": "Existing local validation image; other machines must obtain this exact image or register and reverify a new environment. The deployment Dockerfile is a separate build source."
+  },
+  "host": {
+    "python_constraint": ">=3.11",
+    "verified_python": "3.12.4",
+    "dependency_constraints": "python_service/requirements-local-v2.lock"
+  },
+  "historical_validation": "docs/verification/local_v2_validation.json",
+  "p2_status": "bootstrap_in_progress; full interface matrix and formal acceptance pending",
+  "external_dependencies": "docs/integration/p2_external_dependencies.json",
+  "fallback_revision": "ebb940637f41d05a2adee3e107bca825f762b9a0",
+  "fallback_note": "Historical 0.3.0 has the old diagnosis evidence issue; fallback requires explicit review and does not satisfy the fixed diagnosis evidence criterion."
+}

@@ -1,0 +1,38 @@
+{
+  "verified_at": "2026-10-26T05:14:22.263Z",
+  "result": "passed",
+  "counts": {
+    "tests": 89,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 89
+  },
+  "scope": "64 existing adapter/P2 tests plus 25 reference/accounting/exception boundary tests; unit backend synthetic, actual Docker evidence separate",
+  "junit_sha256": "a98e54435a18866b3ae6e25c606403aac8fafeafdfa86e66cb8565223be175bb",
+  "command": [
+    "<local-v2-python>",
+    "-B",
+    "-m",
+    "pytest",
+    "tests/test_local_v2.py",
+    "tests/test_local_v2_samples.py",
+    "tests/test_local_v2_p2.py",
+    "tests/test_local_v2_p2_lineage.py",
+    "tests/test_local_v2_p2_boundaries.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--tb=short",
+    "--basetemp",
+    "<new-short-private-temp>",
+    "--junitxml",
+    ".interop/p2-boundaries-tests.xml"
+  ],
+  "overlay_hashes": {
+    "driver": "94ec16f36854512296602a43bbab45594a4372019727bd3d0f50419b2f70e631",
+    "tests": "cc4c93b4db41556dbe08225ebac6ecedad79ec317db6181c8ac5069bb3d9c6a8"
+  },
+  "formal_p2_acceptance": "not_claimed",
+  "raw_records": "Private JUnit and pytest temp directories; not committed"
+}

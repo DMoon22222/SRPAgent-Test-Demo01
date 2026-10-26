@@ -1,0 +1,370 @@
+{
+  "verified_at": "2026-10-26T05:07:26.875Z",
+  "result": "passed",
+  "cases": [
+    {
+      "name": "history_and_prior",
+      "group": "reference_lifecycle",
+      "result": "passed",
+      "backend_invocations": 0,
+      "physical_execution_calls": 0,
+      "expected_status": "completed",
+      "reason": null,
+      "resolver_revoked": true,
+      "injection": "none"
+    },
+    {
+      "name": "unlisted_reference",
+      "group": "reference_lifecycle",
+      "result": "passed",
+      "backend_invocations": 0,
+      "physical_execution_calls": 0,
+      "expected_status": "completed",
+      "reason": null,
+      "resolver_revoked": true,
+      "injection": "Declared B-owned reference/probe fixture"
+    },
+    {
+      "name": "wrong_reference_hash",
+      "group": "reference_lifecycle",
+      "result": "passed",
+      "backend_invocations": 0,
+      "physical_execution_calls": 0,
+      "expected_status": "blocked",
+      "reason": "AUTHORIZED_CONTEXT_UNAVAILABLE",
+      "resolver_revoked": true,
+      "injection": "Declared B-owned reference/probe fixture"
+    },
+    {
+      "name": "missing_reference",
+      "group": "reference_lifecycle",
+      "result": "passed",
+      "backend_invocations": 0,
+      "physical_execution_calls": 0,
+      "expected_status": "blocked",
+      "reason": "AUTHORIZED_CONTEXT_UNAVAILABLE",
+      "resolver_revoked": true,
+      "injection": "Declared B-owned reference/probe fixture"
+    },
+    {
+      "name": "wrong_reference_task",
+      "group": "reference_lifecycle",
+      "result": "passed",
+      "backend_invocations": 0,
+      "physical_execution_calls": 0,
+      "expected_status": "blocked",
+      "reason": "AUTHORIZED_CONTEXT_UNAVAILABLE",
+      "resolver_revoked": true,
+      "injection": "Declared B-owned reference/probe fixture"
+    },
+    {
+      "name": "wrong_history_run",
+      "group": "reference_lifecycle",
+      "result": "passed",
+      "backend_invocations": 0,
+      "physical_execution_calls": 0,
+      "expected_status": "error",
+      "reason": "INPUT_INVARIANT_VIOLATION",
+      "resolver_revoked": true,
+      "injection": "Declared B-owned reference/probe fixture"
+    },
+    {
+      "name": "protected_reference",
+      "group": "reference_lifecycle",
+      "result": "passed",
+      "backend_invocations": 0,
+      "physical_execution_calls": 0,
+      "expected_status": "transport_error",
+      "reason": "CONTRACT_INVALID",
+      "resolver_revoked": true,
+      "injection": "Declared B-owned reference/probe fixture"
+    },
+    {
+      "name": "resolver_body_hash",
+      "group": "reference_lifecycle",
+      "result": "passed",
+      "backend_invocations": 0,
+      "physical_execution_calls": 0,
+      "expected_status": "blocked",
+      "reason": "AUTHORIZED_CONTEXT_UNAVAILABLE",
+      "resolver_revoked": true,
+      "injection": "Declared defective-resolver fixture after original O authorization"
+    },
+    {
+      "name": "resolver_identity",
+      "group": "reference_lifecycle",
+      "result": "passed",
+      "backend_invocations": 0,
+      "physical_execution_calls": 0,
+      "expected_status": "blocked",
+      "reason": "AUTHORIZED_CONTEXT_UNAVAILABLE",
+      "resolver_revoked": true,
+      "injection": "Declared defective-resolver fixture after original O authorization"
+    },
+    {
+      "name": "exception_revocation",
+      "group": "reference_lifecycle",
+      "result": "passed",
+      "backend_invocations": 0,
+      "physical_execution_calls": 0,
+      "expected_status": "transport_error",
+      "reason": "MODULE_IMPLEMENTATION_ERROR",
+      "resolver_revoked": true,
+      "injection": "Declared B-owned reference/probe fixture"
+    },
+    {
+      "name": "log_reference",
+      "group": "reference_lifecycle",
+      "result": "passed",
+      "backend_invocations": 1,
+      "physical_execution_calls": 1,
+      "expected_status": "completed",
+      "reason": null,
+      "resolver_revoked": true,
+      "injection": "Declared referenced-log fixture based on observed execution shape; new fixture execution_id"
+    },
+    {
+      "name": "log_hash_mismatch",
+      "group": "reference_lifecycle",
+      "result": "passed",
+      "backend_invocations": 1,
+      "physical_execution_calls": 1,
+      "expected_status": "error",
+      "reason": "INPUT_INVARIANT_VIOLATION",
+      "resolver_revoked": true,
+      "injection": "Declared referenced-log fixture based on observed execution shape; new fixture execution_id"
+    },
+    {
+      "name": "missing_log_reference",
+      "group": "reference_lifecycle",
+      "result": "passed",
+      "backend_invocations": 1,
+      "physical_execution_calls": 1,
+      "expected_status": "error",
+      "reason": "INPUT_INVARIANT_VIOLATION",
+      "resolver_revoked": true,
+      "injection": "Declared referenced-log fixture based on observed execution shape; new fixture execution_id"
+    },
+    {
+      "name": "zero_grant",
+      "group": "budget_replay_accounting",
+      "result": "passed",
+      "backend_invocations": 0,
+      "physical_execution_calls": 0,
+      "reason": "EXECUTION_NOT_AUTHORIZED",
+      "ledger_execution_calls": 0,
+      "usage_id": "usage-d8e84cf44eab4ea5beee3c5f5b0dad13",
+      "completed_response_replay_count": 0,
+      "injection": "Declared grant/deadline/budget fixture"
+    },
+    {
+      "name": "insufficient_budget",
+      "group": "budget_replay_accounting",
+      "result": "passed",
+      "backend_invocations": 0,
+      "physical_execution_calls": 0,
+      "reason": "GRANT_EXCEEDS_BUDGET",
+      "ledger_execution_calls": 0,
+      "usage_id": "usage-f485cdccf877475f995e88b3f6691ee1",
+      "completed_response_replay_count": 0,
+      "injection": "Declared grant/deadline/budget fixture"
+    },
+    {
+      "name": "invalid_budget_revision",
+      "group": "budget_replay_accounting",
+      "result": "passed",
+      "backend_invocations": 0,
+      "physical_execution_calls": 0,
+      "reason": "GRANT_BUDGET_MISMATCH",
+      "ledger_execution_calls": 0,
+      "usage_id": "usage-b8f54d6fbc0c4526b955d96b84cc295e",
+      "completed_response_replay_count": 0,
+      "injection": "Declared grant/deadline/budget fixture"
+    },
+    {
+      "name": "envelope_deadline",
+      "group": "budget_replay_accounting",
+      "result": "passed",
+      "backend_invocations": 0,
+      "physical_execution_calls": 0,
+      "reason": "DEADLINE_EXCEEDED",
+      "ledger_execution_calls": 0,
+      "usage_id": "usage-e1f618e5b9664d7f913abc56676db638",
+      "completed_response_replay_count": 0,
+      "injection": "Declared grant/deadline/budget fixture"
+    },
+    {
+      "name": "grant_deadline",
+      "group": "budget_replay_accounting",
+      "result": "passed",
+      "backend_invocations": 0,
+      "physical_execution_calls": 0,
+      "reason": "DEADLINE_EXCEEDED",
+      "ledger_execution_calls": 0,
+      "usage_id": "usage-9e459778171b4b8786b9841086666087",
+      "completed_response_replay_count": 0,
+      "injection": "Declared grant/deadline/budget fixture"
+    },
+    {
+      "name": "budget_deadline",
+      "group": "budget_replay_accounting",
+      "result": "passed",
+      "backend_invocations": 0,
+      "physical_execution_calls": 0,
+      "reason": "DEADLINE_EXCEEDED",
+      "ledger_execution_calls": 0,
+      "usage_id": "usage-5917315ecbd843d6988b04b6f3313785",
+      "completed_response_replay_count": 0,
+      "injection": "Declared grant/deadline/budget fixture"
+    },
+    {
+      "name": "wall_budget",
+      "group": "budget_replay_accounting",
+      "result": "passed",
+      "backend_invocations": 0,
+      "physical_execution_calls": 0,
+      "reason": "DEADLINE_EXCEEDED",
+      "ledger_execution_calls": 0,
+      "usage_id": "usage-2cea30601b7c42a98a10a399fda7c23e",
+      "completed_response_replay_count": 0,
+      "injection": "Declared grant/deadline/budget fixture"
+    },
+    {
+      "name": "ledger_exhausted",
+      "group": "budget_replay_accounting",
+      "result": "passed",
+      "backend_invocations": 0,
+      "physical_execution_calls": 0,
+      "reason": "CALL_BUDGET_UNAVAILABLE",
+      "injection": "Declared zero execution budget fixture"
+    },
+    {
+      "name": "durable_replay",
+      "group": "budget_replay_accounting",
+      "result": "passed",
+      "backend_invocations": 1,
+      "physical_execution_calls": 1,
+      "reason": null,
+      "ledger_execution_calls": 1,
+      "usage_id": "usage-4d18f8c1754f44ff8259c7485a158a75",
+      "completed_response_replay_count": 4,
+      "injection": "Declared future-clock replay checks"
+    },
+    {
+      "name": "pending_outcome",
+      "group": "unknown_late_partial",
+      "result": "passed",
+      "backend_invocations": 0,
+      "physical_execution_calls": 0,
+      "terminal": "human_review",
+      "reason": "USAGE_RECONCILIATION_REQUIRED",
+      "ledger_execution_calls": 0,
+      "reserved_execution_calls": 1,
+      "unknown_usage_count": 1,
+      "injection": "Declared B-owned pending_outcome fixture"
+    },
+    {
+      "name": "late_result",
+      "group": "unknown_late_partial",
+      "result": "passed",
+      "backend_invocations": 1,
+      "physical_execution_calls": 1,
+      "terminal": "human_review",
+      "reason": "LATE_RESULT_NOT_APPLIED",
+      "ledger_execution_calls": 1,
+      "reserved_execution_calls": 0,
+      "unknown_usage_count": 0,
+      "injection": "Declared B-owned late_result fixture"
+    },
+    {
+      "name": "partial_diagnosis",
+      "group": "unknown_late_partial",
+      "result": "passed",
+      "backend_invocations": 1,
+      "physical_execution_calls": 1,
+      "terminal": "human_review",
+      "reason": "DIAGNOSIS_FAILED",
+      "ledger_execution_calls": 1,
+      "reserved_execution_calls": 0,
+      "unknown_usage_count": 0,
+      "injection": "Declared B-owned partial_diagnosis fixture"
+    }
+  ],
+  "formal_p2_acceptance": "blocked",
+  "o_receipt": "not_received",
+  "scope": "B technical reference, budget/replay and unknown/late/partial joint verification",
+  "model_calls": 0,
+  "raw_records": "Private python_service/.interop/p2-boundaries directory; not committed",
+  "implementation_version": "0.3.1",
+  "source_revision": "441077ac5b54d122469845bce41ef62dfd0f24fe",
+  "image_digest": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+  "public_contract_sha256": "07382d82cce2c748b39110b6107575acc87af2ed86e15abaddd208f84b8aceae",
+  "config_canonical_sha256": "643eeb7473dea785a5dd0fe4c61d5804400dcc47fcc6f13c63d19b4298267c0e",
+  "docker_engine": "29.9.1",
+  "host_python": "3.12.4",
+  "host_packages": {
+    "pytest": "9.1.1",
+    "pydantic": "2.14.1",
+    "jsonschema": "4.26.0"
+  },
+  "framework_git_commit": "d3f46741bab412886ad39e5f7c8fac52741e506e",
+  "configuration_overrides": {
+    "B.options.state_dir": "Unique private fixture directory; same directory only for durable replay",
+    "transport.timeout_seconds": "60; late fixture explicitly reduces timeout after B returns",
+    "O.routing_mode": "no_rag",
+    "O.max_repairs": 2,
+    "O.output_dir": "Unique private fixture directory",
+    "O.A_and_C": "Original declared Mock factories; no real model calls",
+    "budget_context": "Explicit fixture values; not actual A tokenizer/context metadata"
+  },
+  "overlay_hashes": {
+    "driver": "94ec16f36854512296602a43bbab45594a4372019727bd3d0f50419b2f70e631",
+    "tests": "cc4c93b4db41556dbe08225ebac6ecedad79ec317db6181c8ac5069bb3d9c6a8",
+    "bootstrap_driver": "dcd723adaeb76336f519a763fcbaaa293f20ee2574c9b861f185b873ad5535a2",
+    "config": "4f41e60fd8b5f11ee0c8a53cfad7fa4bb6490631e5911a26d1ee8c992e231dcd",
+    "manifest": "11ab65b3a6d4192ddfa89eeaf6e444deb9a24c5dccc279ee0c817aec6aa1075c"
+  },
+  "overlay_files": {
+    "driver": "verify_p2_boundaries.py",
+    "tests": "test_local_v2_p2_boundaries.py",
+    "bootstrap_driver": "verify_p2_local.py",
+    "config": "config.b-local.p2.example.json",
+    "manifest": "p2_handoff_manifest_v0.3.1.json"
+  },
+  "source_overlay": "Uncommitted B-owned test fixtures; fixed 0.3.1 runtime and shared framework unchanged",
+  "backend_invocations": 6,
+  "physical_execution_calls": 6,
+  "no_new_remaining_containers": true,
+  "actual_runtimes": [
+    {
+      "name": "python",
+      "version": "3.11.5"
+    },
+    {
+      "name": "python",
+      "version": "3.11.5"
+    },
+    {
+      "name": "python",
+      "version": "3.11.5"
+    },
+    {
+      "name": "python",
+      "version": "3.11.5"
+    },
+    {
+      "name": "python",
+      "version": "3.11.5"
+    },
+    {
+      "name": "python",
+      "version": "3.11.5"
+    }
+  ],
+  "unverified": [
+    "Full protected receiver-view matrix",
+    "Formal TEST-001 lock and target A metadata",
+    "Independent O receipt",
+    "Real A/C algorithms"
+  ]
+}

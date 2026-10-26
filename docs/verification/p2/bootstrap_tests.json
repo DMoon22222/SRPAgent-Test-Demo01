@@ -1,0 +1,31 @@
+{
+  "verified_at": "2026-10-26T03:11:22.945Z",
+  "result": "passed",
+  "scope": "Existing 46 local adapter/sample tests plus seven P2 portable-bundle tests; test backends are distinct from the separate real Docker bootstrap",
+  "counts": {
+    "tests": 53,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 53
+  },
+  "command": [
+    "<local-v2-python>",
+    "-B",
+    "-m",
+    "pytest",
+    "tests/test_local_v2.py",
+    "tests/test_local_v2_samples.py",
+    "tests/test_local_v2_p2.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--tb=short",
+    "--basetemp",
+    "<unique-short-private-temp>",
+    "--junitxml",
+    ".interop/p2-bootstrap-tests.xml"
+  ],
+  "formal_p2_acceptance": "not_claimed",
+  "raw_report": "Private python_service/.interop/p2-bootstrap-tests.xml"
+}
