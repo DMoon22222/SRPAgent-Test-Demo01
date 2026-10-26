@@ -1,0 +1,42 @@
+{
+  "record_version": "1.0",
+  "updated_date": "2026-10-26",
+  "work_item": "INTB-001",
+  "formal_acceptance": "blocked",
+  "communication_status": "Checklist prepared locally; no messages or requests sent to other people",
+  "items": [
+    {
+      "id": "p0_material_lock",
+      "owner_groups": ["O"],
+      "related_work_item": "TEST-001",
+      "status": "awaiting_material",
+      "required": ["Fixed task IDs", "Public and final test artifact IDs and hashes", "Budget and grant policy version", "Knowledge snapshot ID", "Controlled original-record location"],
+      "provided_ref": null
+    },
+    {
+      "id": "actual_target_a_context",
+      "owner_groups": ["A", "O"],
+      "related_work_item": "TEST-001",
+      "status": "awaiting_material",
+      "required": ["Actual context_profiles", "Tokenizer ID and version", "Verifiable model-window metadata"],
+      "provided_ref": null
+    },
+    {
+      "id": "consumer_field_review",
+      "owner_groups": ["A", "C", "O"],
+      "related_work_item": "INTB-001",
+      "status": "awaiting_confirmation",
+      "required": ["FailureSource/DiagnosisReport/ExecutionContext field review", "History and protected-view boundary confirmation"],
+      "provided_ref": null
+    },
+    {
+      "id": "independent_o_receipt",
+      "owner_groups": ["O"],
+      "related_work_item": "INTB-001",
+      "status": "awaiting_confirmation",
+      "required": ["Independent installation and reproduction", "Receiver, date and actual comments"],
+      "provided_ref": null
+    }
+  ],
+  "scope_note": "B uses rules and has zero model calls. A/C remain explicitly Mock in bootstrap verification. Missing actual metadata must not be replaced by demonstration tokenizer values."
+}

@@ -1,0 +1,336 @@
+{
+  "verified_at": "2026-10-26T03:32:02.500Z",
+  "result": "passed",
+  "scope": "P2 multi-round history/parent/fixed-test technical verification",
+  "formal_p2_acceptance": "blocked",
+  "o_receipt": "not_received",
+  "model_calls": 0,
+  "cases": [
+    {
+      "scenario": "two_execution_failures",
+      "result": "passed",
+      "evidence_kind": "real_docker_with_declared_mock_candidates_and_fault_injection",
+      "candidate_source": "Declared A/C Mock test adapter; no actual model",
+      "terminal": "accepted",
+      "stop_reason": null,
+      "iterations": 2,
+      "run_id": "run-0fe1743fd8cb4e948c6d4319192e55f4",
+      "trace_id": "trace-4831da7f76774c35ae2c46d27aef6691",
+      "execution_requests": 4,
+      "physical_execution_calls": 4,
+      "diagnosis_calls": 2,
+      "repair_calls": 2,
+      "routing_mode": "no_rag",
+      "repair_limit": 2,
+      "observed_image_ids": [
+        "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32"
+      ],
+      "lineage": [
+        {
+          "attempt_id": "attempt-62b6ed6a304243a2bd9c91ba61543f4c",
+          "code_id": "code-4a5f0408189d4023b2323e2d963abc35",
+          "revision": "r0",
+          "code_hash": "e63bb6a8e401e7249842a537a11e047e756e48ccb346c13c18232fa1ec15294a",
+          "source_kind": "execution",
+          "diagnosis_id": "diagnosis-3f6e5d88d30a4c34ac076a1c51337d60",
+          "prior_diagnosis_id": null
+        },
+        {
+          "attempt_id": "attempt-0ced87f152544a408399215f546b141b",
+          "code_id": "code-1644d565c7b74f5ba339311b26d299ea",
+          "revision": "p2-r1",
+          "code_hash": "8a8dd932b0d83c9bd43c3e683c9738daf959b68b230038d6f9cb6f741ca6a665",
+          "source_kind": "execution",
+          "diagnosis_id": "diagnosis-f9e2c1aa1daf4af1a832f2f1d64036ba",
+          "prior_diagnosis_id": "diagnosis-3f6e5d88d30a4c34ac076a1c51337d60"
+        }
+      ]
+    },
+    {
+      "scenario": "two_static_failures",
+      "result": "passed",
+      "evidence_kind": "real_docker_with_declared_mock_candidates_and_fault_injection",
+      "candidate_source": "Declared A/C Mock test adapter; no actual model",
+      "terminal": "accepted",
+      "stop_reason": null,
+      "iterations": 2,
+      "run_id": "run-3128835938ac46769e1233206467a667",
+      "trace_id": "trace-0553958e781e4d3eb24ca8c4be1e39c7",
+      "execution_requests": 2,
+      "physical_execution_calls": 2,
+      "diagnosis_calls": 2,
+      "repair_calls": 2,
+      "routing_mode": "no_rag",
+      "repair_limit": 2,
+      "observed_image_ids": [
+        "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32"
+      ],
+      "lineage": [
+        {
+          "attempt_id": "attempt-75a7cc436248442eaa2118c7b3d100a2",
+          "code_id": "code-755ba8f2857b43b181a4bc25f4acbdde",
+          "revision": "r0",
+          "code_hash": "48cd865bb01a59888c5b344695dc9a9b58fa5df168ce68e607d0d44d91cc8518",
+          "source_kind": "static",
+          "diagnosis_id": "diagnosis-1fda4fd55c4946799860b1ee7702588c",
+          "prior_diagnosis_id": null
+        },
+        {
+          "attempt_id": "attempt-f9cf974d5c6b4b3db5c3e501a5e54376",
+          "code_id": "code-4a5456faa29b407c97cf5e06cce85265",
+          "revision": "p2-r1",
+          "code_hash": "48cd865bb01a59888c5b344695dc9a9b58fa5df168ce68e607d0d44d91cc8518",
+          "source_kind": "static",
+          "diagnosis_id": "diagnosis-560e7ae40b804619a0999219d4820d26",
+          "prior_diagnosis_id": "diagnosis-1fda4fd55c4946799860b1ee7702588c"
+        }
+      ]
+    },
+    {
+      "scenario": "static_then_execution",
+      "result": "passed",
+      "evidence_kind": "real_docker_with_declared_mock_candidates_and_fault_injection",
+      "candidate_source": "Declared A/C Mock test adapter; no actual model",
+      "terminal": "accepted",
+      "stop_reason": null,
+      "iterations": 2,
+      "run_id": "run-e9fe7dc9bacc41c9b9b232d39d489f26",
+      "trace_id": "trace-2397f0d24a5c4f309c5034552faede9f",
+      "execution_requests": 3,
+      "physical_execution_calls": 3,
+      "diagnosis_calls": 2,
+      "repair_calls": 2,
+      "routing_mode": "no_rag",
+      "repair_limit": 2,
+      "observed_image_ids": [
+        "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32"
+      ],
+      "lineage": [
+        {
+          "attempt_id": "attempt-d6220569e17948459d0d03768bacce68",
+          "code_id": "code-cfc493a5ca21470ca4934351275440a8",
+          "revision": "r0",
+          "code_hash": "48cd865bb01a59888c5b344695dc9a9b58fa5df168ce68e607d0d44d91cc8518",
+          "source_kind": "static",
+          "diagnosis_id": "diagnosis-49264a1ebc164df586244acd0b8f3fa9",
+          "prior_diagnosis_id": null
+        },
+        {
+          "attempt_id": "attempt-7eae48a1b3a74391bffef7048b3e5ed8",
+          "code_id": "code-b0312b25fb06489799b685e2ee7e2c7c",
+          "revision": "p2-r1",
+          "code_hash": "8a8dd932b0d83c9bd43c3e683c9738daf959b68b230038d6f9cb6f741ca6a665",
+          "source_kind": "execution",
+          "diagnosis_id": "diagnosis-b4374f3cd58845ca8c40884df7633958",
+          "prior_diagnosis_id": "diagnosis-49264a1ebc164df586244acd0b8f3fa9"
+        }
+      ]
+    },
+    {
+      "scenario": "wrong_parent_id",
+      "result": "passed",
+      "evidence_kind": "real_docker_with_declared_mock_candidates_and_fault_injection",
+      "candidate_source": "Declared A/C Mock test adapter; no actual model",
+      "terminal": "human_review",
+      "stop_reason": "Patch parent artifact/hash mismatch",
+      "iterations": 0,
+      "run_id": "run-17bada72eb7742e8b68f8b29372ecdd6",
+      "trace_id": "trace-96955d14b48248ac9f5fb9f258e696eb",
+      "execution_requests": 1,
+      "physical_execution_calls": 1,
+      "diagnosis_calls": 1,
+      "repair_calls": 1,
+      "routing_mode": "no_rag",
+      "repair_limit": 2,
+      "observed_image_ids": [
+        "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32"
+      ],
+      "lineage": []
+    },
+    {
+      "scenario": "wrong_parent_hash",
+      "result": "passed",
+      "evidence_kind": "real_docker_with_declared_mock_candidates_and_fault_injection",
+      "candidate_source": "Declared A/C Mock test adapter; no actual model",
+      "terminal": "human_review",
+      "stop_reason": "Patch parent artifact/hash mismatch",
+      "iterations": 0,
+      "run_id": "run-bb81a0b3d5154e5dbf1d6adee65b5ff6",
+      "trace_id": "trace-ca50fffd0db44c2c892cc8f7f770f470",
+      "execution_requests": 1,
+      "physical_execution_calls": 1,
+      "diagnosis_calls": 1,
+      "repair_calls": 1,
+      "routing_mode": "no_rag",
+      "repair_limit": 2,
+      "observed_image_ids": [
+        "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32"
+      ],
+      "lineage": []
+    },
+    {
+      "scenario": "wrong_parent_attempt",
+      "result": "passed",
+      "evidence_kind": "real_docker_with_declared_mock_candidates_and_fault_injection",
+      "candidate_source": "Declared A/C Mock test adapter; no actual model",
+      "terminal": "human_review",
+      "stop_reason": "Patch parent attempt mismatch",
+      "iterations": 0,
+      "run_id": "run-99408d34158b4ed790cd382ad0a319ed",
+      "trace_id": "trace-0c57548aefda4051af9f9ccdfa77ccac",
+      "execution_requests": 1,
+      "physical_execution_calls": 1,
+      "diagnosis_calls": 1,
+      "repair_calls": 1,
+      "routing_mode": "no_rag",
+      "repair_limit": 2,
+      "observed_image_ids": [
+        "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32"
+      ],
+      "lineage": []
+    },
+    {
+      "scenario": "reused_target_attempt",
+      "result": "passed",
+      "evidence_kind": "real_docker_with_declared_mock_candidates_and_fault_injection",
+      "candidate_source": "Declared A/C Mock test adapter; no actual model",
+      "terminal": "human_review",
+      "stop_reason": "Patch target attempt mismatch",
+      "iterations": 0,
+      "run_id": "run-6304490f59874a1794aea3ad90936d34",
+      "trace_id": "trace-dd947e373bf040ff9b36267f229aa84d",
+      "execution_requests": 1,
+      "physical_execution_calls": 1,
+      "diagnosis_calls": 1,
+      "repair_calls": 1,
+      "routing_mode": "no_rag",
+      "repair_limit": 2,
+      "observed_image_ids": [
+        "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32"
+      ],
+      "lineage": []
+    },
+    {
+      "scenario": "wrong_preserved_test_hash",
+      "result": "passed",
+      "evidence_kind": "real_docker_with_declared_mock_candidates_and_fault_injection",
+      "candidate_source": "Declared A/C Mock test adapter; no actual model",
+      "terminal": "human_review",
+      "stop_reason": "Patch changed the fixed test hash",
+      "iterations": 0,
+      "run_id": "run-ca481ba1ecdc49f3be49e6f6b4937ab4",
+      "trace_id": "trace-e18098e822014d7280070295d8cef734",
+      "execution_requests": 1,
+      "physical_execution_calls": 1,
+      "diagnosis_calls": 1,
+      "repair_calls": 1,
+      "routing_mode": "no_rag",
+      "repair_limit": 2,
+      "observed_image_ids": [
+        "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32"
+      ],
+      "lineage": []
+    },
+    {
+      "scenario": "unauthorized_build",
+      "result": "passed",
+      "evidence_kind": "real_docker_with_declared_mock_candidates_and_fault_injection",
+      "candidate_source": "Declared A/C Mock test adapter; no actual model",
+      "terminal": "human_review",
+      "stop_reason": "Build manifest replacement is not authorized",
+      "iterations": 0,
+      "run_id": "run-28cfb96b0365456498c6b45c9d6c8e7e",
+      "trace_id": "trace-284f90c711dc4ed5911cfb1c8343d383",
+      "execution_requests": 1,
+      "physical_execution_calls": 1,
+      "diagnosis_calls": 1,
+      "repair_calls": 1,
+      "routing_mode": "no_rag",
+      "repair_limit": 2,
+      "observed_image_ids": [
+        "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32"
+      ],
+      "lineage": []
+    },
+    {
+      "scenario": "stale_failure_source",
+      "result": "passed",
+      "evidence_kind": "real_docker_with_declared_mock_candidates_and_fault_injection",
+      "candidate_source": "Declared A/C Mock test adapter; no actual model",
+      "terminal": "human_review",
+      "stop_reason": "INPUT_INVARIANT_VIOLATION",
+      "iterations": 1,
+      "run_id": "run-999bcdf91bab48acbb44dbe7cdd6d846",
+      "trace_id": "trace-e657d9541ab6477796cdeff39c59b334",
+      "execution_requests": 2,
+      "physical_execution_calls": 2,
+      "diagnosis_calls": 2,
+      "repair_calls": 1,
+      "routing_mode": "no_rag",
+      "repair_limit": 2,
+      "observed_image_ids": [
+        "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32"
+      ],
+      "lineage": []
+    },
+    {
+      "scenario": "changed_fixed_tests",
+      "result": "passed",
+      "evidence_kind": "real_docker_with_declared_mock_candidates_and_fault_injection",
+      "candidate_source": "Declared A/C Mock test adapter; no actual model",
+      "terminal": "human_review",
+      "stop_reason": "FIXED_TESTS_CHANGED",
+      "iterations": 1,
+      "run_id": "run-6bba99aa79f7446d85589dc63f3b85d4",
+      "trace_id": "trace-b6f280ef9f4a40cbbe07c847e9976578",
+      "execution_requests": 2,
+      "physical_execution_calls": 1,
+      "diagnosis_calls": 1,
+      "repair_calls": 1,
+      "routing_mode": "no_rag",
+      "repair_limit": 2,
+      "observed_image_ids": [
+        "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32"
+      ],
+      "lineage": []
+    }
+  ],
+  "raw_records": "Private python_service/.interop/p2-lineage directory; not committed",
+  "implementation_version": "0.3.1",
+  "source_revision": "441077ac5b54d122469845bce41ef62dfd0f24fe",
+  "image_digest": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+  "public_contract_sha256": "07382d82cce2c748b39110b6107575acc87af2ed86e15abaddd208f84b8aceae",
+  "config_canonical_sha256": "643eeb7473dea785a5dd0fe4c61d5804400dcc47fcc6f13c63d19b4298267c0e",
+  "configuration_overrides": {
+    "O.routing_mode": "no_rag to isolate B history/lineage cases",
+    "B.options.state_dir": "Unique private directory per scenario",
+    "O.output_dir": "Unique private directory per scenario"
+  },
+  "source_overlay": "Uncommitted test adapter and driver; fixed B runtime is unchanged",
+  "host_python": "3.12.4",
+  "host_packages": {
+    "pytest": "9.1.1",
+    "pydantic": "2.14.1",
+    "jsonschema": "4.26.0"
+  },
+  "overlay_hashes": {
+    "lineage_driver": "b28335dd70a9fa5ed962bad190296889e50c732adf1876481ebe4a9363ed75ec",
+    "lineage_tests": "6c9525df1fe895c97e9c616237ea5f25efd481893da7fffee076422b87aa28f2",
+    "bootstrap_driver": "dcd723adaeb76336f519a763fcbaaa293f20ee2574c9b861f185b873ad5535a2",
+    "config": "4f41e60fd8b5f11ee0c8a53cfad7fa4bb6490631e5911a26d1ee8c992e231dcd",
+    "manifest": "11ab65b3a6d4192ddfa89eeaf6e444deb9a24c5dccc279ee0c817aec6aa1075c"
+  },
+  "overlay_files": {
+    "lineage_driver": "verify_p2_lineage.py",
+    "lineage_tests": "test_local_v2_p2_lineage.py",
+    "bootstrap_driver": "verify_p2_local.py",
+    "config": "config.b-local.p2.example.json",
+    "manifest": "p2_handoff_manifest_v0.3.1.json"
+  },
+  "unverified": [
+    "Full reference/unknown/late/protected-receiver P2 matrix",
+    "Formal TEST-001 lock and target A context metadata",
+    "O independent receipt",
+    "Real A/C algorithms"
+  ]
+}
