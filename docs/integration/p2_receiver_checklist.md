@@ -4,7 +4,7 @@
 
 ## 候选内容核对
 
-1. 核对 `docs/integration/p2_delivery_files.json` 的文件摘要，以及 `docs/verification/p2/delivery_validation.json` 的归档 SHA-256。工具仍是未提交快照，实际共享前需记录对应提交或受控制品标识。
+1. 核对 `docs/integration/p2_delivery_files.json` 的文件摘要，以及 `docs/verification/p2/delivery_validation.json` 的归档 SHA-256。工具已固定并推送为 `b3239cadf26da6360862f84a6da80f10717e8dcc`，实际发布证明见 `docs/verification/p2/publication.json`；组装时的快照状态保留历史原样。
 2. 核对候选 ZIP 中 `DELIVERY.json` 的 65 份载荷摘要、固定 B wheel SHA 与框架快照提交。保持 A/C 的 Mock 声明和 B 独立沙箱边界。
 3. 使用 Python >=3.11，按 `b/python_service/requirements-local-v2.lock` 准备兼容依赖。若复用已有环境，明确记录复用范围。
 4. 在解压后的候选目录执行：
