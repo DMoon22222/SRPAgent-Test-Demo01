@@ -33,6 +33,14 @@ class Journal:
             db.execute("""CREATE TABLE IF NOT EXISTS fixed_tests (
                 run TEXT, kind TEXT, artifact TEXT, sha256 TEXT,
                 PRIMARY KEY(run, kind))""")
+            db.execute("""CREATE TABLE IF NOT EXISTS model_observations (
+                call_id TEXT PRIMARY KEY, body TEXT NOT NULL)""")
+
+    def observe_model(self, call_id, observation):
+        """Private provider originals; never exposed by the public artifact resolver."""
+        with self.connection() as db:
+            db.execute("INSERT OR REPLACE INTO model_observations VALUES (?,?)",
+                       (call_id, canonical(observation)))
 
     @contextmanager
     def connection(self):

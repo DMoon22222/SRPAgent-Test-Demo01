@@ -1,0 +1,30 @@
+{
+  "schema_version": "2.0",
+  "transport": "local",
+  "modules": {
+    "A": {
+      "factory": "reliable_codegen.mocks:create_mock_module",
+      "options": {"service": "A", "scenario": "repair_no_rag"}
+    },
+    "B": {
+      "factory": "srp_b:create_module",
+      "options": {
+        "state_dir": ".interop/claude/b-state",
+        "image": "srp-b-python:0.3.0",
+        "diagnosis_backend": "anthropic",
+        "anthropic_model": "REPLACE_WITH_APPROVED_CLAUDE_MODEL_ID",
+        "anthropic_max_tokens": 1024,
+        "anthropic_timeout_seconds": 30,
+        "anthropic_api_key_env": "ANTHROPIC_API_KEY"
+      }
+    },
+    "C": {
+      "factory": "reliable_codegen.mocks:create_mock_module",
+      "options": {"service": "C", "scenario": "repair_no_rag"}
+    }
+  },
+  "output_dir": ".interop/claude/o-runs",
+  "timeout_seconds": 90,
+  "max_repairs": 2,
+  "routing_mode": "adaptive_rag"
+}

@@ -18,6 +18,7 @@ from reliable_codegen.utils import canonical, digest, uid, utcnow
 
 from . import __version__
 from .diagnosis import diagnose
+from .claude import ClaudeDiagnosis, ModelBlocked, ModelFailure
 from .state import Journal, StateConflict
 
 STATIC = "/api/v2/validate/static"
@@ -32,13 +33,20 @@ class Blocked(ContractError):
 
 class BModule:
     def __init__(self, state_dir=".interop/local-v2", image="srp-b-python:0.3.0",
-                 max_payload_bytes=2 * 1024 * 1024, *, runner=None):
+                 max_payload_bytes=2 * 1024 * 1024, *, runner=None, diagnosis_backend="rules",
+                 anthropic_model=None, anthropic_max_tokens=1024, anthropic_timeout_seconds=30,
+                 anthropic_base_url=None, anthropic_api_key_env="ANTHROPIC_API_KEY"):
         if type(max_payload_bytes) is not int or not 1 <= max_payload_bytes <= 2 * 1024 * 1024:
             raise ValueError("max_payload_bytes must be between 1 and 2097152")
         if not isinstance(image, str) or not image or image.startswith("-"):
             raise ValueError("A Docker image name or digest is required")
         from .sandbox import DockerRunner
 
+        if diagnosis_backend not in ("rules", "anthropic"):
+            raise ValueError("diagnosis_backend must be rules or anthropic")
+        self.claude = ClaudeDiagnosis(model=anthropic_model, max_tokens=anthropic_max_tokens,
+                                     timeout_seconds=anthropic_timeout_seconds, base_url=anthropic_base_url,
+                                     api_key_env=anthropic_api_key_env) if diagnosis_backend == "anthropic" else None
         self.registry = ContractRegistry()
         self.journal = Journal(state_dir)
         self.runner = runner if runner is not None else DockerRunner(image=image)
@@ -55,8 +63,10 @@ class BModule:
             "supported_routing_phases": [], "context_profiles": [], "artifact_resolver_keys": ["local-store"],
             "execution_guarantees": {"backend": "docker", "host_target_execution": False,
                                       "unsupported_policies": "rejected", "runtime": "observed per execution"},
-            "extensions": {"srp_b": {"implementation_version": __version__, "diagnosis": "rule_based",
-                                       "model_calls": 0, "configured_image": self.image,
+            "extensions": {"srp_b": {"implementation_version": __version__, "diagnosis": "anthropic" if self.claude else "rule_based",
+                                       "model_calls": 1 if self.claude else 0, "configured_image": self.image,
+                                       "model": self.claude.model if self.claude else None,
+                                       "max_model_calls_per_diagnosis": 1 if self.claude else 0,
                                        "completed_replay": "durable", "pending_replay": "outcome_unknown"}},
         }
         self.registry.validate("CapabilityDescriptor", result)
@@ -106,8 +116,10 @@ class BModule:
             if replay == "completed":
                 return json_copy(response)
             started = monotonic()
-            counters = {"execution_calls": 0}
+            counters = {"execution_calls": 0, "model_calls": 0, "input_tokens": 0, "output_tokens": 0}
             if replay == "pending":
+                if operation == DIAGNOSE:
+                    counters.update(model_calls=None, input_tokens=None, output_tokens=None)
                 return self._response(operation, snapshot, started, counters, error="OUTCOME_UNKNOWN", unknown=True)
             partial = None
             try:
@@ -128,10 +140,27 @@ class BModule:
                                                 fact["report_id" if static else "execution_id"])
                     prior, logs = self._context(snapshot)
                     data = diagnose(snapshot, prior=prior, logs=logs)
+                    if self.claude:
+                        def remaining():
+                            try:
+                                authorized = self._authorize(snapshot)
+                            except Blocked as error:
+                                raise ModelBlocked(str(error)) from None
+                            available = min(authorized,
+                                            snapshot["payload"]["budget"]["remaining"]["wall_time_ms"] / 1000
+                                            - (monotonic() - started))
+                            if available <= 0:
+                                raise ModelBlocked("DEADLINE_EXCEEDED")
+                            return available
+                        data = self.claude.enrich(snapshot, data, prior=prior, logs=logs, usage=counters,
+                                                 remaining=remaining, observe=lambda value:
+                                                     self.journal.observe_model(snapshot["call_id"], value))
                     self.journal.save(data["diagnosis_report"], "DiagnosisReport", data["diagnosis_report"]["diagnosis_id"])
                 response = self._response(operation, snapshot, started, counters, data=data)
-            except Blocked as error:
+            except (Blocked, ModelBlocked) as error:
                 response = self._response(operation, snapshot, started, counters, blocked=str(error))
+            except ModelFailure as error:
+                response = self._response(operation, snapshot, started, counters, error=str(error), partial=partial)
             except (ContractError, ValueError, KeyError) as error:
                 # Messages are stable identifiers, never source/log/SDK exception text.
                 code = str(error) if isinstance(error, StateConflict) else "INPUT_INVARIANT_VIOLATION"
@@ -338,12 +367,18 @@ class BModule:
 
     def _response(self, operation, request, started, counters, *, data=None, error=None, blocked=None, partial=None, unknown=False):
         usage = {"usage_id": uid("usage"), "call_id": request["call_id"], "parent_call_id": request["parent_call_id"],
-                 "input_tokens": 0, "output_tokens": 0, "model_calls": 0, "retrieval_calls": 0,
+                  "input_tokens": counters.get("input_tokens", 0), "output_tokens": counters.get("output_tokens", 0),
+                  "model_calls": counters.get("model_calls", 0), "retrieval_calls": 0,
                  "execution_calls": counters["execution_calls"], "latency_ms": round((monotonic() - started) * 1000, 3),
                  "estimated_cost_usd": None, "measurement_status": "complete", "measurement": "exact",
                  "aggregation": "leaf", "children_usage_ids": [], "notes": ["Local rules only; no model or retrieval was invoked. Cost is not priced."]}
-        if unknown or counters["execution_calls"] is None:
+        if (unknown and operation == EXECUTE) or counters["execution_calls"] is None:
             usage.update(execution_calls=None, measurement_status="partial", measurement="unknown")
+        if any(usage[k] is None for k in ("model_calls", "input_tokens", "output_tokens")):
+            usage.update(measurement_status="partial", measurement="unknown")
+        if usage["model_calls"] != 0:
+            usage["notes"] = ["Anthropic inference: server-reported tokens include cache creation/read input tokens. "
+                              "Missing usage is unknown; retain its reservation. Cost is not priced."]
         module_error = None
         status = "completed"
         if error:

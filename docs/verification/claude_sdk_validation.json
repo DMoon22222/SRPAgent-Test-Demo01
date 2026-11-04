@@ -1,0 +1,104 @@
+{
+  "record_version": "1.0",
+  "verified_at": "2026-11-02T10:39:40.932026+08:00",
+  "implementation_version": "0.4.0",
+  "schema_version": "2.0",
+  "result": "passed",
+  "scope": "Local Claude SDK implementation/packaging and synthetic contract regression; no live provider or Docker execution",
+  "source_state": "Uncommitted local 0.4.0 candidate; source hashes identify this tested worktree, not a published release",
+  "git_base": "145bc77a271ac2efb22fc7e159090fe605f72602",
+  "framework_revision": "782e6bc59c5d5ec9cb1a8c39cefec299b5c681cf",
+  "public_contract_sha256": "07382d82cce2c748b39110b6107575acc87af2ed86e15abaddd208f84b8aceae",
+  "source_hashes": {
+    ".gitattributes": "fd668fb198fa697c06639e66b27c8ecd9bbb1a20c77241645eda6e08f2c65b30",
+    "README.md": "c5d0923221a8184a8b019e4b6fac95e142714b400fdb035ee3d101d48dd6a862",
+    "docs/claude_sdk_integration.md": "23b11ba7ffdb5b5c422b7d356ed390030297806ae6228cb84442bc9b1b241052",
+    "docs/integration/config.b-local.claude.example.json": "73ba6cf505d2a41834d15986288adf1d26e98825f2e6e37c5af21f6f790d97fc",
+    "python_service/pyproject.toml": "c07d0ed0a6222eb9f887a3cc5b1c8d67ada55d9598ffd05ec8c4773b590b6e17",
+    "python_service/requirements-local-v2.lock": "cb24640ba84d52aa89d4b40836830e28eb8d5ecd2cd11ff31bce205ca476d3b0",
+    "python_service/requirements-local-v2-anthropic.lock": "5275a0d1ddcde9035aa02ddcc68e55f032a5bf8bc748fc23bf008b1a9679109d",
+    "python_service/app/analyzer/error_signal_extractor.py": "e72616c2e28d4887f93ce118f34981fef7e0d9ae5414894fe27e52fe74948e5e",
+    "python_service/app/schemas.py": "ad970badd6dfa8a01279ec9d93c3da62c99b8e8359df38bd99b6c3fbbe0b29ce",
+    "python_service/srp_b/__init__.py": "568e9cd369be1978708a7dccb91951a8346337b962aa57d07b97d98ff36140db",
+    "python_service/srp_b/claude.py": "f840aa4ba56402f3a53c78c14f4b1aac6a44ed6511da53f0ff0763a022008cb1",
+    "python_service/srp_b/diagnosis.py": "45d7a360d6026f33244f38acb9c92fc27055886dfae4ff47a36abefc337f917b",
+    "python_service/srp_b/module.py": "edcdf3c5e59687d5541bb0c366135131f6945135f6ea3443203ba520c1aae6f0",
+    "python_service/srp_b/samples.py": "bba00bfeba324fc83bbd1814ad0e0c3adac51a201edd1101f43f32fc8c72da30",
+    "python_service/srp_b/sandbox.py": "cdc9651de3980434faf82b79c325aa7b9574bf56c3cd8003bec9e3aea2eed834",
+    "python_service/srp_b/state.py": "90c1834f121b083e9d23f85684368d48e97908da70e296fe95263ece748104b8",
+    "python_service/tests/test_local_v2_claude.py": "82a47c0a215852e32e1406b1a4b4a31a61986663fb74e052861142adb36aad5a",
+    "python_service/tests/test_local_v2.py": "42f292802a27a2ae8c60a8ce2ce3f7860b4c31beb559fa19765b84769be97940",
+    "python_service/tests/test_local_v2_samples.py": "94ed7ba737256bc8079dfda1e453839d1f167b39f61ea376cfd2db8f5f5b74d4",
+    "python_service/tests/test_local_v2_p2_lineage.py": "6c9525df1fe895c97e9c616237ea5f25efd481893da7fffee076422b87aa28f2",
+    "python_service/tests/test_local_v2_p2_boundaries.py": "cc4c93b4db41556dbe08225ebac6ecedad79ec317db6181c8ac5069bb3d9c6a8",
+    "python_service/tests/test_local_v2_p2_protected.py": "69ea88a916da694ce24ac12da834f1220deeb538b81cecfbd7f445f06441a008",
+    "python_service/scripts/check_local_v2.py": "38e3af55b2c3a7fd001623dea785a48c770d216a1b04bbc2ac45e7798c2efead",
+    "python_service/scripts/verify_p2_lineage.py": "b28335dd70a9fa5ed962bad190296889e50c732adf1876481ebe4a9363ed75ec",
+    "python_service/scripts/verify_p2_boundaries.py": "94ec16f36854512296602a43bbab45594a4372019727bd3d0f50419b2f70e631",
+    "python_service/scripts/verify_p2_protected.py": "144f28428ae10db4fc56ccbf5bc5dac5e7f3e846244b5495b6927767bff86a4b"
+  },
+  "source_snapshot_sha256": "08bd1c6b888d3bdc52dfcea581f4931503992dd277cc7aaf0d11cccd4372ae74",
+  "packages": {
+    "srp-b-local": "0.4.0",
+    "anthropic": "1.17.0",
+    "httpx2": "2.16.0",
+    "pydantic": "2.14.1",
+    "jsonschema": "4.26.0",
+    "pytest": "9.1.1"
+  },
+  "suites": {
+    "b_local_and_claude": {
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "tests": 132,
+      "passed": 132,
+      "junit_sha256": "ae315bed85e425736b46fe905f212bcb58eee92178c390060950879eacbdbc95",
+      "claude_sdk_cases": 44
+    },
+    "common_framework": {
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "tests": 99,
+      "passed": 99,
+      "junit_sha256": "d584b98a076d0e4d8d16e667ee24c6ee7696c8f1c02005bc2fc4b4fd988d576e"
+    }
+  },
+  "wheel": {
+    "filename": "srp_b_local-0.4.0-py3-none-any.whl",
+    "sha256": "3d02f3475c168cada2ed11b42c1881b6914e542dde9ac422ad70e529acf1496e",
+    "entries": 51,
+    "isolated_extraction_smoke": "passed",
+    "scope": "Extracted wheel imported ahead of checkout; reused installed shared framework/dependencies; both factory modes and capabilities; SDK not imported",
+    "clean_environment_install": "not_run"
+  },
+  "installation": {
+    "editable_with_anthropic_extra": "passed",
+    "pip_check": "passed"
+  },
+  "evidence_kinds": [
+    "Real Anthropic SDK with in-memory HTTP responses",
+    "Original O/LocalTransport and budget ledger",
+    "Synthetic non-executing sandbox outcomes",
+    "Real AST checks",
+    "Common framework Mock/loopback HTTP tests"
+  ],
+  "real_provider_requests": 0,
+  "real_docker_executions": 0,
+  "test_environment_notes": [
+    "Initial common suite had one HTTP failure with a long Windows basetemp; the isolated case and final full 99-test suite passed with a short basetemp. No common runtime was changed."
+  ],
+  "historical_031": {
+    "evidence_rewritten": false,
+    "note": "P1/P2 exact-source checks and bootstrap/delivery tests remain scoped to their fixed 0.3.1 commits; not counted as current 0.4.0 regression"
+  },
+  "unverified": [
+    "Live Claude account authentication, authorized model ID and real inference response/usage",
+    "Fresh dependency environment installation",
+    "New real Docker run",
+    "Real A/C algorithms, formal P2/M1 acceptance and independent O receipt",
+    "Algorithm quality or benefit"
+  ],
+  "private_records": "Private python_service/.interop and module SQLite state; raw prompts/responses not published"
+}

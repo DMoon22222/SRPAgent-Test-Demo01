@@ -2,7 +2,7 @@
 
 本项目是“面向可靠代码生成的多模块协同和闭环优化系统”的 B 组实现，为生成代码提供静态检查、受控执行结果和错误诊断，供其他模块决定后续检索与修复。
 
-当前分支候选为 **`srp-b-local 0.3.1`**，对应架构 v0.3、共同框架 v0.2.1、公共 `schema_version=2.0`。公开工厂入口为 **`srp_b:create_module`**，由 O 通过同进程 LocalTransport 调用；`/api/v2/*` 是逻辑能力标识。修复、精简审查、验证及待签收状态见 [P1 交付核对报告](docs/p1_delivery_review_20261024.md)，完整接入说明见 [本地 v2 交付](docs/local_v2_handoff.md)。
+当前开发候选为 **`srp-b-local 0.4.0`**，新增 [Claude 官方 SDK 可选诊断后端](docs/claude_sdk_integration.md)。已发布的 P1/P2 固定版本仍为 0.3.1，历史证据与本次新功能验证分开记录。项目对应架构 v0.3、共同框架 v0.2.1、公共 `schema_version=2.0`。公开工厂入口为 **`srp_b:create_module`**，由 O 通过同进程 LocalTransport 调用；`/api/v2/*` 是逻辑能力标识。原 0.3.1 交付见 [P1 报告](docs/p1_delivery_review_20261024.md)和[本地 v2 交付](docs/local_v2_handoff.md)。
 
 ## 主要功能
 
@@ -17,7 +17,7 @@
 - **契约与授权校验**：保留完整 v2 消息信封，检查授权、预算、截止时间、制品哈希、代码版本和固定测试；受保护验收反馈按可见性约束交接。
 - **持久化与重放**：私有 SQLite 日志保存事实及完成响应；相同调用重放返回原结果，未确认完成的执行保留未知状态，避免自动重复执行。
 
-当前 v2 诊断复用已有规则提取器，模型与检索调用均为零。M1 支持 Python 单文件标准库任务、内联制品、固定 pytest 测试和同步调用；不在该范围内的能力以实际能力声明和阻塞结果为准。
+默认 v2 诊断复用已有规则提取器，模型与检索调用均为零。0.4.0 可显式配置 `diagnosis_backend="anthropic"`，通过官方 SDK 对已有公开证据生成根因假设和建议，并记录实际用量；安装配置及验证边界见 [Claude 接入说明](docs/claude_sdk_integration.md)。M1 支持 Python 单文件标准库任务、内联制品、固定 pytest 测试和同步调用；不在该范围内的能力以实际能力声明和阻塞结果为准。
 
 ## 团队职责
 
@@ -46,7 +46,7 @@ python -m venv .venv-local-v2
 & '.\.venv-local-v2\Scripts\python.exe' -c 'from srp_b import create_module; print(create_module().capabilities())'
 ```
 
-`requirements-local-v2.lock` 记录已验证的 Windows / Python 3.12 主应用依赖；沙箱依赖单独固定。本地入口不需要模型 API Key。
+`requirements-local-v2.lock` 记录原有 Windows / Python 3.12 基础依赖；沙箱依赖单独固定。默认规则模式不需要模型 API Key。Claude 模式使用可选 `.[anthropic]` 依赖、独立约束 `requirements-local-v2-anthropic.lock`，并要求部署者注入密钥、选择实际模型和取得 O 调用授权。
 
 在本项目根目录构建执行镜像：
 
@@ -72,11 +72,14 @@ descriptor = module.capabilities()
 在 `python_service` 目录执行：
 
 ```powershell
-# 核对公共样例、契约和已登记源码哈希，不执行目标代码。
+# 在 0.3.1 固定提交核对其公共样例、契约和源码哈希；0.4.0 使用下述新测试。
 & '.\.venv-local-v2\Scripts\python.exe' -B scripts/check_local_v2.py
 
 # 本地适配回归使用合成执行后端，不启动真实沙箱。
 & '.\.venv-local-v2\Scripts\python.exe' -m pytest tests/test_local_v2.py tests/test_local_v2_samples.py -q
+
+# 安装可选依赖后验证 Claude 接入；使用 SDK 内存 HTTP transport，不请求真实模型。
+& '.\.venv-local-v2\Scripts\python.exe' -m pytest tests/test_local_v2_claude.py -q
 ```
 
 2026-10-24（Asia/Shanghai）的本次验证包含 46 项适配测试、99 项共同框架测试和 182 项旧 B 服务测试通过，另有 3 项旧版 Docker 冒烟测试跳过。执行验证程序的 17 项检查包括真实 Docker、规则诊断、显式故障注入和按共同本机交付配置加载的真实 B + A/C Mock 混合流程；11 个公开样例逐项注明来源。具体环境、源码哈希和覆盖范围见 [执行验证摘要](docs/verification/local_v2_validation.json) 与 [回归测试摘要](docs/verification/local_v2_tests.json)。0.3.1 源码已固定为提交 `c1f52e8ed321616a8e364c1d43c22568c27fe17c`，其原始字节与验证快照逐项一致，见 [固定版本核对记录](docs/verification/local_v2_publication.json)。O 正式签收、全真实 A/B/C 联调和算法收益仍待验证。
