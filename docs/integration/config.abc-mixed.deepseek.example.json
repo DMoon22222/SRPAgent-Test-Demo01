@@ -1,0 +1,38 @@
+{
+  "sources": {
+    "A": {
+      "path": "../framework-a",
+      "revision": "f1b20bd3b47fdab3060d1ab9b84afe1e95da9ecd"
+    },
+    "B": {
+      "path": ".",
+      "revision": "6d99e31b99d50656fffc51a377752f9992b68dec"
+    },
+    "C": {
+      "path": "../framework-c",
+      "revision": "0d441d70c4223884aa300e72294a02761886cf36"
+    }
+  },
+  "provider": {
+    "base_url": "https://api.deepseek.com",
+    "model": "deepseek-flash",
+    "api_key_env": "DEEPSEEK_API_KEY",
+    "max_calls": 4,
+    "timeout_seconds": 30
+  },
+  "runtime": {
+    "timeout_seconds": 60,
+    "deadline_seconds": 180,
+    "max_repairs": 2,
+    "routing_mode": "always_rag",
+    "budget_limits": {
+      "tokens": 100000,
+      "model_calls": 10,
+      "retrieval_calls": 4,
+      "execution_calls": 5,
+      "wall_time_ms": 180000
+    }
+  },
+  "image": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+  "output_root": "python_service/.interop/abc-integration"
+}

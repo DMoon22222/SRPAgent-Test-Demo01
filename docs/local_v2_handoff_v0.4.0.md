@@ -45,3 +45,45 @@ SDK 模式必须将模型占位符替换为账号实际获授权的模型 ID，�
 `mixed_validation` 表示已有混合技术证据，具体分版本范围以上表和每份原始摘要为准；它不是 O 签收。B-001 的 done 表示本组候选交付，TEST-001、INTB-001、O-001 和 MILESTONE-001 的正式状态由实际材料决定。
 
 接收时按 [O 核对单](integration/receiver_checklist_v0.4.0.md)记录版本、模式、配置及实际意见；截止进展与仍缺材料见 [11 月 5 日准备报告](m1_readiness_20261105.md)。登记、PR 共享和检查通过均不补造接收人、签名或真实模型结果。
+
+## 2026-11-07 三组混合联调补充
+
+以下是晚于上述 11 月 4 日登记的新记录，不回写原候选的历史验收状态。2026-11-07 22:43（Asia/Shanghai），B 组以固定合成加法任务完成了一次 A/B/C 经 O 的混合联调，终态为 `accepted`，`mock=true`。本次路径上未发现需要修改 B 公共接口的阻塞。
+
+| 组成 | 固定源码提交 | 实际运行范围 |
+|---|---|---|
+| A | `f1b20bd3b47fdab3060d1ab9b84afe1e95da9ecd` | `reliable_a:create_module`；生成与修复仍为 Mock |
+| B | `6d99e31b99d50656fffc51a377752f9992b68dec` | `srp_b:create_module`；真实静态检查、Docker 执行和规则诊断 |
+| C / O | `0d441d70c4223884aa300e72294a02761886cf36` | `my_c.adapter:create_module` 与原 O；decide/assess 在运行时适配 DeepSeek，retrieve 为 Mock |
+| 模型 | `deepseek-flash`，官方 `https://api.deepseek.com` | 非思考模式、JSON 输出；保留 C 的提示、响应解析和契约校验，SDK 不自动重试 |
+| 执行镜像 | `sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32` | 既有本地镜像，无构建、拉取或安全策略变更 |
+
+本次 8 项必需业务能力均有调用，11 项交接检查通过；B 实际执行 3 次，依次为公开测试失败、修复后公开测试通过、受保护最终测试通过。诊断复用原始失败事实，未再次执行代码；固定测试及父版本关系经 O 守卫核对。A/C 请求中未出现隐藏测试正文或身份，运行容器已清理。
+
+DeepSeek 实际调用 2 次：decide 为 419 输入 / 53 输出 tokens，assess 为 944 输入 / 178 输出 tokens，共 1,594 tokens；无模块错误或未知用量。模型拒绝了 Mock 证据，O 正确使用 `keep_no_rag` 回退，传给 A 的证据为空。该次记录没有覆盖真实合格证据进入 A 的路径，也不证明 RAG 收益。
+
+本机私有原件位于 `python_service/.interop/abc-integration-deepseek-20261107T144342004180Z/integration.json`，其同目录保留 O 事件、制品与 B 状态。原件包含受保护验收数据，不随 Git 交付。另一次 C 模型 I/O 被替换的离线联调单独保留在 `.interop/abc-integration-offline-20261107T143048834045Z/`，不计为真实模型证据。
+
+### 可复现入口与无密钥配置
+
+使用 [联调入口](../python_service/scripts/run_abc_integration.py) 和 [DeepSeek 混合配置](integration/config.abc-mixed.deepseek.example.json)。历史运行使用临时入口；新增入口保存相同工厂选择、提供方适配方式和交接检查，不据此声称已重新执行上述真实模型/Docker 运行。
+
+配置中的相对路径以 B 仓库根目录为基准：默认 A/C 位于相邻的 `framework-a`、`framework-c` checkout。接收方先取得对应分支和固定提交；位置不同时修改 `sources.*.path`。入口检查指定版本的运行源码，允许 B 后续仅文档或联调工具的提交；实际 HEAD 和依赖版本仍单独记录。要接入后续真实模块，应另选明确版本和适用配置，不把此 Mock 混合入口作为全真实运行。
+
+Python 需 3.11+，使用同时具备 B 与框架依赖及 `openai` SDK 的环境。本次复用既有 Python 3.12.4 环境，版本为 openai 2.53.0、jsonschema 4.26.0、pydantic 2.13.4，不声称完成干净环境安装。以下命令从 B 仓库根目录执行：
+
+执行模式还需本地已有配置指定的 Docker 镜像；入口不构建或拉取镜像。其他接收环境按 [B 的构建说明](../README.md)准备镜像，并在配置中填写实际 image ID，作为新的环境记录。
+
+```powershell
+# 默认只检查路径、固定源码版本与依赖；不取密钥、不调用模型、不启动 Docker。
+.\python_service\.venv\Scripts\python.exe -B python_service/scripts/run_abc_integration.py
+
+# 需要重新联调时才使用 --run：会调用收费模型并执行 Docker 测试。
+.\python_service\.venv\Scripts\python.exe -B python_service/scripts/run_abc_integration.py --run
+```
+
+执行模式优先读取本机进程环境变量 `DEEPSEEK_API_KEY`，未设置时通过隐藏输入读取；不读取 `.env`，不接收命令行密钥，也不将密钥写入配置或结果。DeepSeek 客户端只在进程内替换 C 的模型服务绑定，原 A/B/C 分支代码不因此改写。
+
+每次执行使用独立的 `python_service/.interop/abc-integration/<UTC时间戳>/`，保留版本、无密钥配置、模型请求/响应与真实用量、O 原件及检查结果，不覆盖旧记录。模型调用最多 4 次、修复最多 2 次，保留 O 的调用授权、总预算和 B 沙箱限制；未知结果不自动重试。正常退出码 0 表示本配置的混合接口检查通过，不代表 M1 正式接收。
+
+目前仍缺 A 真实生成/修复、C 真实知识检索和目标 tokenizer、真实合格证据进入 A、规定任务集和其他必要分支，以及生产组/消费组与 O 的正式接收确认。
