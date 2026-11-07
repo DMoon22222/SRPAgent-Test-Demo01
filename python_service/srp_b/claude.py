@@ -131,6 +131,10 @@ class ClaudeDiagnosis:
             report["extensions"]["srp_b"].update(
                 algorithm="rule-facts-claude-explanation-v1", model_calls=1,
                 model=self.model, provider="anthropic", prompt_sha256=observation["prompt_sha256"])
+            assessment = report["extensions"]["srp_b"].get("confidence_assessment")
+            if assessment:
+                assessment["root_cause"] = {"score": None, "level": "UNKNOWN",
+                                             "reasons": ["MODEL_EXPLANATION_NOT_STATISTICALLY_CALIBRATED"]}
             return result
         except (ModelBlocked, ModelFailure) as error:
             observation["error_code"] = str(error)

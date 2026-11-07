@@ -1,0 +1,15 @@
+{
+  "verified_at": "2026-11-07T08:09:53.386771+00:00",
+  "result": "passed",
+  "source_files_checked": 12,
+  "artifact_hashes_checked": 35,
+  "local_markdown_links_checked": 44,
+  "missing_links": [],
+  "diff_check": "passed",
+  "head_unchanged": true,
+  "committed": false,
+  "pushed": false,
+  "merged": false,
+  "summary_sha256": "b8db95c05b7ef342f3758d7962b72608205e7387926e3c111d3dcd06ca4ed097",
+  "note": "Final read-only validation after report generation; source and artifact snapshots match. This record is outside the summary hash set to avoid a digest cycle."
+}

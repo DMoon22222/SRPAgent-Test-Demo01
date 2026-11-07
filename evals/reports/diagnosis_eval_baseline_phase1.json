@@ -1,0 +1,2209 @@
+{
+  "record_version": "1.0",
+  "verified_at": "2026-11-07T07:17:43.957Z",
+  "label": "original-b4a1684",
+  "implementation_version": "0.4.0",
+  "python": "3.12.4",
+  "source_head": "b4a1684fc44a088ca7dab1cf0ff572bad225ca7c",
+  "source_hashes": {
+    "python_service/srp_b/diagnosis.py": "45d7a360d6026f33244f38acb9c92fc27055886dfae4ff47a36abefc337f917b",
+    "evals/runners/run_diagnosis_eval_phase1.py": "8ae805185a03ec82efeb55830ee09a3433700c0df37aa31e2906c4467003dabd"
+  },
+  "dataset_sha256": "37cc2a142dde0287b8d11249f427563e515e2c48cace3a163ee3f9f378be1e93",
+  "development_dataset_sha256": "bdcb97bc95c775e6561ca9f1e7eb8bb7ac35f1a7b2105c6288a1a24bf72411e2",
+  "candidates": 40,
+  "scored": 40,
+  "schema_or_invocation_errors": [],
+  "annotation_counts": {
+    "pending_review": 40
+  },
+  "source_counts": {
+    "historical_real_docker": 4,
+    "historical_real_ast": 1,
+    "historical_environment_probe": 1,
+    "synthetic_adversarial": 34
+  },
+  "independent_human_reviewed": {
+    "classification": {
+      "n": 0,
+      "accuracy": null,
+      "precision": null,
+      "recall": null,
+      "macro_f1": null,
+      "per_class": {},
+      "confusion_matrix": {}
+    },
+    "stage_accuracy": null,
+    "next_action_accuracy": null,
+    "evidence": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "precision": null,
+      "recall": null
+    },
+    "unsupported_diagnosis": {
+      "count": 0,
+      "n": 0,
+      "rate": null
+    },
+    "unknown_or_abstention": {
+      "count": 0,
+      "n": 0,
+      "rate": null
+    }
+  },
+  "provisional_pending_review": {
+    "classification": {
+      "n": 40,
+      "accuracy": 0.85,
+      "precision": 0.9055759055759055,
+      "recall": 0.9158249158249158,
+      "macro_f1": 0.8965811965811965,
+      "averaging": "macro over the union of true/predicted labels; per-class zero division is 0",
+      "per_class": {
+        "dependency_error": {
+          "tp": 5,
+          "fp": 2,
+          "fn": 1,
+          "support": 6,
+          "precision": 0.7142857142857143,
+          "recall": 0.8333333333333334,
+          "f1": 0.7692307692307693
+        },
+        "environment_error": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "support": 4,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "none": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "support": 3,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "resource_limit": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "support": 1,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "runtime_error": {
+          "tp": 10,
+          "fp": 3,
+          "fn": 1,
+          "support": 11,
+          "precision": 0.7692307692307693,
+          "recall": 0.9090909090909091,
+          "f1": 0.8333333333333334
+        },
+        "syntax_error": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "test_failure": {
+          "tp": 2,
+          "fp": 1,
+          "fn": 0,
+          "support": 2,
+          "precision": 0.6666666666666666,
+          "recall": 1.0,
+          "f1": 0.8
+        },
+        "timeout": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "support": 3,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "unknown": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 4,
+          "support": 8,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666
+        }
+      },
+      "confusion_matrix": {
+        "none": {
+          "none": 3
+        },
+        "test_failure": {
+          "test_failure": 2
+        },
+        "timeout": {
+          "timeout": 3
+        },
+        "unknown": {
+          "unknown": 4,
+          "runtime_error": 3,
+          "dependency_error": 1
+        },
+        "syntax_error": {
+          "syntax_error": 2
+        },
+        "environment_error": {
+          "environment_error": 4
+        },
+        "runtime_error": {
+          "runtime_error": 10,
+          "dependency_error": 1
+        },
+        "dependency_error": {
+          "test_failure": 1,
+          "dependency_error": 5
+        },
+        "resource_limit": {
+          "resource_limit": 1
+        }
+      }
+    },
+    "stage_accuracy": 1.0,
+    "next_action_accuracy": 0.725,
+    "evidence": {
+      "tp": 39,
+      "fp": 2,
+      "fn": 0,
+      "precision": 0.9512195121951219,
+      "recall": 1.0
+    },
+    "unsupported_diagnosis": {
+      "count": 27,
+      "n": 40,
+      "rate": 0.675
+    },
+    "unknown_or_abstention": {
+      "count": 6,
+      "n": 40,
+      "rate": 0.15
+    }
+  },
+  "scoring_limitations": "Provisional labels are Codex-generated. Unsupported flags are a bounded evidence/high-confidence/prohibited-claim rubric, not independent semantic adjudication. Historical observations are development data, not unseen generalization evidence.",
+  "definitions": {
+    "precision_recall": "Macro single-label classification; evidence is micro over distinct source pointers per case",
+    "abstention": "failure_class unknown OR next_action collect_information",
+    "unsupported": "Invalid reference, explicit prohibited claim, or >=0.75 root score on a provisionally nondeterminable root",
+    "zero_human_denominator": "n=0 produces null scores, never a 0% or 100% accuracy claim"
+  },
+  "cases": [
+    {
+      "case_id": "historical_success",
+      "annotation_status": "pending_review",
+      "source_type": "historical_real_docker",
+      "expected_failure_class": "none",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 0,
+        "fp": 1,
+        "fn": 0,
+        "invalid": [],
+        "expected": [],
+        "predicted": [
+          "/stdout"
+        ]
+      },
+      "unsupported": false,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": false,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "none",
+        "failure_stage": "none",
+        "failure_domain": "none",
+        "confidence": null,
+        "root_cause": null,
+        "next_action": "none",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-524edb23081e4eb6994c541230614f0c",
+            "pointer": "/stdout",
+            "summary": ".                                                                        [100%]\n---------------- generated xml file: /workspace/tmp/b-junit.xml ----------------\n1 passed in 0.14s\n"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "historical_test_failed",
+      "annotation_status": "pending_review",
+      "source_type": "historical_real_docker",
+      "expected_failure_class": "test_failure",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stdout",
+          "/test_case_results/0"
+        ],
+        "predicted": [
+          "/stdout",
+          "/test_case_results/0"
+        ]
+      },
+      "unsupported": false,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": false,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "test_failure",
+        "failure_stage": "test",
+        "failure_domain": "code",
+        "confidence": null,
+        "root_cause": "The supplied fixed tests failed; inspect the recorded assertions before changing the implementation.",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "test_result",
+            "artifact_id": "execution-f2e79093bba14a398a2f48abf7876cd0",
+            "pointer": "/test_case_results/0",
+            "summary": "assert -1 == 5\n +  where -1 = add(2, 3)\ntests/test_main.py:4: in test_add\n    assert add(2, 3) == 5\nE   assert -1 == 5\nE    +  where -1 = add(2, 3)"
+          },
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-f2e79093bba14a398a2f48abf7876cd0",
+            "pointer": "/stdout",
+            "summary": "F                                                                        [100%]\n=================================== FAILURES ===================================\n___________________________________ test_add ___________________________________\ntests/test_main.py:4: in test_add\n    assert add(2, 3) == 5\nE   assert -1 == 5\nE    +  where -1 = add(2, 3)\n---------------- generated xml file: /workspace/tmp/b-junit.xml ----------------\n=========================== short test summary info ============================\n"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "historical_timeout",
+      "annotation_status": "pending_review",
+      "source_type": "historical_real_docker",
+      "expected_failure_class": "timeout",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [],
+        "predicted": []
+      },
+      "unsupported": false,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": false,
+        "prohibited_claim": false
+      },
+      "abstained": true,
+      "observed": {
+        "failure_class": "timeout",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": null,
+        "root_cause": "The supplied failure evidence does not establish a specific root cause.",
+        "next_action": "collect_information",
+        "evidence_refs": [],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "historical_output_limit",
+      "annotation_status": "pending_review",
+      "source_type": "historical_real_docker",
+      "expected_failure_class": "unknown",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stdout"
+        ],
+        "predicted": [
+          "/stdout"
+        ]
+      },
+      "unsupported": false,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": false,
+        "prohibited_claim": false
+      },
+      "abstained": true,
+      "observed": {
+        "failure_class": "unknown",
+        "failure_stage": "run",
+        "failure_domain": "policy",
+        "confidence": null,
+        "root_cause": "The supplied failure evidence does not establish a specific root cause.",
+        "next_action": "stop",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-f562dbd083ff41749a60c9628b837d06",
+            "pointer": "/stdout",
+            "summary": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "historical_static_failure",
+      "annotation_status": "pending_review",
+      "source_type": "historical_real_ast",
+      "expected_failure_class": "syntax_error",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/findings/0"
+        ],
+        "predicted": [
+          "/findings/0"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "syntax_error",
+        "failure_stage": "static",
+        "failure_domain": "code",
+        "confidence": 0.95,
+        "root_cause": "规则层检测到 Python 语法错误。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "source_location",
+            "artifact_id": "static-eeed2251812649bba899678772b327d9",
+            "pointer": "/findings/0",
+            "summary": "SyntaxError: expected ':'"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "historical_environment_failure",
+      "annotation_status": "pending_review",
+      "source_type": "historical_environment_probe",
+      "expected_failure_class": "environment_error",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": false,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": false,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "environment_error",
+        "failure_stage": "environment",
+        "failure_domain": "environment",
+        "confidence": null,
+        "root_cause": "The supplied failure evidence does not establish a specific root cause.",
+        "next_action": "fix_environment",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-f26496847c5c4f7ea94df1e83ab9e80e",
+            "pointer": "/stderr",
+            "summary": "Observed Python runtime does not match the requested runtime."
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_name_full",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "runtime_error",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "runtime_error",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": 0.75,
+        "root_cause": "规则层检测到 NameError，通常与访问当前作用域内未定义的名称有关；请核对失败位置的变量或函数名称。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_name_full",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nNameError: name 'missing_value' is not defined"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_key_full",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "runtime_error",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "runtime_error",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": 0.75,
+        "root_cause": "规则层检测到 KeyError，通常与映射键访问失败有关；请结合原始失败位置核对键名及缺失键处理。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_key_full",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nKeyError: 'missing_key'"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_type_nested",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "runtime_error",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "runtime_error",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": 0.8,
+        "root_cause": "规则层检测到运行时类型错误。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_type_nested",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"tests/test_main.py\", line 5, in test_add\n    add(2, 3)\n  File \"src/main.py\", line 3, in add\n    return 2 + \"x\"\nTypeError: unsupported operand type(s) for +: int and str"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_index_multilayer",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "runtime_error",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "runtime_error",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": 0.85,
+        "root_cause": "规则层检测到下标越界异常。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_index_multilayer",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"src/main.py\", line 2, in add\n    return helper(a)\n  File \"src/main.py\", line 7, in helper\n    return [1][5]\nIndexError: list index out of range"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_unlinked_errors",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "unknown",
+      "stage_matches": true,
+      "action_matches": false,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "runtime_error",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": 0.75,
+        "root_cause": "规则层检测到 NameError，通常与访问当前作用域内未定义的名称有关；请核对失败位置的变量或函数名称。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_unlinked_errors",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nNameError: name 'a' is not defined\n\nTraceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nKeyError: 'b'"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_cause_import_value",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "runtime_error",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "dependency_error",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": 0.9,
+        "root_cause": "规则层检测到依赖缺失或导入失败。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_cause_import_value",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nModuleNotFoundError: No module named 'demo'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nValueError: configuration rejected"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_context_key_runtime",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "runtime_error",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "runtime_error",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": 0.75,
+        "root_cause": "规则层检测到 KeyError，通常与映射键访问失败有关；请结合原始失败位置核对键名及缺失键处理。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_context_key_runtime",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nKeyError: 'x'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nRuntimeError: fallback failed"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_cause_assert_import",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "dependency_error",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "test_failure",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": 0.95,
+        "root_cause": "规则层检测到 HumanEval/单元测试断言失败，属于测试阶段答案错误。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_cause_assert_import",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nAssertionError: bad precondition\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nImportError: cannot import name adapter"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_test_name_error",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "runtime_error",
+      "stage_matches": true,
+      "action_matches": false,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "runtime_error",
+        "failure_stage": "test",
+        "failure_domain": "code",
+        "confidence": 0.75,
+        "root_cause": "规则层检测到 NameError，通常与访问当前作用域内未定义的名称有关；请核对失败位置的变量或函数名称。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_test_name_error",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"tests/test_main.py\", line 5, in test_add\n    operation()\nNameError: name 'fixture_value' is not defined"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_test_setup_type",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "runtime_error",
+      "stage_matches": true,
+      "action_matches": false,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "runtime_error",
+        "failure_stage": "test",
+        "failure_domain": "code",
+        "confidence": 0.8,
+        "root_cause": "规则层检测到运行时类型错误。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_test_setup_type",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"tests/test_main.py\", line 2, in setup_method\n    operation()\nTypeError: fixture() takes 0 positional arguments but 1 was given"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_test_import_error",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "dependency_error",
+      "stage_matches": true,
+      "action_matches": false,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "dependency_error",
+        "failure_stage": "test",
+        "failure_domain": "code",
+        "confidence": 0.9,
+        "root_cause": "规则层检测到依赖缺失或导入失败。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_test_import_error",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"tests/test_main.py\", line 1, in test_add\n    operation()\nImportError: cannot import name helper"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_missing_dependency",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "dependency_error",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "dependency_error",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": 0.9,
+        "root_cause": "规则层检测到依赖缺失或导入失败。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_missing_dependency",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nModuleNotFoundError: No module named 'demo_missing'"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_version_import",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "dependency_error",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "dependency_error",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": 0.9,
+        "root_cause": "规则层检测到依赖缺失或导入失败。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_version_import",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nImportError: cannot import name 'NewAPI' from 'module_v1'"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_path_import",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "dependency_error",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "dependency_error",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": 0.9,
+        "root_cause": "规则层检测到依赖缺失或导入失败。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_path_import",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nImportError: attempted relative import with no known parent package"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_daemon_unavailable",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "environment_error",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "environment_error",
+        "failure_stage": "environment",
+        "failure_domain": "environment",
+        "confidence": 0.95,
+        "root_cause": "规则层检测到运行环境或 Docker 不可用。",
+        "next_action": "fix_environment",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_daemon_unavailable",
+            "pointer": "/stderr",
+            "summary": "Cannot connect to the Docker daemon. environment_error"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_image_missing",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "environment_error",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": false,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": false,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "environment_error",
+        "failure_stage": "environment",
+        "failure_domain": "environment",
+        "confidence": null,
+        "root_cause": "The supplied failure evidence does not establish a specific root cause.",
+        "next_action": "fix_environment",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_image_missing",
+            "pointer": "/stderr",
+            "summary": "No such image: approved-image; Sandbox environment is unavailable."
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_oom_memory_error",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "resource_limit",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "resource_limit",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": 0.75,
+        "root_cause": "规则层检测到运行时异常。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_oom_memory_error",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nMemoryError: allocation failed"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_timeout_no_logs",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "timeout",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [],
+        "predicted": []
+      },
+      "unsupported": false,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": false,
+        "prohibited_claim": false
+      },
+      "abstained": true,
+      "observed": {
+        "failure_class": "timeout",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": null,
+        "root_cause": "The supplied failure evidence does not establish a specific root cause.",
+        "next_action": "collect_information",
+        "evidence_refs": [],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_timeout_stale_name",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "timeout",
+      "stage_matches": true,
+      "action_matches": false,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "timeout",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": 0.75,
+        "root_cause": "规则层检测到 NameError，通常与访问当前作用域内未定义的名称有关；请核对失败位置的变量或函数名称。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_timeout_stale_name",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nNameError: name 'old' is not defined"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_cpu_throttled_success",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "none",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [],
+        "predicted": []
+      },
+      "unsupported": false,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": false,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "none",
+        "failure_stage": "none",
+        "failure_domain": "none",
+        "confidence": null,
+        "root_cause": null,
+        "next_action": "none",
+        "evidence_refs": [],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_trace_without_terminal",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "unknown",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": false,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": false,
+        "prohibited_claim": false
+      },
+      "abstained": true,
+      "observed": {
+        "failure_class": "unknown",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": null,
+        "root_cause": "The supplied failure evidence does not establish a specific root cause.",
+        "next_action": "collect_information",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_trace_without_terminal",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"src/main.py\", line 4, in add\n    unknown_call()"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_key_without_location",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "runtime_error",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "runtime_error",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": 0.75,
+        "root_cause": "规则层检测到 KeyError，通常与映射键访问失败有关；请结合原始失败位置核对键名及缺失键处理。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_key_without_location",
+            "pointer": "/stderr",
+            "summary": "KeyError: 'missing'"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_keyword_only",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "runtime_error",
+      "stage_matches": true,
+      "action_matches": false,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "runtime_error",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": 0.75,
+        "root_cause": "规则层检测到 NameError，通常与访问当前作用域内未定义的名称有关；请核对失败位置的变量或函数名称。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_keyword_only",
+            "pointer": "/stderr",
+            "summary": "NameError"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_quoted_keyword",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "unknown",
+      "stage_matches": true,
+      "action_matches": false,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "runtime_error",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": 0.75,
+        "root_cause": "规则层检测到 NameError，通常与访问当前作用域内未定义的名称有关；请核对失败位置的变量或函数名称。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_quoted_keyword",
+            "pointer": "/stderr",
+            "summary": "INFO: the literal 'NameError' appears in an example, no exception was observed"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_streams_conflict",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "unknown",
+      "stage_matches": true,
+      "action_matches": false,
+      "evidence": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr",
+          "/stdout"
+        ],
+        "predicted": [
+          "/stderr",
+          "/stdout"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "runtime_error",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": 0.95,
+        "root_cause": "规则层检测到 Python 除零异常。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_streams_conflict",
+            "pointer": "/stdout",
+            "summary": "Traceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nZeroDivisionError: division by zero"
+          },
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_streams_conflict",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nNameError: name 'missing' is not defined"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_environment_with_code_log",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "environment_error",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "environment_error",
+        "failure_stage": "environment",
+        "failure_domain": "environment",
+        "confidence": 0.75,
+        "root_cause": "规则层检测到 NameError，通常与访问当前作用域内未定义的名称有关；请核对失败位置的变量或函数名称。",
+        "next_action": "fix_environment",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_environment_with_code_log",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nNameError: name 'missing' is not defined"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_truncated_terminal",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "runtime_error",
+      "stage_matches": true,
+      "action_matches": false,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "runtime_error",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": 0.75,
+        "root_cause": "规则层检测到 NameError，通常与访问当前作用域内未定义的名称有关；请核对失败位置的变量或函数名称。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_truncated_terminal",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nNameError: name 'a' is not defined\nTraceback (most recent call last):\n  File \"src/main.py\", line 20, in handler"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_assertion_expected_actual",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "test_failure",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr",
+          "/test_case_results/0"
+        ],
+        "predicted": [
+          "/stderr",
+          "/test_case_results/0"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "test_failure",
+        "failure_stage": "test",
+        "failure_domain": "code",
+        "confidence": 0.95,
+        "root_cause": "规则层检测到 HumanEval/单元测试断言失败，属于测试阶段答案错误。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "test_result",
+            "artifact_id": "execution-adversarial_assertion_expected_actual",
+            "pointer": "/test_case_results/0",
+            "summary": "AssertionError: expected 5, actual -1"
+          },
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_assertion_expected_actual",
+            "pointer": "/stderr",
+            "summary": "AssertionError: expected 5, actual -1"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_failure_without_exception",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "unknown",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": false,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": false,
+        "prohibited_claim": false
+      },
+      "abstained": true,
+      "observed": {
+        "failure_class": "unknown",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": null,
+        "root_cause": "The supplied failure evidence does not establish a specific root cause.",
+        "next_action": "collect_information",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_failure_without_exception",
+            "pointer": "/stderr",
+            "summary": "process exited with status 2"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_passed_stale_error",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "none",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 0,
+        "fp": 1,
+        "fn": 0,
+        "invalid": [],
+        "expected": [],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": false,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": false,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "none",
+        "failure_stage": "none",
+        "failure_domain": "none",
+        "confidence": null,
+        "root_cause": null,
+        "next_action": "none",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_passed_stale_error",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nNameError: name 'previous' is not defined"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_syntax_caret",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "syntax_error",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/findings/0"
+        ],
+        "predicted": [
+          "/findings/0"
+        ]
+      },
+      "unsupported": false,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": false,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "syntax_error",
+        "failure_stage": "static",
+        "failure_domain": "code",
+        "confidence": 0.95,
+        "root_cause": "规则层检测到 Python 语法错误。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "source_location",
+            "artifact_id": "static-adversarial_syntax_caret",
+            "pointer": "/findings/0",
+            "summary": "  File \"src/main.py\", line 1\n    def add(a, b)\n                 ^\nSyntaxError: expected colon"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_multiple_tests_conflict",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "unknown",
+      "stage_matches": true,
+      "action_matches": false,
+      "evidence": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/test_case_results/0",
+          "/test_case_results/1"
+        ],
+        "predicted": [
+          "/test_case_results/0",
+          "/test_case_results/1"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "dependency_error",
+        "failure_stage": "test",
+        "failure_domain": "code",
+        "confidence": 0.9,
+        "root_cause": "规则层检测到依赖缺失或导入失败。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "test_result",
+            "artifact_id": "execution-adversarial_multiple_tests_conflict",
+            "pointer": "/test_case_results/0",
+            "summary": "NameError: name 'x' is not defined"
+          },
+          {
+            "kind": "test_result",
+            "artifact_id": "execution-adversarial_multiple_tests_conflict",
+            "pointer": "/test_case_results/1",
+            "summary": "ImportError: cannot import name adapter"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_truncated_chain",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "dependency_error",
+      "stage_matches": true,
+      "action_matches": false,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": true,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": true,
+        "prohibited_claim": false
+      },
+      "abstained": false,
+      "observed": {
+        "failure_class": "dependency_error",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": 0.9,
+        "root_cause": "规则层检测到依赖缺失或导入失败。",
+        "next_action": "repair",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_truncated_chain",
+            "pointer": "/stderr",
+            "summary": "Traceback (most recent call last):\n  File \"src/main.py\", line 3, in add\n    operation()\nImportError: cannot import name adapter\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"src/main.py\", line 5, in add"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    },
+    {
+      "case_id": "adversarial_malformed_log",
+      "annotation_status": "pending_review",
+      "source_type": "synthetic_adversarial",
+      "expected_failure_class": "unknown",
+      "stage_matches": true,
+      "action_matches": true,
+      "evidence": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "invalid": [],
+        "expected": [
+          "/stderr"
+        ],
+        "predicted": [
+          "/stderr"
+        ]
+      },
+      "unsupported": false,
+      "unsupported_reasons": {
+        "invalid_evidence": false,
+        "uncertain_root_high_score": false,
+        "prohibited_claim": false
+      },
+      "abstained": true,
+      "observed": {
+        "failure_class": "unknown",
+        "failure_stage": "run",
+        "failure_domain": "code",
+        "confidence": null,
+        "root_cause": "The supplied failure evidence does not establish a specific root cause.",
+        "next_action": "collect_information",
+        "evidence_refs": [
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-adversarial_malformed_log",
+            "pointer": "/stderr",
+            "summary": "  \n<<<< incomplete output >>>>\nerror somewhere (no exception or location)"
+          }
+        ],
+        "extensions": {
+          "srp_b": {
+            "algorithm": "existing-rule-extractor-v1",
+            "model_calls": 0,
+            "retrieval_hint_is_advisory": true
+          }
+        }
+      }
+    }
+  ],
+  "cases_sha256": "a1ddc6fac6cb7dee725e60e35d276cbcedb1fbe06f551bd577ec6407a5eea36f",
+  "target_executions": 0,
+  "real_claude_api_calls": 0,
+  "duration_seconds": 7.375
+}

@@ -1,0 +1,777 @@
+{
+  "record_version": "1.0",
+  "verified_at": "2026-11-07T08:09:03.719329+00:00",
+  "started_at": "2026-11-07T07:06:42.839200+00:00",
+  "scope": "B-only phase1 engineering hardening; not formal P2/M1 acceptance, independent evaluation or A/C/O real integration",
+  "git": {
+    "branch": "b/local-v2-adapter",
+    "head": "b4a1684fc44a088ca7dab1cf0ff572bad225ca7c",
+    "committed": false,
+    "pushed": false,
+    "merged": false
+  },
+  "environment": {
+    "python": "3.12.4",
+    "platform": "Windows-11-10.0.22631-SP0",
+    "versions": {
+      "pytest": "9.1.1",
+      "anthropic": "1.17.0",
+      "pydantic": "2.14.1",
+      "jsonschema": "4.26.0"
+    },
+    "full_suite_environment": "Existing .venv interpreter plus existing .venv-local-v2 site-packages, private Hypothesis and local framework path; not a clean install",
+    "docker_engine": "29.9.1",
+    "image_id": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+    "runtime_dependency_locks_changed": false
+  },
+  "targeted_tests": {
+    "standalone_before_final_cleanup_order": {
+      "total": 155,
+      "passed": 155,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "final_full_suite_same_selected_items": {
+      "total": 155,
+      "passed": 155,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "existing_items": 103,
+    "new_items": 52,
+    "counts_by_class": {
+      "tests.property.test_local_v2_properties": 3,
+      "tests.test_error_signal_extractor": 5,
+      "tests.test_local_v2": 39,
+      "tests.test_local_v2_claude": 44,
+      "tests.test_local_v2_samples": 7,
+      "tests.test_phase1_confidence": 15,
+      "tests.test_phase1_eval_metrics": 4,
+      "tests.test_phase1_resource_monitor": 12,
+      "tests.test_phase1_traceback": 21,
+      "tests.test_pre_integration_diagnosis": 5
+    },
+    "standalone_junit": "python_service/.interop/phase1/targeted-final.xml",
+    "final_junit": "python_service/.interop/phase1/full-suite-final.xml",
+    "note": "The final full-suite run covers all 155 targeted items after the cleanup-order fix; counts are not added to the full-suite total"
+  },
+  "full_pytest": {
+    "counts": {
+      "total": 394,
+      "passed": 384,
+      "failed": 7,
+      "errors": 0,
+      "skipped": 3
+    },
+    "duration_seconds_reported_by_pytest": 119.48,
+    "junit": "python_service/.interop/phase1/full-suite-final.xml",
+    "log": "python_service/.interop/phase1/full-suite-final.txt",
+    "warning": "Starlette/anyio deprecated BlockingPortal alias",
+    "historical_failures": [
+      "tests.test_local_v2_p2::test_bootstrap_accepts_config_and_manifest_outside_b_checkout",
+      "tests.test_local_v2_p2::test_bootstrap_rejects_wrong_contract_digest",
+      "tests.test_local_v2_p2::test_fixed_bundle_matches_installed_runtime_and_public_contract",
+      "tests.test_local_v2_p2::test_public_config_loads_real_static_and_diagnosis_without_docker",
+      "tests.test_local_v2_p2_delivery::test_delivery_audit_is_read_only_and_retains_formal_blockers",
+      "tests.test_local_v2_p2_delivery::test_formal_pass_cannot_be_inferred_from_technical_matrix",
+      "tests.test_local_v2_p2_delivery::test_new_catalog_does_not_hide_stale_historical_evidence"
+    ],
+    "baseline_same_failures_confirmed": true,
+    "failure_reason": "Preserved historical P2 0.3.1 manifest rejects B 0.4.0; confirmed on HEAD sources",
+    "skipped": [
+      "tests.test_repository_docker_smoke::test_real_success_and_original_workspace_isolation",
+      "tests.test_repository_docker_smoke::test_real_test_failure_is_structured",
+      "tests.test_repository_docker_smoke::test_real_timeout_force_cleans_container"
+    ],
+    "runs": 2,
+    "no_new_failures_identified": true,
+    "result": "not_all_green_due_to_7_preexisting_historical_version_checks"
+  },
+  "hypothesis": {
+    "properties": 3,
+    "max_examples_each": 30,
+    "passing_generated_examples_final_run": 90,
+    "failing": 0,
+    "invalid": 0,
+    "deadline_ms": 2000,
+    "derandomize": true,
+    "database": null,
+    "note": "Included inside 3 pytest items, not 90 additional items"
+  },
+  "diagnosis_candidates": {
+    "dataset": "evals/dataset/diagnosis_candidates_phase1.jsonl",
+    "sha256": "37cc2a142dde0287b8d11249f427563e515e2c48cace3a163ee3f9f378be1e93",
+    "labels_unchanged": true,
+    "candidates": 40,
+    "scored": 40,
+    "annotation_counts": {
+      "pending_review": 40
+    },
+    "source_counts": {
+      "historical_real_docker": 4,
+      "historical_real_ast": 1,
+      "historical_environment_probe": 1,
+      "synthetic_adversarial": 34
+    },
+    "baseline": "evals/reports/diagnosis_eval_baseline_phase1.json",
+    "final": "evals/reports/diagnosis_eval_final_phase1_verified.json",
+    "baseline_provisional_metrics": {
+      "classification": {
+        "n": 40,
+        "accuracy": 0.85,
+        "precision": 0.9055759055759055,
+        "recall": 0.9158249158249158,
+        "macro_f1": 0.8965811965811965,
+        "averaging": "macro over the union of true/predicted labels; per-class zero division is 0",
+        "per_class": {
+          "dependency_error": {
+            "tp": 5,
+            "fp": 2,
+            "fn": 1,
+            "support": 6,
+            "precision": 0.7142857142857143,
+            "recall": 0.8333333333333334,
+            "f1": 0.7692307692307693
+          },
+          "environment_error": {
+            "tp": 4,
+            "fp": 0,
+            "fn": 0,
+            "support": 4,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "none": {
+            "tp": 3,
+            "fp": 0,
+            "fn": 0,
+            "support": 3,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "resource_limit": {
+            "tp": 1,
+            "fp": 0,
+            "fn": 0,
+            "support": 1,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "runtime_error": {
+            "tp": 10,
+            "fp": 3,
+            "fn": 1,
+            "support": 11,
+            "precision": 0.7692307692307693,
+            "recall": 0.9090909090909091,
+            "f1": 0.8333333333333334
+          },
+          "syntax_error": {
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "support": 2,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "test_failure": {
+            "tp": 2,
+            "fp": 1,
+            "fn": 0,
+            "support": 2,
+            "precision": 0.6666666666666666,
+            "recall": 1.0,
+            "f1": 0.8
+          },
+          "timeout": {
+            "tp": 3,
+            "fp": 0,
+            "fn": 0,
+            "support": 3,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "unknown": {
+            "tp": 4,
+            "fp": 0,
+            "fn": 4,
+            "support": 8,
+            "precision": 1.0,
+            "recall": 0.5,
+            "f1": 0.6666666666666666
+          }
+        },
+        "confusion_matrix": {
+          "none": {
+            "none": 3
+          },
+          "test_failure": {
+            "test_failure": 2
+          },
+          "timeout": {
+            "timeout": 3
+          },
+          "unknown": {
+            "unknown": 4,
+            "runtime_error": 3,
+            "dependency_error": 1
+          },
+          "syntax_error": {
+            "syntax_error": 2
+          },
+          "environment_error": {
+            "environment_error": 4
+          },
+          "runtime_error": {
+            "runtime_error": 10,
+            "dependency_error": 1
+          },
+          "dependency_error": {
+            "test_failure": 1,
+            "dependency_error": 5
+          },
+          "resource_limit": {
+            "resource_limit": 1
+          }
+        }
+      },
+      "stage_accuracy": 1.0,
+      "next_action_accuracy": 0.725,
+      "evidence": {
+        "tp": 39,
+        "fp": 2,
+        "fn": 0,
+        "precision": 0.9512195121951219,
+        "recall": 1.0
+      },
+      "unsupported_diagnosis": {
+        "count": 27,
+        "n": 40,
+        "rate": 0.675
+      },
+      "unknown_or_abstention": {
+        "count": 6,
+        "n": 40,
+        "rate": 0.15
+      }
+    },
+    "final_provisional_metrics": {
+      "classification": {
+        "n": 40,
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "macro_f1": 1.0,
+        "averaging": "macro over the union of true/predicted labels; per-class zero division is 0",
+        "per_class": {
+          "dependency_error": {
+            "tp": 6,
+            "fp": 0,
+            "fn": 0,
+            "support": 6,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "environment_error": {
+            "tp": 4,
+            "fp": 0,
+            "fn": 0,
+            "support": 4,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "none": {
+            "tp": 3,
+            "fp": 0,
+            "fn": 0,
+            "support": 3,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "resource_limit": {
+            "tp": 1,
+            "fp": 0,
+            "fn": 0,
+            "support": 1,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "runtime_error": {
+            "tp": 11,
+            "fp": 0,
+            "fn": 0,
+            "support": 11,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "syntax_error": {
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "support": 2,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "test_failure": {
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "support": 2,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "timeout": {
+            "tp": 3,
+            "fp": 0,
+            "fn": 0,
+            "support": 3,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "unknown": {
+            "tp": 8,
+            "fp": 0,
+            "fn": 0,
+            "support": 8,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "confusion_matrix": {
+          "none": {
+            "none": 3
+          },
+          "test_failure": {
+            "test_failure": 2
+          },
+          "timeout": {
+            "timeout": 3
+          },
+          "unknown": {
+            "unknown": 8
+          },
+          "syntax_error": {
+            "syntax_error": 2
+          },
+          "environment_error": {
+            "environment_error": 4
+          },
+          "runtime_error": {
+            "runtime_error": 11
+          },
+          "dependency_error": {
+            "dependency_error": 6
+          },
+          "resource_limit": {
+            "resource_limit": 1
+          }
+        }
+      },
+      "stage_accuracy": 1.0,
+      "next_action_accuracy": 1.0,
+      "evidence": {
+        "tp": 39,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "unsupported_diagnosis": {
+        "count": 0,
+        "n": 40,
+        "rate": 0.0
+      },
+      "unknown_or_abstention": {
+        "count": 17,
+        "n": 40,
+        "rate": 0.425
+      }
+    },
+    "independent_human_reviewed": {
+      "classification": {
+        "n": 0,
+        "accuracy": null,
+        "precision": null,
+        "recall": null,
+        "macro_f1": null,
+        "per_class": {},
+        "confusion_matrix": {}
+      },
+      "stage_accuracy": null,
+      "next_action_accuracy": null,
+      "evidence": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "precision": null,
+        "recall": null
+      },
+      "unsupported_diagnosis": {
+        "count": 0,
+        "n": 0,
+        "rate": null
+      },
+      "unknown_or_abstention": {
+        "count": 0,
+        "n": 0,
+        "rate": null
+      }
+    },
+    "limitations": "Provisional labels are Codex-generated. Unsupported flags are a bounded evidence/high-confidence/prohibited-claim rubric, not independent semantic adjudication. Historical observations are development data, not unseen generalization evidence.",
+    "schema_or_invocation_errors": [],
+    "target_executions": 0,
+    "real_claude_api_calls": 0
+  },
+  "development_regression": {
+    "dataset": "evals/dataset/diagnosis_cases.jsonl",
+    "sha256": "bdcb97bc95c775e6561ca9f1e7eb8bb7ac35f1a7b2105c6288a1a24bf72411e2",
+    "counts": {
+      "total": 16,
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0
+    },
+    "metrics": {
+      "classification": {
+        "correct": 16,
+        "total": 16,
+        "rate": 1.0
+      },
+      "stage": {
+        "correct": 16,
+        "total": 16,
+        "rate": 1.0
+      },
+      "next_action": {
+        "correct": 16,
+        "total": 16,
+        "rate": 1.0
+      },
+      "diagnostic_support_rubric": {
+        "correct": 16,
+        "total": 16,
+        "rate": 1.0
+      },
+      "schema": {
+        "correct": 16,
+        "total": 16,
+        "rate": 1.0
+      }
+    },
+    "reference_metrics": {
+      "emitted": 22,
+      "valid_paths_and_identities": 22,
+      "matching_observation_summaries": 22
+    },
+    "report": "evals/reports/diagnosis_dev_regression_phase1_verified.json",
+    "labels_and_assertions_unchanged": true
+  },
+  "docker": {
+    "report": "docs/verification/phase1_docker_smoke_final.json",
+    "counts": {
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0,
+      "total": 8
+    },
+    "duration_seconds": 36.813,
+    "real_docker": true,
+    "mock": false,
+    "physical_target_executions_final_run": 7,
+    "runs": 3,
+    "physical_target_executions_all_phase1_runs": 21,
+    "runtime_probe_containers_in_addition": 21,
+    "resource_observations_final_run": [
+      {
+        "case_id": "SUCCESS",
+        "wall_time_ms": 1235.0,
+        "cpu_time_ms": 366.495,
+        "peak_memory_bytes": 20701184,
+        "measurement_status": "estimated",
+        "sample_count": 2,
+        "sampling_errors": 1,
+        "oom_killed": false,
+        "exit_code": 0,
+        "timeout": false,
+        "output_limit_reached": false,
+        "resource_limit_exceeded": false,
+        "monitor_thread_cleanup_confirmed": true,
+        "unavailable_reason": null
+      },
+      {
+        "case_id": "TEST_FAILED",
+        "wall_time_ms": 1218.0,
+        "cpu_time_ms": 311.58,
+        "peak_memory_bytes": 20496384,
+        "measurement_status": "estimated",
+        "sample_count": 2,
+        "sampling_errors": 2,
+        "oom_killed": false,
+        "exit_code": 1,
+        "timeout": false,
+        "output_limit_reached": false,
+        "resource_limit_exceeded": false,
+        "monitor_thread_cleanup_confirmed": true,
+        "unavailable_reason": null
+      },
+      {
+        "case_id": "TIMEOUT",
+        "wall_time_ms": 1360.0,
+        "cpu_time_ms": 990.963,
+        "peak_memory_bytes": 20520960,
+        "measurement_status": "estimated",
+        "sample_count": 4,
+        "sampling_errors": 1,
+        "oom_killed": false,
+        "exit_code": null,
+        "timeout": true,
+        "output_limit_reached": false,
+        "resource_limit_exceeded": true,
+        "monitor_thread_cleanup_confirmed": true,
+        "unavailable_reason": null
+      },
+      {
+        "case_id": "OUTPUT_LIMIT",
+        "wall_time_ms": 1109.0,
+        "cpu_time_ms": 256.395,
+        "peak_memory_bytes": 20877312,
+        "measurement_status": "estimated",
+        "sample_count": 2,
+        "sampling_errors": 2,
+        "oom_killed": false,
+        "exit_code": 0,
+        "timeout": false,
+        "output_limit_reached": true,
+        "resource_limit_exceeded": true,
+        "monitor_thread_cleanup_confirmed": true,
+        "unavailable_reason": null
+      },
+      {
+        "case_id": "HIGH_CPU",
+        "wall_time_ms": 2969.0,
+        "cpu_time_ms": 2128.65,
+        "peak_memory_bytes": 20135936,
+        "measurement_status": "estimated",
+        "sample_count": 9,
+        "sampling_errors": 1,
+        "oom_killed": false,
+        "exit_code": 0,
+        "timeout": false,
+        "output_limit_reached": false,
+        "resource_limit_exceeded": false,
+        "monitor_thread_cleanup_confirmed": true,
+        "unavailable_reason": null
+      },
+      {
+        "case_id": "HIGH_MEMORY",
+        "wall_time_ms": 2985.0,
+        "cpu_time_ms": 251.904,
+        "peak_memory_bytes": 45281280,
+        "measurement_status": "estimated",
+        "sample_count": 10,
+        "sampling_errors": 1,
+        "oom_killed": false,
+        "exit_code": 0,
+        "timeout": false,
+        "output_limit_reached": false,
+        "resource_limit_exceeded": false,
+        "monitor_thread_cleanup_confirmed": true,
+        "unavailable_reason": null
+      },
+      {
+        "case_id": "OOM",
+        "wall_time_ms": 1515.0,
+        "cpu_time_ms": 643.023,
+        "peak_memory_bytes": 268435456,
+        "measurement_status": "estimated",
+        "sample_count": 3,
+        "sampling_errors": 1,
+        "oom_killed": true,
+        "exit_code": 137,
+        "timeout": false,
+        "output_limit_reached": false,
+        "resource_limit_exceeded": true,
+        "monitor_thread_cleanup_confirmed": true,
+        "unavailable_reason": null
+      }
+    ],
+    "note": "Cleanup is one observation check; runtime probes are separate containers, not target-execution budget calls. All fixtures are self-authored, existing image only."
+  },
+  "quality": {
+    "ruff": {
+      "report": "docs/verification/phase1_ruff_final.json",
+      "files_checked": 12,
+      "new_diagnostics": 0,
+      "preexisting_diagnostics": 4,
+      "result": "baseline_findings_only_not_zero_warning_pass"
+    },
+    "bandit": {
+      "status": "not_run",
+      "reason": "Not installed; no installation attempted"
+    },
+    "pip_audit": {
+      "status": "not_run",
+      "reason": "Not installed; no installation attempted"
+    }
+  },
+  "mock_and_real_scope": {
+    "pytest": "Synthetic target backends, fake Docker commands/stats and injected failures; Claude official SDK uses in-memory HTTP transport. Legacy local HTTP/A2A/MCP fixtures are not actual A/C integration.",
+    "evaluators": "Real B rules, supplied historical/synthetic facts and execution canary; no target execution",
+    "docker": "Native Docker with 7 self-authored safe fixtures per run",
+    "real_claude_api_calls": 0
+  },
+  "boundaries": {
+    "public_schema_changed": false,
+    "shared_framework_modified": false,
+    "a_c_o_business_code_changed": false,
+    "docker_security_policy_changed": false,
+    "runtime_dependency_locks_changed": false,
+    "public_contract_sha256": "07382d82cce2c748b39110b6107575acc87af2ed86e15abaddd208f84b8aceae"
+  },
+  "protection": {
+    "historical_files_hash_verified": 23,
+    "user_files_hash_verified": 3,
+    "pico_retained": true,
+    "security_function_ast_matches_head": [
+      "validate_policy",
+      "create_args",
+      "_cleanup",
+      "bounded_command",
+      "parse_cases",
+      "read_report"
+    ],
+    "details": "docs/verification/phase1_boundary_final.json"
+  },
+  "preserved_intermediate_results": [
+    "evals/reports/diagnosis_dev_regression_phase1.json: 15/16 before TimeoutExpired recognition fix",
+    "evals/reports/diagnosis_eval_final_phase1.json: 40/40 class,39/40 actions before pytest short-frame distinction",
+    "docs/verification/phase1_docker_smoke.json: first 8/8; SUCCESS CPU/memory unavailable",
+    "docs/verification/phase1_docker_smoke_verified.json: middle 8/8 before cleanup-order correction",
+    "docs/verification/phase1_ruff.json: repository-root import-detection findings",
+    "Private collection/export setup failures and all original JUnit preserved"
+  ],
+  "remaining": [
+    "Independent human-reviewed evaluation has n=0; no generalization accuracy or probability calibration claim",
+    "Precise full-lifetime CPU tail/memory peak unavailable from sampled stats; short tasks/platforms may have null metrics",
+    "ExceptionGroup trees/custom log formats and Java native Local v2 execution are not implemented",
+    "Seven historical P2 version checks and four preexisting Ruff findings remain",
+    "Clean install, optional audits, remote/other-platform and concurrent resource validation remain",
+    "Live Claude, independent O receipt and real A/C/O formal P2/M1 are outside this task"
+  ],
+  "task_files": [
+    "docs/confidence_design.md",
+    "docs/phase1_diagnosis_hardening.md",
+    "docs/phase1_implementation_plan.md",
+    "docs/resource_monitoring_design.md",
+    "docs/structured_traceback_design.md",
+    "docs/verification/phase1_boundary_checks.json",
+    "docs/verification/phase1_boundary_final.json",
+    "docs/verification/phase1_diagnosis_benchmark.md",
+    "docs/verification/phase1_docker_smoke.json",
+    "docs/verification/phase1_docker_smoke_final.json",
+    "docs/verification/phase1_docker_smoke_verified.json",
+    "docs/verification/phase1_ruff.json",
+    "docs/verification/phase1_ruff_final.json",
+    "docs/verification/phase1_ruff_verified.json",
+    "docs/verification/phase1_test_summary.json",
+    "docs/verification/phase1_workspace_inventory.json",
+    "evals/dataset/annotation_guide.md",
+    "evals/dataset/data_sources_phase1.md",
+    "evals/dataset/diagnosis_candidates_phase1.jsonl",
+    "evals/reports/diagnosis_dev_regression_phase1.json",
+    "evals/reports/diagnosis_dev_regression_phase1_verified.json",
+    "evals/reports/diagnosis_eval_baseline_phase1.json",
+    "evals/reports/diagnosis_eval_final_phase1.json",
+    "evals/reports/diagnosis_eval_final_phase1_verified.json",
+    "evals/runners/run_diagnosis_eval_phase1.py",
+    "python_service/scripts/phase1_docker_smoke.py",
+    "python_service/srp_b/claude.py",
+    "python_service/srp_b/confidence.py",
+    "python_service/srp_b/diagnosis.py",
+    "python_service/srp_b/resource_monitor.py",
+    "python_service/srp_b/sandbox.py",
+    "python_service/srp_b/structured_errors.py",
+    "python_service/tests/test_phase1_confidence.py",
+    "python_service/tests/test_phase1_eval_metrics.py",
+    "python_service/tests/test_phase1_resource_monitor.py",
+    "python_service/tests/test_phase1_traceback.py"
+  ],
+  "source_hashes": {
+    "evals/runners/run_diagnosis_eval_phase1.py": "c85871eeb765d8ac6c6d591725516d03dead4de097bf376e1015f004b4bfc136",
+    "python_service/scripts/phase1_docker_smoke.py": "e382fcb15c219aa8df9641ac02e1f69764f39f5b33aa76ca6dbe19c943ea8a6a",
+    "python_service/srp_b/claude.py": "72ff3e643c0a6d4acffe0c9562c9f0918f8584346c468a552c6f02b4c81b4cc8",
+    "python_service/srp_b/confidence.py": "508995b7482532e43c2d20d9228dcb6d7e7a074168cf09ec82ee44eb2bdba970",
+    "python_service/srp_b/diagnosis.py": "7afac8d32602b8df51355f9bcb2c27bd29e42dddc84530575ea194ea4fd1a64f",
+    "python_service/srp_b/resource_monitor.py": "76c9a59350d57a2dfd300f9329e4c27e6b771e380247d7bf66fc4eb2f3d3c799",
+    "python_service/srp_b/sandbox.py": "88f00340f15a257243973cd5a281c727b2ae6d518d8d10cde0104ce3980d7119",
+    "python_service/srp_b/structured_errors.py": "8865df174aaf1850d3ee3c3ab7b446400d3401d27ff478c216afa30c2c8d82bb",
+    "python_service/tests/test_phase1_confidence.py": "b86c86c9e67ae1307248746da0a0f83edb54037bf75baf5c0a5628fb1fb9fe9d",
+    "python_service/tests/test_phase1_eval_metrics.py": "43986fe4077de550cf259c2adce7d972c493d4a4aaaaf09fccd80266a1bbf1d7",
+    "python_service/tests/test_phase1_resource_monitor.py": "0bb9f73eaeaf1d4aa935688682549add0369856fe54afa93b74bf09fb1430e9b",
+    "python_service/tests/test_phase1_traceback.py": "de0c95140e67867a3bf6476e32698412c0d11fd1f368a23f367868e126ab326c"
+  },
+  "artifact_hashes_excluding_this_summary": {
+    "docs/confidence_design.md": "069b62a018e0271d2865eca87daa07f5b3073f7d551fffb4036ae1147e0af7d0",
+    "docs/phase1_diagnosis_hardening.md": "c04335a90a2f6a4a60b39581f1f2288f0e0371ef122c7e3d69150c9bf1a198fe",
+    "docs/phase1_implementation_plan.md": "c58f7dd7fa6bade4f02768770897077eb52182ea733754001ee87a1d9a05850e",
+    "docs/resource_monitoring_design.md": "a75c59381484f1d2da7776c9a091d950a3763668d8846a05d6dd88b866765e37",
+    "docs/structured_traceback_design.md": "edf0ca43ebe76e9c6fa43613440df4c3b6af721cf8ea734c0f221f68afe73aa5",
+    "docs/verification/phase1_boundary_checks.json": "f234798fb352f46ea3b3887f70c20ef2f82890591cae926e3b646228207cecb7",
+    "docs/verification/phase1_boundary_final.json": "37ecd97db25f02bc0c6056a92eb15096b0740a893f332f3d55ba5bb2493cb594",
+    "docs/verification/phase1_diagnosis_benchmark.md": "2f53135f48d6ccefc0b8f5997924528ce5d5f496877f216a542ac78a7b0690b4",
+    "docs/verification/phase1_docker_smoke.json": "bf6db792e2497b95050e85438d2b7f4d21c895b81532e423c6f2c3788dd55605",
+    "docs/verification/phase1_docker_smoke_final.json": "43505d55437757a42fa76df9cb4f66cb77987383de3e8e240fba3e86653c15ea",
+    "docs/verification/phase1_docker_smoke_verified.json": "013560c4e7146302f0737c494005e517ff62c1caa3fafb8b42d9430c3a6216f4",
+    "docs/verification/phase1_ruff.json": "46c80563255169cdc4173a3f0cc3cd0b776c17a0d42bc4a6c2e969f6a0ee9fc1",
+    "docs/verification/phase1_ruff_final.json": "5b64b8f90b5f1f8f0481424e9b151161d66e48d2cbfcce7acf3d3735e610c03e",
+    "docs/verification/phase1_ruff_verified.json": "0c3d183af34282e8146fc79233cb4aa2a607f904676c763f52716c1c6c9793c0",
+    "docs/verification/phase1_workspace_inventory.json": "62d9121e86a261d61dc8627c78da533734278feced89f005827df004cbd2c884",
+    "evals/dataset/annotation_guide.md": "0cd26fc211248404b9ccfc1a9d11f2d7bce932c8d2c5299d72dbec69e9d3be50",
+    "evals/dataset/data_sources_phase1.md": "b150cc0c3435110d76100d9624630491ab5f8414c7495494c6b2cd66d2b8c025",
+    "evals/dataset/diagnosis_candidates_phase1.jsonl": "37cc2a142dde0287b8d11249f427563e515e2c48cace3a163ee3f9f378be1e93",
+    "evals/reports/diagnosis_dev_regression_phase1.json": "4455b611d2bf250aa18ad06195d34ff20100960d79ce7634884cea52aa916d31",
+    "evals/reports/diagnosis_dev_regression_phase1_verified.json": "73b47a89551f6a95f38a695088a000a6426488ee4746542d371b9c6cae06f41b",
+    "evals/reports/diagnosis_eval_baseline_phase1.json": "e4068c585c1ac0b9005d440f8d349fd2ceecc92af683a65cd49f01950af0f0fd",
+    "evals/reports/diagnosis_eval_final_phase1.json": "0aee57e2e79cb18ee700d6428d755391fbcb85f725e22a2b7368407d0194639b",
+    "evals/reports/diagnosis_eval_final_phase1_verified.json": "6ccbb98c908305a180541d3642ad022aa3206c20b75da53b4a83915e9d472f70",
+    "evals/runners/run_diagnosis_eval_phase1.py": "c85871eeb765d8ac6c6d591725516d03dead4de097bf376e1015f004b4bfc136",
+    "python_service/scripts/phase1_docker_smoke.py": "e382fcb15c219aa8df9641ac02e1f69764f39f5b33aa76ca6dbe19c943ea8a6a",
+    "python_service/srp_b/claude.py": "72ff3e643c0a6d4acffe0c9562c9f0918f8584346c468a552c6f02b4c81b4cc8",
+    "python_service/srp_b/confidence.py": "508995b7482532e43c2d20d9228dcb6d7e7a074168cf09ec82ee44eb2bdba970",
+    "python_service/srp_b/diagnosis.py": "7afac8d32602b8df51355f9bcb2c27bd29e42dddc84530575ea194ea4fd1a64f",
+    "python_service/srp_b/resource_monitor.py": "76c9a59350d57a2dfd300f9329e4c27e6b771e380247d7bf66fc4eb2f3d3c799",
+    "python_service/srp_b/sandbox.py": "88f00340f15a257243973cd5a281c727b2ae6d518d8d10cde0104ce3980d7119",
+    "python_service/srp_b/structured_errors.py": "8865df174aaf1850d3ee3c3ab7b446400d3401d27ff478c216afa30c2c8d82bb",
+    "python_service/tests/test_phase1_confidence.py": "b86c86c9e67ae1307248746da0a0f83edb54037bf75baf5c0a5628fb1fb9fe9d",
+    "python_service/tests/test_phase1_eval_metrics.py": "43986fe4077de550cf259c2adce7d972c493d4a4aaaaf09fccd80266a1bbf1d7",
+    "python_service/tests/test_phase1_resource_monitor.py": "0bb9f73eaeaf1d4aa935688682549add0369856fe54afa93b74bf09fb1430e9b",
+    "python_service/tests/test_phase1_traceback.py": "de0c95140e67867a3bf6476e32698412c0d11fd1f368a23f367868e126ab326c"
+  },
+  "private_junit_hashes": {
+    "python_service/.interop/phase1/traceback-first.xml": "85186b1e8605c687384027d8745af31ba3452162889f384a1d3eaacdb11e8a7f",
+    "python_service/.interop/phase1/diagnosis-integration-first.xml": "3f805233aed8007e83379a63b344d5fc9d942665e40179dceb8ad41d49290029",
+    "python_service/.interop/phase1/new-modules-first.xml": "7cec90b261fa1ee74234fec08136bbdd44bf40d4be9be5da6adf34b326315a9c",
+    "python_service/.interop/phase1/targeted-final.xml": "bd4833d6fe9d4b2f3c8417c89f2b19e84aee1cf7179e1a7523e1251ea0ac7d4e",
+    "python_service/.interop/phase1/full-suite.xml": "267ea3eceed82a51e68c02d1099b5e2b4842226a4f7d6678fa0c8bbbd458cd91",
+    "python_service/.interop/phase1/full-suite-final.xml": "325441bd6bc71dc9c446881115328a3ba03ab1f2d5c79f47a40d1f37192b346d",
+    "python_service/.interop/phase1/head-historical-checks.xml": "924f6e2bad637e62f442a45c2db4c002b30ad43de2ee56db9b36dc888e252d6f",
+    "python_service/.interop/phase1/head-historical-checks-confirmed.xml": "74375ee1eaefa814db82356cab89200069090647ad92ba6e3311b0f9bf2567dd"
+  },
+  "counting_note": "155 targeted items are a subset of 394 full-suite items. Generated cases, evaluator rows, Docker checks/probes and repeated runs have separate denominators and must not be summed as a single accuracy/test count."
+}

@@ -8,8 +8,8 @@ from __future__ import annotations
 
 import json
 import re
-import subprocess
 import stat
+import subprocess
 import tempfile
 import threading
 import time
@@ -19,6 +19,9 @@ from xml.etree import ElementTree as ET
 
 from reliable_codegen.guards import check_artifact_files
 from reliable_codegen.utils import digest
+
+from .resource_monitor import ResourceMonitor
+from .structured_errors import evidence_sources, parse_sources, wire_frames
 
 OUTPUT_LIMIT = 1024 * 1024
 RETAIN_BYTES = 32 * 1024
@@ -147,8 +150,9 @@ def read_report(workspace):
 
 
 class DockerRunner:
-    def __init__(self, image, command=bounded_command):
+    def __init__(self, image, command=bounded_command, *, monitor_factory=ResourceMonitor):
         self.image, self.command = image, command
+        self.monitor_factory = monitor_factory
 
     @staticmethod
     def validate_policy(payload):
@@ -236,6 +240,11 @@ class DockerRunner:
         probe_name = name + "-probe"
         target_created, probe_created = False, False
         temporary = None
+        monitor = None
+        monitoring_error = None
+        target_began = target_finished = None
+        state = None
+        output_overflow = None
         try:
             inspected = run(["docker", "image", "inspect", "--format", "{{.Id}}", self.image])
             image_id = inspected.stdout.decode().strip()
@@ -291,7 +300,17 @@ class DockerRunner:
             if created.returncode:
                 return observation
             observation["execution_calls"] = None  # Until Docker confirms whether it started.
-            attached = run(["docker", "start", "--attach", name], command_timeout=policy["timeout_ms"] / 1000)
+            try:
+                monitor = self.monitor_factory(name, policy)
+                monitor.start()
+            except Exception as error:  # noqa: BLE001 -- optional observation cannot replace execution facts.
+                monitoring_error = type(error).__name__
+            target_began = time.monotonic()
+            try:
+                attached = run(["docker", "start", "--attach", name], command_timeout=policy["timeout_ms"] / 1000)
+            finally:
+                target_finished = time.monotonic()
+            output_overflow = attached.overflow
             observation["stdout"] = log_stream(attached.stdout, attached.stdout_truncated)
             observation["stderr"] = log_stream(attached.stderr, attached.stderr_truncated)
             if attached.timeout or attached.overflow:
@@ -330,10 +349,42 @@ class DockerRunner:
             observation["stderr"] = log_stream("Sandbox infrastructure failed or its deadline expired; target facts may be incomplete.")
             return observation
         finally:
+            # Preserve prompt container teardown even if the optional sampler is
+            # waiting for its bounded I/O timeout. Join observers after cleanup.
             probe_clean = self._cleanup(probe_name) if probe_created else True
             target_clean = self._cleanup(name) if target_created else True
+            monitoring = None
+            if monitor is not None:
+                try:
+                    monitoring = monitor.stop()
+                except Exception as error:  # noqa: BLE001 -- monitor failure is metadata, not a target failure.
+                    monitoring_error = type(error).__name__
             if target_created:
-                observation["resource_usage"]["wall_time_ms"] = round((time.monotonic() - started) * 1000, 3)
+                workflow_wall = round((time.monotonic() - started) * 1000, 3)
+                target_wall = round(((target_finished or time.monotonic()) - target_began) * 1000, 3) if target_began else None
+                resource = observation["resource_usage"]
+                resource["wall_time_ms"] = target_wall if observation["execution_calls"] == 1 else None
+                detail = monitoring or {"version": "docker-resource-v1", "sample_count": 0, "samples": [],
+                                        "cpu_time_ms": None, "peak_memory_bytes": None,
+                                        "unavailable_reason": monitoring_error or "MONITOR_NOT_STARTED",
+                                        "monitor_thread_cleanup_confirmed": monitor is None}
+                detail.update(workflow_wall_time_ms=workflow_wall, target_interval_wall_time_ms=target_wall,
+                              wall_time_scope="Host monotonic bracket around Docker start/attach; client latency included; probe and cleanup excluded",
+                              memory_limit_bytes=policy["memory_mb"] * 1024 * 1024, cpu_limit=policy["cpu_limit"],
+                              oom_killed=state.get("OOMKilled") if state and type(state.get("OOMKilled")) is bool else None,
+                              exit_code=state.get("ExitCode") if state and not state.get("Running") else None,
+                              timeout=observation["execution_status"] == "timeout" if target_began else None,
+                              output_limit_reached=output_overflow)
+                limited = detail["oom_killed"] or detail["timeout"] or output_overflow
+                detail["resource_limit_exceeded"] = True if limited else False if state and not state.get("Running") else None
+                if observation["execution_calls"] == 1:
+                    resource["cpu_time_ms"] = detail["cpu_time_ms"]
+                    resource["peak_memory_bytes"] = detail["peak_memory_bytes"]
+                resource["measurement_status"] = "estimated" if any(resource[key] is not None for key in ("wall_time_ms", "cpu_time_ms", "peak_memory_bytes")) else "unknown"
+                resource["notes"] = ["Wall time is a host start/attach interval. CPU is the last sampled cumulative counter; memory is the observed-window maximum, not an exact lifetime peak."]
+                if detail.get("unavailable_reason"):
+                    resource["notes"].append("Some metrics unavailable: " + detail["unavailable_reason"])
+                resource["extensions"] = {"srp_b": {"resource_monitoring": detail}}
                 observation["isolation_guarantees"] = {
                     "network": "none", "root_read_only": True, "workspace_read_only": True,
                     "allowed_write_paths": list(policy["allowed_write_paths"]), "memory_mb": policy["memory_mb"],
@@ -343,6 +394,20 @@ class DockerRunner:
                     "write_storage": "bounded tmpfs plus a private report file",
                     "container_cleanup_confirmed": target_clean and probe_clean,
                 }
+                try:
+                    refs = [{"kind": "log_span", "artifact_id": execution_id, "pointer": "/" + name,
+                             "summary": observation[name]["text"][:512]}
+                            for name in ("stdout", "stderr") if observation[name]["text"].strip()]
+                    refs += [{"kind": "test_result", "artifact_id": execution_id,
+                              "pointer": f"/test_case_results/{index}", "summary": case["message"] or case["status"]}
+                             for index, case in enumerate(observation["test_case_results"]) if case["status"] in {"failed", "error"}]
+                    paths = [file["path"] for artifact in (payload["code_artifact"], payload["test_artifact"], payload["build_manifest"])
+                             for file in artifact.get("files", artifact.get("supporting_files", []))]
+                    parsed = parse_sources(evidence_sources({"kind": "execution", "execution_result": observation}, refs), known_paths=paths)
+                    observation["traceback"] = wire_frames(parsed)
+                    observation["extensions"] = {"srp_b": {"structured_errors": parsed}}
+                except Exception as error:  # noqa: BLE001 -- preserve raw execution even if optional parsing fails.
+                    observation["extensions"] = {"srp_b": {"structured_errors": {"parse_status": "unavailable", "error_code": type(error).__name__}}}
             if temporary is not None:
                 temporary.cleanup()
             if not probe_clean or not target_clean:

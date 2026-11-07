@@ -41,3 +41,14 @@ evals/README.md text eol=lf
 docs/pre_integration_hardening_20261107.md text eol=lf
 docs/group_meeting_update_20261107.md text eol=lf
 docs/verification/diagnosis_benchmark_20261107.md text eol=lf
+
+# Phase-1 snapshots retain their recorded bytes across Windows checkouts.
+docs/verification/phase1*.json -text
+docs/verification/phase1*.md -text
+docs/phase1*.md -text
+docs/structured_traceback_design.md -text
+docs/confidence_design.md -text
+docs/resource_monitoring_design.md -text
+evals/dataset/annotation_guide.md -text
+evals/dataset/data_sources_phase1.md -text
+python_service/tests/test_phase1*.py text eol=lf

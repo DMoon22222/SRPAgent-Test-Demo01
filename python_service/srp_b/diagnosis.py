@@ -4,8 +4,12 @@ from __future__ import annotations
 
 from copy import deepcopy
 
-from app.analyzer.error_signal_extractor import make_rule_decision
 from reliable_codegen.utils import canonical, digest, uid, utcnow
+
+from app.analyzer.error_signal_extractor import make_rule_decision
+
+from .confidence import assess
+from .structured_errors import evidence_sources, known_workspace_paths, parse_sources
 
 
 def diagnose(request, *, prior=None, logs=None):
@@ -31,7 +35,7 @@ def diagnose(request, *, prior=None, logs=None):
         # Keep each resolved stream's identity; combined text has no /stderr provenance.
         streams = logs if logs is not None else {name: fact[name].get("text", "") for name in ("stdout", "stderr")}
         text_parts = []
-        failed = fact["test_outcome"] != "passed"
+        failed = fact["test_outcome"] != "passed" or fact["execution_status"] != "completed"
         stage = fact["failure_stage"]
         domain = "code"
         failure_class = "test_failure" if fact["test_outcome"] == "failed" else "unknown"
@@ -98,5 +102,12 @@ def diagnose(request, *, prior=None, logs=None):
         "extensions": {"srp_b": {"algorithm": "existing-rule-extractor-v1", "model_calls": 0,
                                     "retrieval_hint_is_advisory": True}},
     }
+    known_paths = known_workspace_paths(payload)
+    sources = evidence_sources(source, evidence, logs)
+    parsed = parse_sources(sources, known_paths=known_paths)
+    report = assess(payload, report, sources, parsed, known_paths=known_paths)
+    report["extensions"]["srp_b"]["algorithm"] = "structured-rule-evidence-v1"
+    report["failure_signature"] = digest(canonical({"code_hash": code["content_hash"], "failure_class": report["failure_class"],
+                                                    "stage": report["failure_stage"], "raw": report["raw_failure_class"]})) if failed else None
     return {"failure_source": deepcopy(source), "diagnosis_report": report,
-            "retrieval_hint": hint, "next_action": action}
+            "retrieval_hint": report["retrieval_hint"], "next_action": report["next_action"]}

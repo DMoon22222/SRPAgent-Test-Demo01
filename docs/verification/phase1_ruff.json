@@ -1,0 +1,401 @@
+{
+  "version": "ruff 0.16.4",
+  "files": [
+    "python_service/srp_b/structured_errors.py",
+    "python_service/srp_b/confidence.py",
+    "python_service/srp_b/resource_monitor.py",
+    "python_service/srp_b/diagnosis.py",
+    "python_service/srp_b/sandbox.py",
+    "python_service/srp_b/claude.py",
+    "python_service/tests/test_phase1_traceback.py",
+    "python_service/tests/test_phase1_confidence.py",
+    "python_service/tests/test_phase1_resource_monitor.py",
+    "python_service/tests/test_phase1_eval_metrics.py",
+    "python_service/scripts/phase1_docker_smoke.py",
+    "evals/runners/run_diagnosis_eval_phase1.py"
+  ],
+  "file_count": 12,
+  "source_hashes": {
+    "python_service/srp_b/structured_errors.py": "8865df174aaf1850d3ee3c3ab7b446400d3401d27ff478c216afa30c2c8d82bb",
+    "python_service/srp_b/confidence.py": "508995b7482532e43c2d20d9228dcb6d7e7a074168cf09ec82ee44eb2bdba970",
+    "python_service/srp_b/resource_monitor.py": "76c9a59350d57a2dfd300f9329e4c27e6b771e380247d7bf66fc4eb2f3d3c799",
+    "python_service/srp_b/diagnosis.py": "7afac8d32602b8df51355f9bcb2c27bd29e42dddc84530575ea194ea4fd1a64f",
+    "python_service/srp_b/sandbox.py": "16d3ece29de2cdd2bfc02ce77ddad605386eb52291fe81394b382de0961a4823",
+    "python_service/srp_b/claude.py": "72ff3e643c0a6d4acffe0c9562c9f0918f8584346c468a552c6f02b4c81b4cc8",
+    "python_service/tests/test_phase1_traceback.py": "de0c95140e67867a3bf6476e32698412c0d11fd1f368a23f367868e126ab326c",
+    "python_service/tests/test_phase1_confidence.py": "b86c86c9e67ae1307248746da0a0f83edb54037bf75baf5c0a5628fb1fb9fe9d",
+    "python_service/tests/test_phase1_resource_monitor.py": "732daab497f2f4b14bc4862e3d1a877576abe47b5a54d7828dafae121c0e2bd9",
+    "python_service/tests/test_phase1_eval_metrics.py": "43986fe4077de550cf259c2adce7d972c493d4a4aaaaf09fccd80266a1bbf1d7",
+    "python_service/scripts/phase1_docker_smoke.py": "e382fcb15c219aa8df9641ac02e1f69764f39f5b33aa76ca6dbe19c943ea8a6a",
+    "evals/runners/run_diagnosis_eval_phase1.py": "c85871eeb765d8ac6c6d591725516d03dead4de097bf376e1015f004b4bfc136"
+  },
+  "result": "review_required",
+  "diagnostics": [
+    {
+      "cell": null,
+      "code": "I001",
+      "end_location": {
+        "column": 37,
+        "row": 23
+      },
+      "filename": "evals/runners/run_diagnosis_eval_phase1.py",
+      "fix": {
+        "applicability": "safe",
+        "edits": [
+          {
+            "content": "from __future__ import annotations\n\nimport argparse\nimport hashlib\nimport json\nimport platform\nimport subprocess\nimport tempfile\nfrom collections import Counter\nfrom copy import deepcopy\nfrom pathlib import Path\nfrom time import monotonic\n\nfrom reliable_codegen.contracts import ContractRegistry\nfrom reliable_codegen.guards import check_response\nfrom reliable_codegen.transport import TransportError\nfrom reliable_codegen.utils import canonical, digest, utcnow\nfrom srp_b import __version__, create_module\nfrom srp_b.module import DIAGNOSE\nfrom srp_b.samples import diagnostic\n\n",
+            "end_location": {
+              "column": 1,
+              "row": 25
+            },
+            "location": {
+              "column": 1,
+              "row": 3
+            }
+          }
+        ],
+        "message": "Organize imports"
+      },
+      "location": {
+        "column": 1,
+        "row": 3
+      },
+      "message": "Import block is un-sorted or un-formatted",
+      "name": "unsorted-imports",
+      "noqa_row": 3,
+      "severity": "error",
+      "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+    },
+    {
+      "cell": null,
+      "code": "I001",
+      "end_location": {
+        "column": 46,
+        "row": 21
+      },
+      "filename": "python_service/scripts/phase1_docker_smoke.py",
+      "fix": {
+        "applicability": "safe",
+        "edits": [
+          {
+            "content": "from __future__ import annotations\n\nimport argparse\nimport hashlib\nimport json\nimport platform\nimport subprocess\nimport tempfile\nfrom pathlib import Path\nfrom time import monotonic\n\nfrom pre_integration_docker_smoke import SCENARIOS, TrackingRunner, docker\nfrom reliable_codegen.contracts import ContractRegistry\nfrom reliable_codegen.guards import check_response\nfrom reliable_codegen.utils import utcnow\nfrom srp_b import __version__, create_module\nfrom srp_b.module import DIAGNOSE, EXECUTE\nfrom srp_b.samples import diagnostic, request\n\n",
+            "end_location": {
+              "column": 1,
+              "row": 23
+            },
+            "location": {
+              "column": 1,
+              "row": 3
+            }
+          }
+        ],
+        "message": "Organize imports"
+      },
+      "location": {
+        "column": 1,
+        "row": 3
+      },
+      "message": "Import block is un-sorted or un-formatted",
+      "name": "unsorted-imports",
+      "noqa_row": 3,
+      "severity": "error",
+      "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+    },
+    {
+      "cell": null,
+      "code": "TRY004",
+      "end_location": {
+        "column": 72,
+        "row": 49
+      },
+      "filename": "python_service/srp_b/claude.py",
+      "fix": null,
+      "location": {
+        "column": 13,
+        "row": 49
+      },
+      "message": "Prefer `TypeError` exception for invalid type",
+      "name": "type-check-without-type-error",
+      "noqa_row": 49,
+      "severity": "error",
+      "url": "https://docs.astral.sh/ruff/rules/type-check-without-type-error"
+    },
+    {
+      "cell": null,
+      "code": "BLE001",
+      "end_location": {
+        "column": 25,
+        "row": 143
+      },
+      "filename": "python_service/srp_b/claude.py",
+      "fix": null,
+      "location": {
+        "column": 16,
+        "row": 143
+      },
+      "message": "Do not catch blind exception: `Exception`",
+      "name": "blind-except",
+      "noqa_row": 143,
+      "severity": "error",
+      "url": "https://docs.astral.sh/ruff/rules/blind-except"
+    },
+    {
+      "cell": null,
+      "code": "S110",
+      "end_location": {
+        "column": 25,
+        "row": 161
+      },
+      "filename": "python_service/srp_b/claude.py",
+      "fix": null,
+      "location": {
+        "column": 17,
+        "row": 160
+      },
+      "message": "`try`-`except`-`pass` detected, consider logging the exception",
+      "name": "try-except-pass",
+      "noqa_row": 160,
+      "severity": "error",
+      "url": "https://docs.astral.sh/ruff/rules/try-except-pass"
+    },
+    {
+      "cell": null,
+      "code": "BLE001",
+      "end_location": {
+        "column": 33,
+        "row": 160
+      },
+      "filename": "python_service/srp_b/claude.py",
+      "fix": null,
+      "location": {
+        "column": 24,
+        "row": 160
+      },
+      "message": "Do not catch blind exception: `Exception`",
+      "name": "blind-except",
+      "noqa_row": 160,
+      "severity": "error",
+      "url": "https://docs.astral.sh/ruff/rules/blind-except"
+    },
+    {
+      "cell": null,
+      "code": "I001",
+      "end_location": {
+        "column": 86,
+        "row": 12
+      },
+      "filename": "python_service/srp_b/diagnosis.py",
+      "fix": {
+        "applicability": "safe",
+        "edits": [
+          {
+            "content": "from __future__ import annotations\n\nfrom copy import deepcopy\n\nfrom app.analyzer.error_signal_extractor import make_rule_decision\nfrom reliable_codegen.utils import canonical, digest, uid, utcnow\n\nfrom .confidence import assess\nfrom .structured_errors import evidence_sources, known_workspace_paths, parse_sources\n\n\n",
+            "end_location": {
+              "column": 1,
+              "row": 15
+            },
+            "location": {
+              "column": 1,
+              "row": 3
+            }
+          }
+        ],
+        "message": "Organize imports"
+      },
+      "location": {
+        "column": 1,
+        "row": 3
+      },
+      "message": "Import block is un-sorted or un-formatted",
+      "name": "unsorted-imports",
+      "noqa_row": 3,
+      "severity": "error",
+      "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+    },
+    {
+      "cell": null,
+      "code": "I001",
+      "end_location": {
+        "column": 2,
+        "row": 16
+      },
+      "filename": "python_service/tests/test_phase1_confidence.py",
+      "fix": {
+        "applicability": "safe",
+        "edits": [
+          {
+            "content": "import sys\nfrom copy import deepcopy\nfrom pathlib import Path\n\nfrom app.analyzer.error_signal_extractor import make_rule_decision\nfrom reliable_codegen.contracts import ContractRegistry\nfrom srp_b.confidence import assess\nfrom srp_b.diagnosis import diagnose\nfrom srp_b.structured_errors import (\n    evidence_sources,\n    known_workspace_paths,\n    parse_sources,\n)\n\n",
+            "end_location": {
+              "column": 1,
+              "row": 18
+            },
+            "location": {
+              "column": 1,
+              "row": 3
+            }
+          }
+        ],
+        "message": "Organize imports"
+      },
+      "location": {
+        "column": 1,
+        "row": 3
+      },
+      "message": "Import block is un-sorted or un-formatted",
+      "name": "unsorted-imports",
+      "noqa_row": 3,
+      "severity": "error",
+      "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+    },
+    {
+      "cell": null,
+      "code": "I001",
+      "end_location": {
+        "column": 48,
+        "row": 19
+      },
+      "filename": "python_service/tests/test_phase1_resource_monitor.py",
+      "fix": {
+        "applicability": "safe",
+        "edits": [
+          {
+            "content": "import json\nimport subprocess\nimport threading\nimport time\nfrom pathlib import Path\n\nimport pytest\nfrom srp_b.module import EXECUTE\nfrom srp_b.resource_monitor import (\n    MAX_SAMPLES,\n    LocalStatsClient,\n    ResourceMonitor,\n    local_endpoint,\n)\nfrom srp_b.samples import request\nfrom srp_b.sandbox import Command, DockerRunner\n\n\n",
+            "end_location": {
+              "column": 1,
+              "row": 22
+            },
+            "location": {
+              "column": 1,
+              "row": 3
+            }
+          }
+        ],
+        "message": "Organize imports"
+      },
+      "location": {
+        "column": 1,
+        "row": 3
+      },
+      "message": "Import block is un-sorted or un-formatted",
+      "name": "unsorted-imports",
+      "noqa_row": 3,
+      "severity": "error",
+      "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+    },
+    {
+      "cell": null,
+      "code": "I001",
+      "end_location": {
+        "column": 2,
+        "row": 15
+      },
+      "filename": "python_service/tests/test_phase1_traceback.py",
+      "fix": {
+        "applicability": "safe",
+        "edits": [
+          {
+            "content": "from copy import deepcopy\n\nimport pytest\nfrom srp_b.structured_errors import (\n    MAX_CHARS,\n    MAX_EXCEPTIONS,\n    MAX_FRAMES,\n    parse_python,\n    parse_sources,\n    validate_parsed,\n    wire_frames,\n)\n\n",
+            "end_location": {
+              "column": 1,
+              "row": 17
+            },
+            "location": {
+              "column": 1,
+              "row": 3
+            }
+          }
+        ],
+        "message": "Organize imports"
+      },
+      "location": {
+        "column": 1,
+        "row": 3
+      },
+      "message": "Import block is un-sorted or un-formatted",
+      "name": "unsorted-imports",
+      "noqa_row": 3,
+      "severity": "error",
+      "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+    }
+  ],
+  "head_claude_baseline_diagnostics": [
+    {
+      "cell": null,
+      "code": "TRY004",
+      "end_location": {
+        "column": 72,
+        "row": 49
+      },
+      "filename": "python_service/srp_b/claude.py",
+      "fix": null,
+      "location": {
+        "column": 13,
+        "row": 49
+      },
+      "message": "Prefer `TypeError` exception for invalid type",
+      "name": "type-check-without-type-error",
+      "noqa_row": 49,
+      "severity": "error",
+      "url": "https://docs.astral.sh/ruff/rules/type-check-without-type-error"
+    },
+    {
+      "cell": null,
+      "code": "BLE001",
+      "end_location": {
+        "column": 25,
+        "row": 139
+      },
+      "filename": "python_service/srp_b/claude.py",
+      "fix": null,
+      "location": {
+        "column": 16,
+        "row": 139
+      },
+      "message": "Do not catch blind exception: `Exception`",
+      "name": "blind-except",
+      "noqa_row": 139,
+      "severity": "error",
+      "url": "https://docs.astral.sh/ruff/rules/blind-except"
+    },
+    {
+      "cell": null,
+      "code": "S110",
+      "end_location": {
+        "column": 25,
+        "row": 157
+      },
+      "filename": "python_service/srp_b/claude.py",
+      "fix": null,
+      "location": {
+        "column": 17,
+        "row": 156
+      },
+      "message": "`try`-`except`-`pass` detected, consider logging the exception",
+      "name": "try-except-pass",
+      "noqa_row": 156,
+      "severity": "error",
+      "url": "https://docs.astral.sh/ruff/rules/try-except-pass"
+    },
+    {
+      "cell": null,
+      "code": "BLE001",
+      "end_location": {
+        "column": 33,
+        "row": 156
+      },
+      "filename": "python_service/srp_b/claude.py",
+      "fix": null,
+      "location": {
+        "column": 24,
+        "row": 156
+      },
+      "message": "Do not catch blind exception: `Exception`",
+      "name": "blind-except",
+      "noqa_row": 156,
+      "severity": "error",
+      "url": "https://docs.astral.sh/ruff/rules/blind-except"
+    }
+  ],
+  "new_diagnostics": null,
+  "note": "Four existing Claude boundary findings retained; full selected scope is not a zero-warning pass. Newly added/changed logic has no new diagnostic."
+}
