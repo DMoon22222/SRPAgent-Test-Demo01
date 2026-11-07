@@ -2,7 +2,6 @@ import re
 
 from app.schemas import RuleDecision
 
-
 SIGNAL_RULES: list[tuple[str, str, str]] = [
     ("SyntaxError", "SYNTAX_ERROR", "检测到 Python SyntaxError，倾向 COMPILE_ERROR / SYNTAX_ERROR。"),
     ("IndentationError", "INDENTATION_ERROR", "检测到 Python IndentationError，倾向 COMPILE_ERROR / INDENTATION_ERROR。"),
@@ -138,6 +137,7 @@ def make_rule_decision(execution: dict | None = None, error_log: str = "", stder
 
     if _contains(lowered, ["keyerror", "nameerror", "recursionerror", "memoryerror", "nullpointerexception", "arithmeticexception"]):
         subtype = "UNKNOWN"
+        explanation = "规则层检测到运行时异常。"
         if "recursionerror" in lowered or "memoryerror" in lowered:
             subtype = "RESOURCE_LIMIT"
         if "nullpointerexception" in lowered:
@@ -146,7 +146,10 @@ def make_rule_decision(execution: dict | None = None, error_log: str = "", stder
             subtype = "DIVIDE_BY_ZERO"
         if "nameerror" in lowered:
             subtype = "MISSING_SYMBOL"
-        return _decision("RUNTIME", "RUNTIME_ERROR", subtype, False, evidence, 0.75, "规则层检测到运行时异常。")
+            explanation = "规则层检测到 NameError，通常与访问当前作用域内未定义的名称有关；请核对失败位置的变量或函数名称。"
+        elif "keyerror" in lowered:
+            explanation = "规则层检测到 KeyError，通常与映射键访问失败有关；请结合原始失败位置核对键名及缺失键处理。"
+        return _decision("RUNTIME", "RUNTIME_ERROR", subtype, False, evidence, 0.75, explanation)
 
     status = str(execution.get("status") or "").upper()
     if status == "WRONG_ANSWER" or "expectedoutput" in lowered or "actualoutput" in lowered:

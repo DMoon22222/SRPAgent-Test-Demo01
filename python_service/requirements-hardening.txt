@@ -1,0 +1,4 @@
+# Optional test-only tooling; install into a private target directory.
+# The existing runtime/SDK lock files are unchanged.
+hypothesis==6.170.15
+sortedcontainers==2.4.0

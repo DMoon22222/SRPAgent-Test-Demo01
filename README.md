@@ -6,6 +6,10 @@
 
 共同框架最近的 B 0.4.0 登记资料已同步，入口见 [同步说明](docs/framework_sync_20261107.md)、[当前交付](docs/local_v2_handoff_v0.4.0.md)、[O 接收核对单](docs/integration/receiver_checklist_v0.4.0.md)及 [M1 原时点缺口报告](docs/m1_readiness_20261105.md)。同步保留原验证日期和待接收状态。
 
+完整的职责边界、已实现功能、源码对应关系、验证范围及待办见 [B 组功能定位与当前项目已实现功能说明](docs/b_group_role_and_implemented_features.md)。
+
+2026-11-07 的 B 组轻量加固结果见 [开发成果报告](docs/pre_integration_hardening_20261107.md)、[诊断评测](docs/verification/diagnosis_benchmark_20261107.md)和[组会汇报单页](docs/group_meeting_update_20261107.md)。其中真实 Docker 快速检查、固定事实评测与离线回归分别统计，尚未代表 O 正式接收。
+
 ## 主要功能
 
 | 能力 | 逻辑操作 | 主要输出与行为 |

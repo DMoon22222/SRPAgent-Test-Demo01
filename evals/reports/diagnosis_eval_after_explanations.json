@@ -1,0 +1,619 @@
+{
+  "record_version": "1.0",
+  "verified_at": "2026-11-07T06:18:28.071Z",
+  "label": "after-hardening",
+  "implementation_version": "0.4.0",
+  "source_head": "f4ed4caec4649afde8a99359513a638193c85e7d",
+  "source_hashes": {
+    "python_service/srp_b/diagnosis.py": "45d7a360d6026f33244f38acb9c92fc27055886dfae4ff47a36abefc337f917b",
+    "python_service/app/analyzer/error_signal_extractor.py": "ed9447fa07cbd5f05b53ca0f44fa3b22e6c9742b50cccd0f5a09f0b6c2ee1c0c",
+    "evals/runners/run_diagnosis_eval.py": "881b5544878e780714a5663020515ad5a364c394efbe25b183ce1c78210bccbb"
+  },
+  "dataset_sha256": "bdcb97bc95c775e6561ca9f1e7eb8bb7ac35f1a7b2105c6288a1a24bf72411e2",
+  "environment": {
+    "python": "3.12.4",
+    "platform": "Windows-11-10.0.22631-SP0"
+  },
+  "scope": "Small curated synthetic fact benchmark; real B rules and schema; no target execution, no A/C/O, no general accuracy claim",
+  "support_rubric": "Predeclared observation markers plus conclusion-specific lexical cues; limited deterministic rubric, not an independent human semantic audit",
+  "mock_input_facts": true,
+  "mock_diagnosis_backend": false,
+  "real_docker": false,
+  "real_claude_api": false,
+  "runner_invocations": 0,
+  "metrics": {
+    "classification": {
+      "correct": 16,
+      "total": 16,
+      "rate": 1.0
+    },
+    "stage": {
+      "correct": 16,
+      "total": 16,
+      "rate": 1.0
+    },
+    "next_action": {
+      "correct": 16,
+      "total": 16,
+      "rate": 1.0
+    },
+    "diagnostic_support_rubric": {
+      "correct": 16,
+      "total": 16,
+      "rate": 1.0
+    },
+    "schema": {
+      "correct": 16,
+      "total": 16,
+      "rate": 1.0
+    }
+  },
+  "reference_metrics": {
+    "emitted": 22,
+    "valid_paths_and_identities": 22,
+    "matching_observation_summaries": 22
+  },
+  "no_evidence_controls": {
+    "total": 1,
+    "unsupported_specific_claims": 0
+  },
+  "counts": {
+    "total": 16,
+    "passed": 16,
+    "failed": 0,
+    "skipped": 0
+  },
+  "confusion_matrix": {
+    "syntax_error": {
+      "syntax_error": 2
+    },
+    "dependency_error": {
+      "dependency_error": 2
+    },
+    "runtime_error": {
+      "runtime_error": 5
+    },
+    "test_failure": {
+      "test_failure": 2
+    },
+    "timeout": {
+      "timeout": 1
+    },
+    "environment_error": {
+      "environment_error": 1
+    },
+    "unknown": {
+      "unknown": 2
+    },
+    "none": {
+      "none": 1
+    }
+  },
+  "cases": [
+    {
+      "case_id": "syntax_missing_colon",
+      "checks": {
+        "classification": true,
+        "stage": true,
+        "next_action": true,
+        "expected_reference_set": true,
+        "reference_integrity": true,
+        "diagnostic_support_rubric": true,
+        "no_unsupported_claim_without_evidence": true,
+        "schema": true
+      },
+      "passed": true,
+      "references": [
+        {
+          "pointer": "/findings/0",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        }
+      ],
+      "root_cause_determinable": true,
+      "specific_root_cause_supported": true,
+      "no_evidence_control": false,
+      "observed": {
+        "failure_class": "syntax_error",
+        "failure_stage": "static",
+        "next_action": "repair",
+        "root_cause": "规则层检测到 Python 语法错误。",
+        "confidence": 0.95
+      }
+    },
+    {
+      "case_id": "indentation_error",
+      "checks": {
+        "classification": true,
+        "stage": true,
+        "next_action": true,
+        "expected_reference_set": true,
+        "reference_integrity": true,
+        "diagnostic_support_rubric": true,
+        "no_unsupported_claim_without_evidence": true,
+        "schema": true
+      },
+      "passed": true,
+      "references": [
+        {
+          "pointer": "/findings/0",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        }
+      ],
+      "root_cause_determinable": true,
+      "specific_root_cause_supported": true,
+      "no_evidence_control": false,
+      "observed": {
+        "failure_class": "syntax_error",
+        "failure_stage": "static",
+        "next_action": "repair",
+        "root_cause": "规则层检测到 Python 缩进错误。",
+        "confidence": 0.95
+      }
+    },
+    {
+      "case_id": "import_missing_symbol",
+      "checks": {
+        "classification": true,
+        "stage": true,
+        "next_action": true,
+        "expected_reference_set": true,
+        "reference_integrity": true,
+        "diagnostic_support_rubric": true,
+        "no_unsupported_claim_without_evidence": true,
+        "schema": true
+      },
+      "passed": true,
+      "references": [
+        {
+          "pointer": "/test_case_results/0",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        },
+        {
+          "pointer": "/stderr",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        }
+      ],
+      "root_cause_determinable": true,
+      "specific_root_cause_supported": true,
+      "no_evidence_control": false,
+      "observed": {
+        "failure_class": "dependency_error",
+        "failure_stage": "test",
+        "next_action": "repair",
+        "root_cause": "规则层检测到依赖缺失或导入失败。",
+        "confidence": 0.9
+      }
+    },
+    {
+      "case_id": "module_not_found",
+      "checks": {
+        "classification": true,
+        "stage": true,
+        "next_action": true,
+        "expected_reference_set": true,
+        "reference_integrity": true,
+        "diagnostic_support_rubric": true,
+        "no_unsupported_claim_without_evidence": true,
+        "schema": true
+      },
+      "passed": true,
+      "references": [
+        {
+          "pointer": "/test_case_results/0",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        },
+        {
+          "pointer": "/stderr",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        }
+      ],
+      "root_cause_determinable": true,
+      "specific_root_cause_supported": true,
+      "no_evidence_control": false,
+      "observed": {
+        "failure_class": "dependency_error",
+        "failure_stage": "test",
+        "next_action": "repair",
+        "root_cause": "规则层检测到依赖缺失或导入失败。",
+        "confidence": 0.9
+      }
+    },
+    {
+      "case_id": "undefined_name",
+      "checks": {
+        "classification": true,
+        "stage": true,
+        "next_action": true,
+        "expected_reference_set": true,
+        "reference_integrity": true,
+        "diagnostic_support_rubric": true,
+        "no_unsupported_claim_without_evidence": true,
+        "schema": true
+      },
+      "passed": true,
+      "references": [
+        {
+          "pointer": "/test_case_results/0",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        },
+        {
+          "pointer": "/stderr",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        }
+      ],
+      "root_cause_determinable": true,
+      "specific_root_cause_supported": true,
+      "no_evidence_control": false,
+      "observed": {
+        "failure_class": "runtime_error",
+        "failure_stage": "test",
+        "next_action": "repair",
+        "root_cause": "规则层检测到 NameError，通常与访问当前作用域内未定义的名称有关；请核对失败位置的变量或函数名称。",
+        "confidence": 0.75
+      }
+    },
+    {
+      "case_id": "type_mismatch",
+      "checks": {
+        "classification": true,
+        "stage": true,
+        "next_action": true,
+        "expected_reference_set": true,
+        "reference_integrity": true,
+        "diagnostic_support_rubric": true,
+        "no_unsupported_claim_without_evidence": true,
+        "schema": true
+      },
+      "passed": true,
+      "references": [
+        {
+          "pointer": "/test_case_results/0",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        },
+        {
+          "pointer": "/stderr",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        }
+      ],
+      "root_cause_determinable": true,
+      "specific_root_cause_supported": true,
+      "no_evidence_control": false,
+      "observed": {
+        "failure_class": "runtime_error",
+        "failure_stage": "test",
+        "next_action": "repair",
+        "root_cause": "规则层检测到运行时类型错误。",
+        "confidence": 0.8
+      }
+    },
+    {
+      "case_id": "index_out_of_bounds",
+      "checks": {
+        "classification": true,
+        "stage": true,
+        "next_action": true,
+        "expected_reference_set": true,
+        "reference_integrity": true,
+        "diagnostic_support_rubric": true,
+        "no_unsupported_claim_without_evidence": true,
+        "schema": true
+      },
+      "passed": true,
+      "references": [
+        {
+          "pointer": "/test_case_results/0",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        },
+        {
+          "pointer": "/stderr",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        }
+      ],
+      "root_cause_determinable": true,
+      "specific_root_cause_supported": true,
+      "no_evidence_control": false,
+      "observed": {
+        "failure_class": "runtime_error",
+        "failure_stage": "test",
+        "next_action": "repair",
+        "root_cause": "规则层检测到下标越界异常。",
+        "confidence": 0.85
+      }
+    },
+    {
+      "case_id": "division_by_zero",
+      "checks": {
+        "classification": true,
+        "stage": true,
+        "next_action": true,
+        "expected_reference_set": true,
+        "reference_integrity": true,
+        "diagnostic_support_rubric": true,
+        "no_unsupported_claim_without_evidence": true,
+        "schema": true
+      },
+      "passed": true,
+      "references": [
+        {
+          "pointer": "/test_case_results/0",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        },
+        {
+          "pointer": "/stderr",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        }
+      ],
+      "root_cause_determinable": true,
+      "specific_root_cause_supported": true,
+      "no_evidence_control": false,
+      "observed": {
+        "failure_class": "runtime_error",
+        "failure_stage": "test",
+        "next_action": "repair",
+        "root_cause": "规则层检测到 Python 除零异常。",
+        "confidence": 0.95
+      }
+    },
+    {
+      "case_id": "assertion_failure",
+      "checks": {
+        "classification": true,
+        "stage": true,
+        "next_action": true,
+        "expected_reference_set": true,
+        "reference_integrity": true,
+        "diagnostic_support_rubric": true,
+        "no_unsupported_claim_without_evidence": true,
+        "schema": true
+      },
+      "passed": true,
+      "references": [
+        {
+          "pointer": "/test_case_results/0",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        },
+        {
+          "pointer": "/stderr",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        }
+      ],
+      "root_cause_determinable": false,
+      "specific_root_cause_supported": null,
+      "no_evidence_control": false,
+      "observed": {
+        "failure_class": "test_failure",
+        "failure_stage": "test",
+        "next_action": "repair",
+        "root_cause": "规则层检测到 HumanEval/单元测试断言失败，属于测试阶段答案错误。",
+        "confidence": 0.95
+      }
+    },
+    {
+      "case_id": "missing_mapping_key",
+      "checks": {
+        "classification": true,
+        "stage": true,
+        "next_action": true,
+        "expected_reference_set": true,
+        "reference_integrity": true,
+        "diagnostic_support_rubric": true,
+        "no_unsupported_claim_without_evidence": true,
+        "schema": true
+      },
+      "passed": true,
+      "references": [
+        {
+          "pointer": "/test_case_results/0",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        },
+        {
+          "pointer": "/stderr",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        }
+      ],
+      "root_cause_determinable": true,
+      "specific_root_cause_supported": true,
+      "no_evidence_control": false,
+      "observed": {
+        "failure_class": "runtime_error",
+        "failure_stage": "test",
+        "next_action": "repair",
+        "root_cause": "规则层检测到 KeyError，通常与映射键访问失败有关；请结合原始失败位置核对键名及缺失键处理。",
+        "confidence": 0.75
+      }
+    },
+    {
+      "case_id": "execution_timeout",
+      "checks": {
+        "classification": true,
+        "stage": true,
+        "next_action": true,
+        "expected_reference_set": true,
+        "reference_integrity": true,
+        "diagnostic_support_rubric": true,
+        "no_unsupported_claim_without_evidence": true,
+        "schema": true
+      },
+      "passed": true,
+      "references": [
+        {
+          "pointer": "/stderr",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        }
+      ],
+      "root_cause_determinable": false,
+      "specific_root_cause_supported": null,
+      "no_evidence_control": false,
+      "observed": {
+        "failure_class": "timeout",
+        "failure_stage": "run",
+        "next_action": "repair",
+        "root_cause": "规则层检测到超时，通常是无限循环、阻塞输入或复杂度过高。",
+        "confidence": 0.95
+      }
+    },
+    {
+      "case_id": "docker_environment_unavailable",
+      "checks": {
+        "classification": true,
+        "stage": true,
+        "next_action": true,
+        "expected_reference_set": true,
+        "reference_integrity": true,
+        "diagnostic_support_rubric": true,
+        "no_unsupported_claim_without_evidence": true,
+        "schema": true
+      },
+      "passed": true,
+      "references": [
+        {
+          "pointer": "/stderr",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        }
+      ],
+      "root_cause_determinable": false,
+      "specific_root_cause_supported": null,
+      "no_evidence_control": false,
+      "observed": {
+        "failure_class": "environment_error",
+        "failure_stage": "environment",
+        "next_action": "fix_environment",
+        "root_cause": "规则层检测到运行环境或 Docker 不可用。",
+        "confidence": 0.95
+      }
+    },
+    {
+      "case_id": "policy_rejected",
+      "checks": {
+        "classification": true,
+        "stage": true,
+        "next_action": true,
+        "expected_reference_set": true,
+        "reference_integrity": true,
+        "diagnostic_support_rubric": true,
+        "no_unsupported_claim_without_evidence": true,
+        "schema": true
+      },
+      "passed": true,
+      "references": [
+        {
+          "pointer": "/stderr",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        }
+      ],
+      "root_cause_determinable": false,
+      "specific_root_cause_supported": null,
+      "no_evidence_control": false,
+      "observed": {
+        "failure_class": "unknown",
+        "failure_stage": "environment",
+        "next_action": "stop",
+        "root_cause": "The supplied failure evidence does not establish a specific root cause.",
+        "confidence": null
+      }
+    },
+    {
+      "case_id": "insufficient_evidence",
+      "checks": {
+        "classification": true,
+        "stage": true,
+        "next_action": true,
+        "expected_reference_set": true,
+        "reference_integrity": true,
+        "diagnostic_support_rubric": true,
+        "no_unsupported_claim_without_evidence": true,
+        "schema": true
+      },
+      "passed": true,
+      "references": [],
+      "root_cause_determinable": false,
+      "specific_root_cause_supported": null,
+      "no_evidence_control": true,
+      "observed": {
+        "failure_class": "unknown",
+        "failure_stage": "test",
+        "next_action": "collect_information",
+        "root_cause": "The supplied failure evidence does not establish a specific root cause.",
+        "confidence": null
+      }
+    },
+    {
+      "case_id": "assertion_without_exception_token",
+      "checks": {
+        "classification": true,
+        "stage": true,
+        "next_action": true,
+        "expected_reference_set": true,
+        "reference_integrity": true,
+        "diagnostic_support_rubric": true,
+        "no_unsupported_claim_without_evidence": true,
+        "schema": true
+      },
+      "passed": true,
+      "references": [
+        {
+          "pointer": "/test_case_results/0",
+          "path_and_identity_valid": true,
+          "summary_matches_observation": true
+        }
+      ],
+      "root_cause_determinable": false,
+      "specific_root_cause_supported": null,
+      "no_evidence_control": false,
+      "observed": {
+        "failure_class": "test_failure",
+        "failure_stage": "test",
+        "next_action": "repair",
+        "root_cause": "The supplied fixed tests failed; inspect the recorded assertions before changing the implementation.",
+        "confidence": null
+      }
+    },
+    {
+      "case_id": "successful_execution_control",
+      "checks": {
+        "classification": true,
+        "stage": true,
+        "next_action": true,
+        "expected_reference_set": true,
+        "reference_integrity": true,
+        "diagnostic_support_rubric": true,
+        "no_unsupported_claim_without_evidence": true,
+        "schema": true
+      },
+      "passed": true,
+      "references": [],
+      "root_cause_determinable": false,
+      "specific_root_cause_supported": null,
+      "no_evidence_control": false,
+      "observed": {
+        "failure_class": "none",
+        "failure_stage": "none",
+        "next_action": "none",
+        "root_cause": null,
+        "confidence": null
+      }
+    }
+  ],
+  "duration_seconds": 2.547
+}

@@ -28,3 +28,16 @@ docs/framework_sync_20261107.md text eol=lf
 docs/integration/receiver_checklist_v0.4.0.md text eol=lf
 docs/local_v2_handoff_v0.4.0.md text eol=lf
 docs/m1_readiness_20261105.md text eol=lf
+
+# Pre-integration inputs and evidence retain their recorded bytes.
+evals/dataset/*.jsonl -text
+evals/reports/*.json -text
+evals/runners/*.py text eol=lf
+docs/verification/pre_integration*.json -text
+python_service/tests/property/*.py text eol=lf
+python_service/tests/test_pre_integration_diagnosis.py text eol=lf
+python_service/requirements-hardening.txt text eol=lf
+evals/README.md text eol=lf
+docs/pre_integration_hardening_20261107.md text eol=lf
+docs/group_meeting_update_20261107.md text eol=lf
+docs/verification/diagnosis_benchmark_20261107.md text eol=lf

@@ -1,0 +1,352 @@
+{
+  "record_version": "1.0",
+  "date": "2026-11-07",
+  "timezone": "Asia/Shanghai",
+  "started_at": "2026-11-07T06:05:59+00:00",
+  "finished_at": "2026-11-07T06:30:38.242532+00:00",
+  "total_wall_time_seconds": 1479.243,
+  "scope": "B-only bounded hardening; uncommitted working tree, no formal P2/M1 or O receipt",
+  "git": {
+    "branch": "b/local-v2-adapter",
+    "head": "f4ed4caec4649afde8a99359513a638193c85e7d",
+    "committed": false,
+    "pushed": false,
+    "pre_existing_uncommitted_content_preserved": true
+  },
+  "environment": {
+    "python": "3.12.4",
+    "platform": "Windows-11-10.0.22631-SP0",
+    "pytest": "9.1.1",
+    "sdk": "1.17.0",
+    "hypothesis": "6.170.15",
+    "sortedcontainers": "2.4.0",
+    "hypothesis_location": "private .interop/hardening-tools target; runtime venv and locks unchanged",
+    "ruff": "ruff 0.16.4",
+    "docker_engine": "29.9.1",
+    "sandbox_runtime": {
+      "name": "python",
+      "version": "3.11.5"
+    },
+    "sandbox_packages": [
+      {
+        "name": "pytest",
+        "version": "8.3.5",
+        "source": "observed"
+      }
+    ],
+    "image_id": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+    "clean_environment_install": false
+  },
+  "docker_smoke": {
+    "record": "docs/verification/pre_integration_docker_smoke.json",
+    "result": "passed",
+    "counts": {
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "blocked": 0,
+      "total": 5
+    },
+    "physical_execution_calls": 4,
+    "duration_seconds": 19.157,
+    "uses_mock": false,
+    "real_docker": true,
+    "real_claude_api": false,
+    "cleanup_confirmed": true,
+    "remaining_owned_containers": [],
+    "initial_record": "docs/verification/pre_integration_docker_smoke_initial.json",
+    "total_physical_execution_calls_including_initial": 8,
+    "repeat_reason": "Ruff/harness error handling and source-snapshot recording were finalized; original run retained"
+  },
+  "diagnosis_benchmark": {
+    "dataset": "evals/dataset/diagnosis_cases.jsonl",
+    "dataset_sha256": "bdcb97bc95c775e6561ca9f1e7eb8bb7ac35f1a7b2105c6288a1a24bf72411e2",
+    "dataset_labels_unchanged": true,
+    "baseline": "evals/reports/diagnosis_eval_baseline.json",
+    "final": "evals/reports/diagnosis_eval.json",
+    "baseline_counts": {
+      "total": 16,
+      "passed": 14,
+      "failed": 2,
+      "skipped": 0
+    },
+    "final_counts": {
+      "total": 16,
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0
+    },
+    "metrics": {
+      "classification": {
+        "correct": 16,
+        "total": 16,
+        "rate": 1.0
+      },
+      "stage": {
+        "correct": 16,
+        "total": 16,
+        "rate": 1.0
+      },
+      "next_action": {
+        "correct": 16,
+        "total": 16,
+        "rate": 1.0
+      },
+      "diagnostic_support_rubric": {
+        "correct": 16,
+        "total": 16,
+        "rate": 1.0
+      },
+      "schema": {
+        "correct": 16,
+        "total": 16,
+        "rate": 1.0
+      }
+    },
+    "reference_metrics": {
+      "emitted": 22,
+      "valid_paths_and_identities": 22,
+      "matching_observation_summaries": 22
+    },
+    "no_evidence_controls": {
+      "total": 1,
+      "unsupported_specific_claims": 0
+    },
+    "support_rubric_before": {
+      "correct": 14,
+      "total": 16,
+      "rate": 0.875
+    },
+    "support_rubric_after": {
+      "correct": 16,
+      "total": 16,
+      "rate": 1.0
+    },
+    "rubric_limitation": "Predeclared observation markers plus conclusion-specific lexical cues; limited deterministic rubric, not an independent human semantic audit",
+    "duration_seconds": 2.734,
+    "uses_synthetic_facts": true,
+    "uses_real_rules": true,
+    "real_docker": false,
+    "real_claude_api": false,
+    "runner_invocations": 0,
+    "runs": 3,
+    "case_invocations_total": 48,
+    "distinct_cases": 16
+  },
+  "targeted_pytest": {
+    "counts": {
+      "total": 103,
+      "passed": 103,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "new_tests": 8,
+    "existing_tests": 95,
+    "counts_by_class": {
+      "tests.test_pre_integration_diagnosis": 5,
+      "tests.property.test_local_v2_properties": 3,
+      "tests.test_local_v2": 39,
+      "tests.test_local_v2_samples": 7,
+      "tests.test_local_v2_claude": 44,
+      "tests.test_error_signal_extractor": 5
+    },
+    "duration_seconds": 39.245,
+    "private_junit": "python_service/.interop/pre-integration/hardening-tests-20261107.xml",
+    "junit_sha256": "947f3f5bf0e60c3270ee69ee7be8a00b0f11a3d36eacaa14f57c1520823eced2",
+    "uses_synthetic_execution_backend": true,
+    "uses_in_memory_sdk_http": true,
+    "real_docker": false,
+    "real_claude_api": false,
+    "full_pytest_suite": false,
+    "runs": 2,
+    "unique_selected_tests": 103,
+    "test_invocations_total": 206,
+    "repeat_reason": "Final check after Ruff changes; both JUnit records retained"
+  },
+  "hypothesis": {
+    "properties": 3,
+    "max_examples_per_property": 30,
+    "final_run_passing_examples": 90,
+    "final_run_failing_examples": 0,
+    "invalid_examples": 0,
+    "deadline_ms": 2000,
+    "derandomize": true,
+    "database": null,
+    "statistics": [
+      [
+        30,
+        0,
+        0
+      ],
+      [
+        30,
+        0,
+        0
+      ],
+      [
+        30,
+        0,
+        0
+      ]
+    ],
+    "two_run_generated_examples_total": 180,
+    "counting_note": "90 generated examples are inside 3 pytest items, not 90 additional pytest tests"
+  },
+  "quality": {
+    "ruff": {
+      "result": "passed",
+      "files_checked": 6,
+      "diagnostics": [],
+      "version": "ruff 0.16.4",
+      "command": [
+        "ruff",
+        "check",
+        "--no-cache",
+        "--output-format",
+        "json",
+        "python_service/scripts/pre_integration_docker_smoke.py",
+        "evals/runners/run_diagnosis_eval.py",
+        "python_service/tests/test_pre_integration_diagnosis.py",
+        "python_service/tests/property/conftest.py",
+        "python_service/tests/property/test_local_v2_properties.py",
+        "python_service/app/analyzer/error_signal_extractor.py"
+      ],
+      "source_hashes": {
+        "python_service/scripts/pre_integration_docker_smoke.py": "17dbfb3e146610e50d21156ac8716e74170c54e6d6e3b8f23bac67ec3e5d6ab9",
+        "evals/runners/run_diagnosis_eval.py": "e2c0dbb02c0a5bc01dbcb7cd60d2125ebb8bf527a3b81e1d230c245c98220697",
+        "python_service/tests/test_pre_integration_diagnosis.py": "3755aadb76eccba87b5cbebdd689bee2ef5428012850e375028901aa9cd12f02",
+        "python_service/tests/property/conftest.py": "53ead5fffcca6ad8fd838bb1dbd54374ef9036ce7b7a86bc88ea747cf2d4e9b3",
+        "python_service/tests/property/test_local_v2_properties.py": "6d302ed82576cda9a79d7ed54d6042c0191e6feb769a5d737e4d2a649d659d96",
+        "python_service/app/analyzer/error_signal_extractor.py": "baa4fd07cf93e469c5a414fe1fbe848d4625e9f9bddf9ac276b62b1f466a21e7"
+      }
+    },
+    "optional_tools": [
+      {
+        "name": "Bandit",
+        "status": "skipped",
+        "reason": "Not installed in selected environment and no CLI found; no installation attempted"
+      },
+      {
+        "name": "pip-audit",
+        "status": "skipped",
+        "reason": "Not installed in selected environment and no CLI found; no installation attempted"
+      }
+    ]
+  },
+  "attempts_and_preserved_failures": [
+    {
+      "step": "Docker restricted preflight",
+      "status": "permission_denied",
+      "resolution": "Authorized process access; unchanged engine and security policy"
+    },
+    {
+      "step": "Initial isolated Hypothesis installation",
+      "status": "package_resolution_failed_in_restricted_process",
+      "resolution": "Approved PyPI installation into private target succeeded"
+    },
+    {
+      "step": "Benchmark restricted bootstrap",
+      "status": "temporary_directory_and_SQLite_access_denied",
+      "cases_run": 0,
+      "resolution": "Authorized process rerun; owned leftover temp directories cleaned"
+    },
+    {
+      "step": "Diagnostic baseline",
+      "status": "14 passed; 2 explanation-rubric failures",
+      "failed_cases": [
+        "undefined_name",
+        "missing_mapping_key"
+      ],
+      "resolution": "Only B rule explanations improved; labels and classifications unchanged; baseline retained"
+    },
+    {
+      "step": "Initial Ruff",
+      "status": "11 diagnostics",
+      "resolution": "7 import/noqa fixes and 4 explicit exception/string-concatenation fixes; final check zero diagnostics"
+    }
+  ],
+  "boundaries": {
+    "public_schema_changed": false,
+    "external_operations_added": false,
+    "a_c_o_code_changed": false,
+    "docker_security_policy_changed": false,
+    "automatic_image_pull": false,
+    "real_claude_api_calls": 0,
+    "shared_framework_modified": false,
+    "runtime_dependency_locks_changed": false
+  },
+  "incomplete": [
+    {
+      "item": "Bandit and pip-audit",
+      "reason": "Optional tools unavailable; skipped instead of installing an audit stack"
+    },
+    {
+      "item": "General semantic diagnosis accuracy",
+      "reason": "16 curated synthetic cases and a limited deterministic rubric; no independent held-out or human-labeled evaluation"
+    },
+    {
+      "item": "CPU/peak-memory monitoring and structured traceback",
+      "reason": "Not changed in this bounded task"
+    },
+    {
+      "item": "Clean dependency installation, full Docker/P2 matrix, live Claude, independent O receipt and real A/C integration",
+      "reason": "Outside this run; small B smoke does not replace these requirements"
+    }
+  ],
+  "task_files": [
+    ".gitattributes",
+    "README.md",
+    "python_service/app/analyzer/error_signal_extractor.py",
+    "python_service/scripts/pre_integration_docker_smoke.py",
+    "python_service/requirements-hardening.txt",
+    "python_service/tests/test_pre_integration_diagnosis.py",
+    "python_service/tests/property/conftest.py",
+    "python_service/tests/property/test_local_v2_properties.py",
+    "evals/README.md",
+    "evals/dataset/diagnosis_cases.jsonl",
+    "evals/runners/run_diagnosis_eval.py",
+    "evals/reports/diagnosis_eval_baseline.json",
+    "evals/reports/diagnosis_eval_after_explanations.json",
+    "evals/reports/diagnosis_eval.json",
+    "docs/verification/pre_integration_docker_smoke_initial.json",
+    "docs/verification/pre_integration_docker_smoke.json",
+    "docs/verification/diagnosis_benchmark_20261107.md",
+    "docs/verification/pre_integration_hardening_20261107.json",
+    "docs/pre_integration_hardening_20261107.md",
+    "docs/group_meeting_update_20261107.md"
+  ],
+  "artifact_sha256": {
+    ".gitattributes": "2cb27e3d94c12acdac8b4b9269a47d1892125cc76adfb282212524c66346e0f0",
+    "README.md": "6fcb7e496ea58e1ab30a37586ae441c152f9133cf0d153d80d183f17e00cf28d",
+    "python_service/app/analyzer/error_signal_extractor.py": "baa4fd07cf93e469c5a414fe1fbe848d4625e9f9bddf9ac276b62b1f466a21e7",
+    "python_service/scripts/pre_integration_docker_smoke.py": "17dbfb3e146610e50d21156ac8716e74170c54e6d6e3b8f23bac67ec3e5d6ab9",
+    "python_service/requirements-hardening.txt": "b889115bb5366e43d99cd297e1cafab5d4ca5fa451d69b03eee0474734722c05",
+    "python_service/tests/test_pre_integration_diagnosis.py": "3755aadb76eccba87b5cbebdd689bee2ef5428012850e375028901aa9cd12f02",
+    "python_service/tests/property/conftest.py": "53ead5fffcca6ad8fd838bb1dbd54374ef9036ce7b7a86bc88ea747cf2d4e9b3",
+    "python_service/tests/property/test_local_v2_properties.py": "6d302ed82576cda9a79d7ed54d6042c0191e6feb769a5d737e4d2a649d659d96",
+    "evals/README.md": "7d1e23917787560ef943ed6f5f62039b50ababa8ebaa392bfd48cc3b51b75ea1",
+    "evals/dataset/diagnosis_cases.jsonl": "bdcb97bc95c775e6561ca9f1e7eb8bb7ac35f1a7b2105c6288a1a24bf72411e2",
+    "evals/runners/run_diagnosis_eval.py": "e2c0dbb02c0a5bc01dbcb7cd60d2125ebb8bf527a3b81e1d230c245c98220697",
+    "evals/reports/diagnosis_eval_baseline.json": "af32881bccb2e0b322070dda9aefaab1f6371dea0032e780a44ba9a1f77c01b9",
+    "evals/reports/diagnosis_eval_after_explanations.json": "383cd6e3c906db42dec995c206e7dc821469a09fddc3101f6cfd8c968bafdabf",
+    "evals/reports/diagnosis_eval.json": "d8f515b3c5a2bdb13143e1a5af0fe24e7e97bba762b1daca07f9c4fdf404aad4",
+    "docs/verification/pre_integration_docker_smoke_initial.json": "db29c31717176db1e78c471f8afbc26b08fa3b97a0dbefa50b1bfa8338ba62a6",
+    "docs/verification/pre_integration_docker_smoke.json": "2acb927171bb4abe3aa0b293608f4f8d42e490fa4caab11e0986d1e76563a434",
+    "docs/verification/diagnosis_benchmark_20261107.md": "fd5bbca15917be73ba9211bd74d69b1a15ba0c66a433c61db95f9b00cb6b1501",
+    "docs/pre_integration_hardening_20261107.md": "8a4080e651ff135d2408034aa22d6584530758929cbce7b1f9b752f25dbaae25",
+    "docs/group_meeting_update_20261107.md": "c3bdc17e648837ad2991e7bb934e6bcd2508dbaaf190211c40ff51aed1af69f8"
+  },
+  "counting_note": "Counts are per suite. Primary pytest total is 103. Do not add file counts, generated examples, repeated runs, or benchmark rows into one test/task count.",
+  "reports_generated_at": "2026-11-07T06:29:08.921100+00:00",
+  "final_material_checks": {
+    "result": "passed",
+    "task_files": 20,
+    "local_links_checked": 66,
+    "source_and_artifact_hashes": "passed",
+    "dataset_unchanged_across_three_runs": true,
+    "pre_existing_paths_retained": true,
+    "shared_worktree_clean": true,
+    "public_contract_sha256": "07382d82cce2c748b39110b6107575acc87af2ed86e15abaddd208f84b8aceae"
+  }
+}
