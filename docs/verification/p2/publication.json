@@ -1,0 +1,21 @@
+{
+  "verified_at": "2026-10-26T07:11:43.650Z",
+  "result": "passed",
+  "repository": "https://github.com/DMoon22222/SRPAgent-Test-Demo01",
+  "branch": "b/local-v2-adapter",
+  "tool_commit": "b3239cadf26da6360862f84a6da80f10717e8dcc",
+  "remote_head_at_verification": "b3239cadf26da6360862f84a6da80f10717e8dcc",
+  "tool_commit_url": "https://github.com/DMoon22222/SRPAgent-Test-Demo01/commit/b3239cadf26da6360862f84a6da80f10717e8dcc",
+  "runtime_version": "0.3.1",
+  "runtime_baseline_commit": "441077ac5b54d122469845bce41ef62dfd0f24fe",
+  "publication": "pushed_to_delivery_branch",
+  "merged": false,
+  "o_receipt": "not_received",
+  "formal_p2_acceptance": "blocked",
+  "verified_commit_files": 46,
+  "snapshot_sha256": "e2e90892c48b6f09d54262a473d54bccd510670a3ea8b7d6360b52f7b4b6bcb8",
+  "catalog_file_sha256": "db5817b06456944d7c10a5fa851b1c6eb8919fa865b8ce48964d951960f7ba13",
+  "archive_sha256": "ae640d4adbe889e7665d715974b2bdb315b96dd5b8f4075d54838853f0529c1e",
+  "evidence_note": "Assembly catalog/receipt retain their historical local_uncommitted_candidate status. This later publication record binds the unchanged snapshot to an actually pushed commit; later documentation-only commits may advance the branch.",
+  "private_materials": "Personal files, .interop, ZIP, raw journals and hidden originals excluded from Git"
+}

@@ -1,0 +1,117 @@
+{
+  "updated_date": "2026-10-26",
+  "target_date": "2026-10-30",
+  "phase": "b_technical_matrix_completed_formal_acceptance_pending",
+  "overall_result": "blocked",
+  "note": "All B-owned technical rows have current evidence; formal TEST-001/context/consumer/O acceptance remain blocked. Real A/C algorithms are not claimed.",
+  "items": [
+    {
+      "id": "bootstrap.fixed_runtime_config_and_contract",
+      "status": "passed",
+      "evidence": "bootstrap_validation.json",
+      "scope": "Technical bootstrap only"
+    },
+    {
+      "id": "bootstrap.public_factories_and_capabilities",
+      "status": "passed",
+      "evidence": "bootstrap_validation.json",
+      "scope": "Technical bootstrap only"
+    },
+    {
+      "id": "bootstrap.real_static_failure",
+      "status": "passed",
+      "evidence": "bootstrap_validation.json",
+      "scope": "Technical bootstrap only"
+    },
+    {
+      "id": "bootstrap.static_feedback_without_execution",
+      "status": "passed",
+      "evidence": "bootstrap_validation.json",
+      "scope": "Technical bootstrap only"
+    },
+    {
+      "id": "bootstrap.locked_image_available",
+      "status": "passed",
+      "evidence": "bootstrap_validation.json",
+      "scope": "Technical bootstrap only"
+    },
+    {
+      "id": "bootstrap.real_execution_from_portable_config",
+      "status": "passed",
+      "evidence": "bootstrap_validation.json",
+      "scope": "Technical bootstrap only"
+    },
+    {
+      "id": "bootstrap.real_o_b_with_mock_a_c",
+      "status": "passed",
+      "evidence": "bootstrap_validation.json",
+      "scope": "Technical bootstrap only"
+    },
+    {
+      "id": "bootstrap.no_new_remaining_containers",
+      "status": "passed",
+      "evidence": "bootstrap_validation.json",
+      "scope": "Technical bootstrap only"
+    },
+    {
+      "id": "p2.multi_round_history",
+      "status": "passed",
+      "evidence": "lineage_validation.json",
+      "scope": "Real B/Docker and original O with declared A/C Mock candidate/fault adapter; technical self-verification, not formal O receipt"
+    },
+    {
+      "id": "p2.lineage_and_fixed_tests",
+      "status": "passed",
+      "evidence": "lineage_validation.json",
+      "scope": "Real B/Docker and original O with declared A/C Mock candidate/fault adapter; technical self-verification, not formal O receipt"
+    },
+    {
+      "id": "p2.reference_lifecycle",
+      "status": "passed",
+      "evidence": "boundaries_validation.json",
+      "scope": "Real B/original local transport, artifact resolver/store and O ledger; three complete O fault runs, declared fixtures; technical self-verification, not O receipt"
+    },
+    {
+      "id": "p2.budget_replay_accounting",
+      "status": "passed",
+      "evidence": "boundaries_validation.json",
+      "scope": "Real B/original local transport, artifact resolver/store and O ledger; three complete O fault runs, declared fixtures; technical self-verification, not O receipt"
+    },
+    {
+      "id": "p2.unknown_late_partial",
+      "status": "passed",
+      "evidence": "boundaries_validation.json",
+      "scope": "Real B/original local transport, artifact resolver/store and O ledger; three complete O fault runs, declared fixtures; technical self-verification, not O receipt"
+    },
+    {
+      "id": "p2.protected_receiver_views",
+      "status": "passed",
+      "evidence": "protected_validation.json",
+      "scope": "Six original O/real B Docker runs with declared A/C Mock and protected fault fixtures; canary plus structural checks; technical self-verification, not formal O receipt"
+    },
+    {
+      "id": "formal.TEST-001_material_lock",
+      "status": "blocked",
+      "evidence": "../../integration/p2_external_dependencies.json",
+      "scope": "External material/confirmation pending; no invented values"
+    },
+    {
+      "id": "formal.actual_target_a_context",
+      "status": "blocked",
+      "evidence": "../../integration/p2_external_dependencies.json",
+      "scope": "External material/confirmation pending; no invented values"
+    },
+    {
+      "id": "formal.consumer_confirmation",
+      "status": "blocked",
+      "evidence": "../../integration/p2_external_dependencies.json",
+      "scope": "External material/confirmation pending; no invented values"
+    },
+    {
+      "id": "formal.independent_o_receipt",
+      "status": "blocked",
+      "evidence": "../../integration/p2_external_dependencies.json",
+      "scope": "External material/confirmation pending; no invented values"
+    }
+  ]
+}

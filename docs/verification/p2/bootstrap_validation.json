@@ -1,0 +1,130 @@
+{
+  "verified_at": "2026-10-26T03:08:34.534Z",
+  "result": "passed",
+  "scope": "P2 bootstrap technical self-verification only",
+  "implementation_version": "0.3.1",
+  "checks": [
+    {
+      "name": "fixed_runtime_config_and_contract",
+      "result": "passed",
+      "evidence_kind": "real_adapter",
+      "runtime_source_files": 8
+    },
+    {
+      "name": "public_factories_and_capabilities",
+      "result": "passed",
+      "evidence_kind": "real_adapter",
+      "factories": {
+        "A": "reliable_codegen.mocks:create_mock_module",
+        "B": "srp_b:create_module",
+        "C": "reliable_codegen.mocks:create_mock_module"
+      }
+    },
+    {
+      "name": "real_static_failure",
+      "result": "passed",
+      "evidence_kind": "real_static",
+      "report_id": "static-21a95ce6050f4a8cbb8415c82e83e313"
+    },
+    {
+      "name": "static_feedback_without_execution",
+      "result": "passed",
+      "evidence_kind": "real_rules",
+      "diagnosis_id": "diagnosis-23d002351f91409695b5e34d6b65ca03"
+    },
+    {
+      "name": "locked_image_available",
+      "result": "passed",
+      "evidence_kind": "real_environment_probe",
+      "image_digest": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32"
+    },
+    {
+      "name": "real_execution_from_portable_config",
+      "result": "passed",
+      "evidence_kind": "real_docker",
+      "execution_id": "execution-6cee7b99a1af414ba267c1a6637201b1",
+      "code_hash": "d7a21898a23011ca7ed4c66206cf94ff230326c9dc0ecbf548ca923d975cc1cd",
+      "test_hash": "5729e7d3ee8a426edef6071d2e04a9d6bdfd896c5aa741b2d8e3de2bc31b6031",
+      "config_hash": "a9c855c8f0b4905690af2bf178b5795e83d40d8b288e934ec0fd65a4e2b0b8d5",
+      "actual_runtime": {
+        "name": "python",
+        "version": "3.11.5"
+      },
+      "package_versions": [
+        {
+          "name": "pytest",
+          "version": "8.3.5",
+          "source": "observed"
+        }
+      ]
+    },
+    {
+      "name": "real_o_b_with_mock_a_c",
+      "result": "passed",
+      "evidence_kind": "mixed",
+      "run_id": "run-010f0783b19a46388c23b8609f40ed6e",
+      "trace_id": "trace-52d8489f90164de3b39800b78a56a0e5",
+      "terminal": "accepted",
+      "iterations": 1,
+      "routing_mode": "adaptive_rag",
+      "used_budget": {
+        "tokens": 0,
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "execution_calls": 3,
+        "wall_time_ms": 10297
+      },
+      "o_receipt": "not_received"
+    },
+    {
+      "name": "no_new_remaining_containers",
+      "result": "passed",
+      "evidence_kind": "real_environment_probe"
+    }
+  ],
+  "docker_requested": true,
+  "formal_p2_acceptance": "blocked",
+  "o_receipt": "not_received",
+  "model_calls": 0,
+  "actual_target_a_context_verified": false,
+  "external_dependencies": "docs/integration/p2_external_dependencies.json",
+  "raw_records": "Private python_service/.interop/p2-bootstrap directory; not committed",
+  "source_revision": "441077ac5b54d122469845bce41ef62dfd0f24fe",
+  "public_contract_sha256": "07382d82cce2c748b39110b6107575acc87af2ed86e15abaddd208f84b8aceae",
+  "config_canonical_sha256": "643eeb7473dea785a5dd0fe4c61d5804400dcc47fcc6f13c63d19b4298267c0e",
+  "overlay_state": "Uncommitted P2 delivery tools; fixed 0.3.1 runtime is unchanged",
+  "overlay_hashes": {
+    "config": "4f41e60fd8b5f11ee0c8a53cfad7fa4bb6490631e5911a26d1ee8c992e231dcd",
+    "manifest": "11ab65b3a6d4192ddfa89eeaf6e444deb9a24c5dccc279ee0c817aec6aa1075c",
+    "driver": "dcd723adaeb76336f519a763fcbaaa293f20ee2574c9b861f185b873ad5535a2",
+    "tests": "6c93015014499e98cd7f6ef401b820b8f513a0e074be3306d8457dfe3433e58c",
+    "dependencies": "05c4dbfc5f74c958fa077a430d5febb4c3538011b5fcf55a78cbaac121800671"
+  },
+  "overlay_files": {
+    "config": "config.b-local.p2.example.json",
+    "manifest": "p2_handoff_manifest_v0.3.1.json",
+    "driver": "verify_p2_local.py",
+    "tests": "test_local_v2_p2.py",
+    "dependencies": "p2_external_dependencies.json"
+  },
+  "host_python": "3.12.4",
+  "host_packages": {
+    "pydantic": "2.14.1",
+    "jsonschema": "4.26.0",
+    "pytest": "9.1.1"
+  },
+  "framework_git_commit": "d3f46741bab412886ad39e5f7c8fac52741e506e",
+  "config_overrides": {
+    "B.options.state_dir": "Private directory unique to this run",
+    "output_dir": "Private O directory unique to this run"
+  },
+  "docker_engine": "29.9.1",
+  "image_digest": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+  "unverified": [
+    "Full P2 multi-round/interface matrix",
+    "TEST-001 formal material lock",
+    "Actual target A tokenizer/context metadata",
+    "Independent O receipt",
+    "Real A/C algorithms"
+  ]
+}

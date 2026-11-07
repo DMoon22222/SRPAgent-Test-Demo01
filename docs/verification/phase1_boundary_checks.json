@@ -1,0 +1,126 @@
+{
+  "head": "b4a1684fc44a088ca7dab1cf0ff572bad225ca7c",
+  "tracked_changes": [
+    "python_service/srp_b/claude.py",
+    "python_service/srp_b/diagnosis.py",
+    "python_service/srp_b/sandbox.py"
+  ],
+  "historical_hashes_unchanged": {
+    ".gitattributes": true,
+    "README.md": true,
+    "python_service/app/analyzer/error_signal_extractor.py": true,
+    "python_service/scripts/pre_integration_docker_smoke.py": true,
+    "python_service/requirements-hardening.txt": true,
+    "python_service/tests/test_pre_integration_diagnosis.py": true,
+    "python_service/tests/property/conftest.py": true,
+    "python_service/tests/property/test_local_v2_properties.py": true,
+    "evals/README.md": true,
+    "evals/dataset/diagnosis_cases.jsonl": true,
+    "evals/runners/run_diagnosis_eval.py": true,
+    "evals/reports/diagnosis_eval_baseline.json": true,
+    "evals/reports/diagnosis_eval_after_explanations.json": true,
+    "evals/reports/diagnosis_eval.json": true,
+    "docs/verification/pre_integration_docker_smoke_initial.json": true,
+    "docs/verification/pre_integration_docker_smoke.json": true,
+    "docs/verification/diagnosis_benchmark_20261107.md": true,
+    "docs/verification/pre_integration_hardening_20261107.json": true,
+    "docs/pre_integration_hardening_20261107.md": true,
+    "docs/group_meeting_update_20261107.md": true,
+    "docs/b_group_role_and_implemented_features.md": true,
+    "docs/pre_integration_publication_20261107.md": true,
+    "docs/verification/pre_integration_publication_20261107.json": true
+  },
+  "protected_user_files_unchanged": {
+    "Test.py": true,
+    "docs/b_group_research_and_delivery_plan.md": true,
+    "docs/group_meeting_brief_20261010.md": true
+  },
+  "pico_directory_retained": true,
+  "sandbox_ast_unchanged": {
+    "validate_policy": true,
+    "create_args": true,
+    "_cleanup": true,
+    "bounded_command": true,
+    "parse_cases": true,
+    "read_report": true
+  },
+  "shared_worktree_clean": true,
+  "shared_head": "5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014",
+  "public_contract_sha256": "07382d82cce2c748b39110b6107575acc87af2ed86e15abaddd208f84b8aceae",
+  "source_snapshot_matches_current": {
+    "docs/verification/phase1_docker_smoke_verified.json": {
+      "python_service/srp_b/__init__.py": true,
+      "python_service/srp_b/claude.py": true,
+      "python_service/srp_b/confidence.py": true,
+      "python_service/srp_b/diagnosis.py": true,
+      "python_service/srp_b/module.py": true,
+      "python_service/srp_b/resource_monitor.py": true,
+      "python_service/srp_b/samples.py": true,
+      "python_service/srp_b/sandbox.py": true,
+      "python_service/srp_b/state.py": true,
+      "python_service/srp_b/structured_errors.py": true,
+      "python_service/scripts/phase1_docker_smoke.py": true,
+      "docker/b-local/Dockerfile": true
+    },
+    "docs/verification/phase1_ruff_verified.json": {
+      "python_service/srp_b/structured_errors.py": true,
+      "python_service/srp_b/confidence.py": true,
+      "python_service/srp_b/resource_monitor.py": true,
+      "python_service/srp_b/diagnosis.py": true,
+      "python_service/srp_b/sandbox.py": true,
+      "python_service/srp_b/claude.py": true,
+      "python_service/tests/test_phase1_traceback.py": true,
+      "python_service/tests/test_phase1_confidence.py": true,
+      "python_service/tests/test_phase1_resource_monitor.py": true,
+      "python_service/tests/test_phase1_eval_metrics.py": true,
+      "python_service/scripts/phase1_docker_smoke.py": true,
+      "evals/runners/run_diagnosis_eval_phase1.py": true
+    },
+    "evals/reports/diagnosis_eval_final_phase1_verified.json": {
+      "python_service/srp_b/diagnosis.py": true,
+      "python_service/srp_b/structured_errors.py": true,
+      "python_service/srp_b/confidence.py": true,
+      "evals/runners/run_diagnosis_eval_phase1.py": true
+    }
+  },
+  "historical_test_failures": {
+    "same_node_ids_on_head": true,
+    "count": 7,
+    "reason": "IMPLEMENTATION_VERSION_MISMATCH: current B 0.4.0 versus preserved P2 manifest 0.3.1",
+    "node_ids": [
+      "tests.test_local_v2_p2::test_bootstrap_accepts_config_and_manifest_outside_b_checkout",
+      "tests.test_local_v2_p2::test_bootstrap_rejects_wrong_contract_digest",
+      "tests.test_local_v2_p2::test_fixed_bundle_matches_installed_runtime_and_public_contract",
+      "tests.test_local_v2_p2::test_public_config_loads_real_static_and_diagnosis_without_docker",
+      "tests.test_local_v2_p2_delivery::test_delivery_audit_is_read_only_and_retains_formal_blockers",
+      "tests.test_local_v2_p2_delivery::test_formal_pass_cannot_be_inferred_from_technical_matrix",
+      "tests.test_local_v2_p2_delivery::test_new_catalog_does_not_hide_stale_historical_evidence"
+    ],
+    "wrapper_summaries": {
+      "workspace": {
+        "node_id": "tests.test_local_v2_p2::test_bootstrap_accepts_config_and_manifest_outside_b_checkout",
+        "error_code": "IMPLEMENTATION_VERSION_MISMATCH",
+        "result": "failed",
+        "model_calls": 0
+      },
+      "head": {
+        "node_id": "tests.test_local_v2_p2::test_bootstrap_accepts_config_and_manifest_outside_b_checkout",
+        "error_code": "IMPLEMENTATION_VERSION_MISMATCH",
+        "result": "failed",
+        "model_calls": 0
+      }
+    },
+    "head_runtime_snapshot": "python_service/.interop/phase1/head-runtime/snapshot.json",
+    "head_runtime_snapshot_sha256": "b8c125c4d74bbda17b8feae54ddc1184f81298517f25e72cec585fda3e9464f5",
+    "junit": "python_service/.interop/phase1/head-historical-checks-confirmed.xml",
+    "junit_sha256": "74375ee1eaefa814db82356cab89200069090647ad92ba6e3311b0f9bf2567dd"
+  },
+  "runtime_dependency_locks_changed": false,
+  "public_schema_changed": false,
+  "shared_framework_modified": false,
+  "a_c_o_business_code_changed": false,
+  "docker_security_policy_changed": false,
+  "committed": false,
+  "pushed": false,
+  "merged": false
+}

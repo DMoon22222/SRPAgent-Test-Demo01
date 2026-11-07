@@ -1,0 +1,255 @@
+{
+  "record_version": "1.0",
+  "verified_at": "2026-11-07T06:09:47.732Z",
+  "implementation_version": "0.4.0",
+  "source_head": "f4ed4caec4649afde8a99359513a638193c85e7d",
+  "host": {
+    "python": "3.12.4",
+    "platform": "Windows-11-10.0.22631-SP0"
+  },
+  "image": "srp-b-python:0.3.0",
+  "mock": false,
+  "real_docker": true,
+  "real_claude_api": false,
+  "model_calls": 0,
+  "scope": "B-only smoke; fixed public synthetic fixtures, no A/C/O loop or formal receipt",
+  "cases": [
+    {
+      "case_id": "SUCCESS",
+      "result": "passed",
+      "evidence_kind": "real_docker",
+      "execution_id": "execution-4c5d36ba0f1b48248862e38f32ba20a3",
+      "execution_status": "completed",
+      "test_outcome": "passed",
+      "exit_code": 0,
+      "termination_reason": "normal",
+      "tests_total": 1,
+      "tests_passed": 1,
+      "code_hash": "d7a21898a23011ca7ed4c66206cf94ff230326c9dc0ecbf548ca923d975cc1cd",
+      "test_hash": "5729e7d3ee8a426edef6071d2e04a9d6bdfd896c5aa741b2d8e3de2bc31b6031",
+      "execution_config_hash": "cb474e9349e85a02e3984d89b84bb37ba6a7e928e8421f9166c860b0e19cf78d",
+      "actual_runtime": {
+        "name": "python",
+        "version": "3.11.5"
+      },
+      "image_digest": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+      "isolation_guarantees": {
+        "network": "none",
+        "root_read_only": true,
+        "workspace_read_only": true,
+        "allowed_write_paths": [
+          "tmp"
+        ],
+        "memory_mb": 256,
+        "cpu_limit": 1,
+        "max_processes": 16,
+        "user": "65534:65534",
+        "capabilities": "dropped",
+        "output_limit_bytes": 1048576,
+        "init_process": true,
+        "write_storage": "bounded tmpfs plus a private report file",
+        "container_cleanup_confirmed": true
+      },
+      "resource_usage": {
+        "wall_time_ms": 5516.0,
+        "cpu_time_ms": null,
+        "peak_memory_bytes": null,
+        "measurement_status": "unknown",
+        "notes": [
+          "Target resource measurements are unavailable."
+        ]
+      },
+      "stdout_retained_bytes": 179,
+      "stdout_truncated": false,
+      "execution_calls": 1,
+      "duration_seconds": 5.656
+    },
+    {
+      "case_id": "TEST_FAILED",
+      "result": "passed",
+      "evidence_kind": "real_docker",
+      "execution_id": "execution-1b26e1c76f95474e923e5277dc3bfc27",
+      "execution_status": "completed",
+      "test_outcome": "failed",
+      "exit_code": 1,
+      "termination_reason": "normal",
+      "tests_total": 1,
+      "tests_passed": 0,
+      "code_hash": "e63bb6a8e401e7249842a537a11e047e756e48ccb346c13c18232fa1ec15294a",
+      "test_hash": "5729e7d3ee8a426edef6071d2e04a9d6bdfd896c5aa741b2d8e3de2bc31b6031",
+      "execution_config_hash": "cb474e9349e85a02e3984d89b84bb37ba6a7e928e8421f9166c860b0e19cf78d",
+      "actual_runtime": {
+        "name": "python",
+        "version": "3.11.5"
+      },
+      "image_digest": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+      "isolation_guarantees": {
+        "network": "none",
+        "root_read_only": true,
+        "workspace_read_only": true,
+        "allowed_write_paths": [
+          "tmp"
+        ],
+        "memory_mb": 256,
+        "cpu_limit": 1,
+        "max_processes": 16,
+        "user": "65534:65534",
+        "capabilities": "dropped",
+        "output_limit_bytes": 1048576,
+        "init_process": true,
+        "write_storage": "bounded tmpfs plus a private report file",
+        "container_cleanup_confirmed": true
+      },
+      "resource_usage": {
+        "wall_time_ms": 4797.0,
+        "cpu_time_ms": null,
+        "peak_memory_bytes": null,
+        "measurement_status": "unknown",
+        "notes": [
+          "Target resource measurements are unavailable."
+        ]
+      },
+      "stdout_retained_bytes": 583,
+      "stdout_truncated": false,
+      "execution_calls": 1,
+      "diagnosis": {
+        "failure_class": "test_failure",
+        "evidence_refs": [
+          {
+            "kind": "test_result",
+            "artifact_id": "execution-1b26e1c76f95474e923e5277dc3bfc27",
+            "pointer": "/test_case_results/0",
+            "summary": "assert -1 == 5\n +  where -1 = add(2, 3)\ntests/test_main.py:4: in test_add\n    assert add(2, 3) == 5\nE   assert -1 == 5\nE    +  where -1 = add(2, 3)"
+          },
+          {
+            "kind": "log_span",
+            "artifact_id": "execution-1b26e1c76f95474e923e5277dc3bfc27",
+            "pointer": "/stdout",
+            "summary": "F                                                                        [100%]\n=================================== FAILURES ===================================\n___________________________________ test_add ___________________________________\ntests/test_main.py:4: in test_add\n    assert add(2, 3) == 5\nE   assert -1 == 5\nE    +  where -1 = add(2, 3)\n---------------- generated xml file: /workspace/tmp/b-junit.xml ----------------\n=========================== short test summary info ============================\n"
+          }
+        ]
+      },
+      "duration_seconds": 5.062
+    },
+    {
+      "case_id": "TIMEOUT",
+      "result": "passed",
+      "evidence_kind": "real_docker",
+      "execution_id": "execution-c71cfad66554461aafbded561b63b905",
+      "execution_status": "timeout",
+      "test_outcome": "unknown",
+      "exit_code": null,
+      "termination_reason": "timeout",
+      "tests_total": null,
+      "tests_passed": null,
+      "code_hash": "04ae3860df7072257d8398cdb417cf28fbcbdabd863151f7b47d811d808ed7ed",
+      "test_hash": "5729e7d3ee8a426edef6071d2e04a9d6bdfd896c5aa741b2d8e3de2bc31b6031",
+      "execution_config_hash": "c002ec9adfe5eb54a515377a4e9560fb223c04ac9cf13dd3ff05820ee297201b",
+      "actual_runtime": {
+        "name": "python",
+        "version": "3.11.5"
+      },
+      "image_digest": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+      "isolation_guarantees": {
+        "network": "none",
+        "root_read_only": true,
+        "workspace_read_only": true,
+        "allowed_write_paths": [
+          "tmp"
+        ],
+        "memory_mb": 256,
+        "cpu_limit": 1,
+        "max_processes": 16,
+        "user": "65534:65534",
+        "capabilities": "dropped",
+        "output_limit_bytes": 1048576,
+        "init_process": true,
+        "write_storage": "bounded tmpfs plus a private report file",
+        "container_cleanup_confirmed": true
+      },
+      "resource_usage": {
+        "wall_time_ms": 4453.0,
+        "cpu_time_ms": null,
+        "peak_memory_bytes": null,
+        "measurement_status": "unknown",
+        "notes": [
+          "Target resource measurements are unavailable."
+        ]
+      },
+      "stdout_retained_bytes": 0,
+      "stdout_truncated": false,
+      "execution_calls": 1,
+      "duration_seconds": 4.578
+    },
+    {
+      "case_id": "OUTPUT_LIMIT",
+      "result": "passed",
+      "evidence_kind": "real_docker",
+      "execution_id": "execution-25a438246e0b449598005ecc5ce062da",
+      "execution_status": "policy_rejected",
+      "test_outcome": "unknown",
+      "exit_code": null,
+      "termination_reason": "policy",
+      "tests_total": null,
+      "tests_passed": null,
+      "code_hash": "e0b2f3c8fc5c6ded0e3ac8be7244cc3e9d7a2fa017cd10239c879079a9c269c1",
+      "test_hash": "c2f126cc45ea7132e8a963d66a210e763a734f71fae1bc0e60303eb22e9f9c7f",
+      "execution_config_hash": "cb474e9349e85a02e3984d89b84bb37ba6a7e928e8421f9166c860b0e19cf78d",
+      "actual_runtime": {
+        "name": "python",
+        "version": "3.11.5"
+      },
+      "image_digest": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+      "isolation_guarantees": {
+        "network": "none",
+        "root_read_only": true,
+        "workspace_read_only": true,
+        "allowed_write_paths": [
+          "tmp"
+        ],
+        "memory_mb": 256,
+        "cpu_limit": 1,
+        "max_processes": 16,
+        "user": "65534:65534",
+        "capabilities": "dropped",
+        "output_limit_bytes": 1048576,
+        "init_process": true,
+        "write_storage": "bounded tmpfs plus a private report file",
+        "container_cleanup_confirmed": true
+      },
+      "resource_usage": {
+        "wall_time_ms": 5157.0,
+        "cpu_time_ms": null,
+        "peak_memory_bytes": null,
+        "measurement_status": "unknown",
+        "notes": [
+          "Target resource measurements are unavailable."
+        ]
+      },
+      "stdout_retained_bytes": 32768,
+      "stdout_truncated": true,
+      "execution_calls": 1,
+      "duration_seconds": 5.266
+    },
+    {
+      "case_id": "CLEANUP",
+      "result": "passed",
+      "owned_containers": 8,
+      "remaining_before_remediation": [],
+      "remaining_owned_containers": []
+    }
+  ],
+  "engine": "29.9.1",
+  "image_id": "sha256:f5845583361a42bef20999c1795e8d5bfb9ada8ac9e1f0552889e48e04840c32",
+  "private_records": "python_service/.interop/pre-integration/b-hardening-state-d5_ff_ki",
+  "result": "passed",
+  "counts": {
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "total": 5
+  },
+  "physical_execution_calls": 4,
+  "duration_seconds": 22.656,
+  "driver_sha256": "ea4d7d6abfea507afabe917cf0e335e28811e3fec00f4040659407451111fe5c"
+}

@@ -1,0 +1,118 @@
+{
+  "record_version": "1.0",
+  "verified_at": "2026-11-04T10:31:21.273443+00:00",
+  "result": "passed",
+  "scope": "Common B 0.4.0 registration, generated views, fixed baseline and handoff documents; not O receipt",
+  "external_implementation_commit": "c5e04a4ab2f9d80b98439e42228cc3515e0b0534",
+  "commands": [
+    {
+      "command": [
+        "<local-v2-python>",
+        "-B",
+        "scripts/check_collaboration.py"
+      ],
+      "return_code": 0,
+      "result": {
+        "result": "passed",
+        "groups": 4,
+        "work_items": 12,
+        "services": 4,
+        "generated_views": 5,
+        "pending_team_configuration": [
+          "各组维护人和接口评审账号待团队登记",
+          "CODEOWNERS 仅有示例，尚未登记真实账号",
+          "远程合并保护待首次 CI 和平台管理员配置"
+        ],
+        "git_index": "checked",
+        "tracked_files_checked": 155,
+        "scope": "协作记录结构、引用、依赖、角色、真实/Mock声明和索引文件检查；不验证远程权限或实际算法效果"
+      }
+    },
+    {
+      "command": [
+        "<local-v2-python>",
+        "-B",
+        "scripts/check_docs.py"
+      ],
+      "return_code": 0,
+      "result": {
+        "result": "passed",
+        "scope": "文档包链接、归档完整性、图纸与Schema及已存运行视图核对；未重跑业务或真实模型实验",
+        "documents_checked": 52,
+        "links_checked": 745,
+        "architecture_version": "0.3",
+        "architecture_diagrams": 4,
+        "architecture_entrypoint": "docs/architecture/总体架构与模块接口图纸_v0.3_20261013.html",
+        "public_paths": 12,
+        "current_o_post_operations": 8,
+        "control_paths": 5,
+        "public_schema_definitions": 102,
+        "schemas_checked_including_control": 108,
+        "schema_references_checked": 514,
+        "control_schema_matches": [
+          "SubmitRun input",
+          "Health"
+        ],
+        "contract_snapshot_integrity": "passed",
+        "archive_snapshot_integrity": "passed"
+      }
+    },
+    {
+      "command": [
+        "<local-v2-python>",
+        "-B",
+        "scripts/check_stable_baseline.py"
+      ],
+      "return_code": 0,
+      "result": {
+        "result": "passed",
+        "baseline_id": "coreloop-dev-baseline-20261014",
+        "date": "2026-10-14",
+        "scope": "development_and_interface_baseline",
+        "architecture_version": "0.3",
+        "framework_version": "0.2.1",
+        "schema_version": "2.0",
+        "files_checked": 61,
+        "pytest": {
+          "tests": 99,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 99
+        },
+        "manifest_sha256": "fa5cefbd8bae4f8f0e0c40dfcae30477167ce832a14b28daaf6100c908f41bb3",
+        "manifest_ref": "contracts/stable_baseline_v0.3.json",
+        "real_module_and_sandbox_validation": "pending",
+        "team_signoff_recorded": false
+      }
+    }
+  ],
+  "metadata_tests": {
+    "counts": {
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 10
+    },
+    "junit_sha256": "f318644ae22f717a7ebc00b6b74e4e154e2cbb7c48c3d47400541ba9e8be4aa4"
+  },
+  "additional_invariants": {
+    "source_git_objects_verified": 26,
+    "configs_loaded_without_provider_request": 2,
+    "new_public_static_rule_samples": 2,
+    "a_c_o_registration_and_o_work_states": "unchanged",
+    "maintainer_and_reviewers_not_invented": true,
+    "historical_031_receipts": "unchanged"
+  },
+  "test_date_scope": "Only the 10 metadata tests and registration/static checks ran on 2026-11-04. The SDK 132/common 99 execution dates remain 2026-11-02. Stable-baseline output includes its historical baseline-test summary.",
+  "default_config_changed": false,
+  "public_contract_or_guard_changed": false,
+  "signed_manifest_or_frozen_sources_changed": false,
+  "real_provider_requests": 0,
+  "real_target_executions": 0,
+  "o_receipt": "not_received",
+  "formal_p2_acceptance": "blocked",
+  "p3_m1_completed": false,
+  "generated_record_newlines": "Normalized only mutable verification/docs_check.json to LF after the unmodified Windows generator; frozen checker unchanged."
+}

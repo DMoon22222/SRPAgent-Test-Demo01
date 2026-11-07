@@ -1,5 +1,7 @@
 # B 组错误分析 Agent 接入说明
 
+> 当前共同 O 集成采用架构 v0.3、schema 2.0 的 [Python 本地模块入口](local_v2_handoff.md)。本文保留既有 REST/A2A/MCP v1 工具的使用和历史验证记录；共同内部交接按本地模块规范实施。当前职责为 A 生成/修复、B 检查/执行事实/诊断、C 检索决策/证据、O 调度。
+
 本版实现统一业务契约、REST/OpenAPI、A2A 1.0 JSON-RPC 和 MCP 工具入口。三个入口复用同一个 `DiagnosisService` 和规则优先分析器，独立 stdio 桥接器通过 REST 调用该服务。B 组负责诊断，不负责调用生成 Agent、修改代码、实际检索或控制全局修复循环。MCP 详细接入和模拟修复样例见 [MCP 接入说明](mcp_integration.md)。
 
 ## 1 启动

@@ -1,0 +1,199 @@
+{
+  "verified_at": "2026-10-23T16:08:35.683Z",
+  "result": "passed",
+  "scope": "Current adapter, shared framework and legacy B tests; model credentials disabled; synthetic backends unless separately recorded",
+  "contract_sha256": "07382d82cce2c748b39110b6107575acc87af2ed86e15abaddd208f84b8aceae",
+  "git_base_commit": "eb13d3b86c58497f671d1c4e313c5953c713d1a6",
+  "git_branch": "b/local-v2-adapter",
+  "source_state": "Uncommitted candidate; source_hashes identify the verified workspace files",
+  "source_hashes": {
+    "srp_b/__init__.py": "a1cff9924d90c316bc6d0b1242ceaa957859d3a838c5a2c4df092ee910b6874e",
+    "srp_b/diagnosis.py": "45d7a360d6026f33244f38acb9c92fc27055886dfae4ff47a36abefc337f917b",
+    "srp_b/module.py": "2915a789cae633e581a95752fad4dcf980399c1bb279a52a0e1dd8f36b3e0968",
+    "srp_b/samples.py": "bba00bfeba324fc83bbd1814ad0e0c3adac51a201edd1101f43f32fc8c72da30",
+    "srp_b/sandbox.py": "cdc9651de3980434faf82b79c325aa7b9574bf56c3cd8003bec9e3aea2eed834",
+    "srp_b/state.py": "7a9d6b834e82ccc11698603867ea75561c0b4b80e53702cac35cf2b3045802e3",
+    "app/analyzer/error_signal_extractor.py": "e72616c2e28d4887f93ce118f34981fef7e0d9ae5414894fe27e52fe74948e5e",
+    "app/schemas.py": "ad970badd6dfa8a01279ec9d93c3da62c99b8e8359df38bd99b6c3fbbe0b29ce",
+    "pyproject.toml": "1996527eda958bf3b7de12090a9b2cc07d8508880f1d1bcc70c145506076086d",
+    "requirements-local-v2.lock": "cb24640ba84d52aa89d4b40836830e28eb8d5ecd2cd11ff31bce205ca476d3b0",
+    "scripts/verify_local_v2.py": "694ea1910fe0aeda590102311512045c03c028be3470ded1de979831a790cbf0",
+    "scripts/check_local_v2.py": "38e3af55b2c3a7fd001623dea785a48c770d216a1b04bbc2ac45e7798c2efead",
+    "scripts/run_local_v2_tests.py": "83357c45079a6ea0bf71ca9b931c9d043353a34aec339cae2eaaa1e1d718b1dd",
+    "tests/test_local_v2.py": "42f292802a27a2ae8c60a8ce2ce3f7860b4c31beb559fa19765b84769be97940",
+    "tests/test_local_v2_samples.py": "94ed7ba737256bc8079dfda1e453839d1f167b39f61ea376cfd2db8f5f5b74d4"
+  },
+  "source_snapshot_sha256": "57492c8b2de0821cf0ce3c5e6582ceecb7f07032bd361f8c17e40933f04383bb",
+  "metadata_hash_algorithm": "SHA-256 of original file bytes, without newline conversion",
+  "host_python": "3.12.4",
+  "host_packages": {
+    "pytest": "9.1.1",
+    "pydantic": "2.14.1",
+    "jsonschema": "4.26.0"
+  },
+  "suites": {
+    "local_adapter": {
+      "tests": 46,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 46,
+      "return_code": 0,
+      "environment": {
+        "python": "3.12.4",
+        "packages": {
+          "pytest": "9.1.1",
+          "pydantic": "2.14.1",
+          "jsonschema": "4.26.0"
+        }
+      },
+      "command": [
+        "<suite-python>",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/test_local_v2.py",
+        "tests/test_local_v2_samples.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "<private-run-temp>",
+        "--junitxml",
+        "<private-junit.xml>"
+      ],
+      "junit_sha256": "1423faae83e8d00190ea4aacc874e81a3bf41dd2095ee2027a264ef37e90e8a5"
+    },
+    "shared_framework": {
+      "tests": 99,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 99,
+      "return_code": 0,
+      "environment": {
+        "python": "3.12.4",
+        "packages": {
+          "pytest": "9.1.1",
+          "pydantic": "2.14.1",
+          "jsonschema": "4.26.0"
+        }
+      },
+      "command": [
+        "<suite-python>",
+        "-B",
+        "-m",
+        "pytest",
+        "tests",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "<private-run-temp>",
+        "--junitxml",
+        "<private-junit.xml>"
+      ],
+      "junit_sha256": "dcb9cebeb48f38ea41d8e86f59cccab91b6f634a65c65072ca2c109ee0725582"
+    },
+    "legacy_b": {
+      "tests": 185,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3,
+      "passed": 182,
+      "return_code": 0,
+      "environment": {
+        "python": "3.12.4",
+        "packages": {
+          "pytest": "9.1.1",
+          "pydantic": "2.13.4",
+          "jsonschema": "4.26.0"
+        }
+      },
+      "command": [
+        "<suite-python>",
+        "-B",
+        "-m",
+        "pytest",
+        "tests",
+        "--ignore=tests/test_local_v2.py",
+        "--ignore=tests/test_local_v2_samples.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "<private-run-temp>",
+        "--junitxml",
+        "<private-junit.xml>"
+      ],
+      "junit_sha256": "ab7607f67f16d1929ec09e4267340fed7e7803b35b70515c3919c4b8ea98a393"
+    }
+  },
+  "previous_attempts": [
+    {
+      "verified_at": "2026-10-23T16:03:33.784Z",
+      "result": "failed",
+      "source_snapshot_sha256": "3139d0096d5665372b25a7b4cfa3f49c3e57f931a8528b95735a4935ae6d59ce",
+      "suites": {
+        "local_adapter": {
+          "tests": 46,
+          "passed": 46,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "shared_framework": {
+          "tests": 99,
+          "passed": 97,
+          "failures": 2,
+          "errors": 0,
+          "skipped": 0
+        },
+        "legacy_b": {
+          "tests": 185,
+          "passed": 182,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 3
+        }
+      },
+      "retry_note": "Previous shared O control tests exceeded the Windows path length with the long pytest base directory. Only the harness temporary directory was shortened; shared framework and test assertions are unchanged."
+    },
+    {
+      "verified_at": "2026-10-23T16:06:02.403Z",
+      "result": "passed",
+      "source_snapshot_sha256": "aac3a158f7d554a036d1ef00251202ef634156f576dc970d818f6a078e643237",
+      "suites": {
+        "local_adapter": {
+          "tests": 46,
+          "passed": 46,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "shared_framework": {
+          "tests": 99,
+          "passed": 99,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "legacy_b": {
+          "tests": 185,
+          "passed": 182,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 3
+        }
+      },
+      "retry_note": "Final source-consistency run after evidence provenance labels, capability-version checks and removal of unused imports; no shared core or test assertions relaxed."
+    }
+  ],
+  "raw_records": "Private .interop/p1-tests run directory; JUnit XML and logs are not committed",
+  "unverified": [
+    "Three opt-in legacy repository Docker smoke cases; current v2 Docker verification is separate"
+  ]
+}

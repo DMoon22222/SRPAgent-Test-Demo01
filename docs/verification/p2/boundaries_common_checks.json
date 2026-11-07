@@ -1,0 +1,83 @@
+{
+  "verified_at": "2026-10-26T05:14:22.284Z",
+  "result": "passed",
+  "scope": "Local common metadata/views/docs only; not formal O receipt",
+  "commands": [
+    {
+      "command": [
+        "<local-v2-python>",
+        "-B",
+        "scripts/check_collaboration.py",
+        "--generate"
+      ],
+      "return_code": 0,
+      "result": {
+        "result": "passed",
+        "groups": 4,
+        "work_items": 12,
+        "services": 4,
+        "generated_views": 5,
+        "pending_team_configuration": [
+          "各组维护人和接口评审账号待团队登记",
+          "CODEOWNERS 仅有示例，尚未登记真实账号",
+          "远程合并保护待首次 CI 和平台管理员配置"
+        ],
+        "git_index": "checked",
+        "tracked_files_checked": 121,
+        "scope": "协作记录结构、引用、依赖、角色、真实/Mock声明和索引文件检查；不验证远程权限或实际算法效果"
+      }
+    },
+    {
+      "command": [
+        "<local-v2-python>",
+        "-B",
+        "scripts/check_collaboration.py"
+      ],
+      "return_code": 0,
+      "result": {
+        "result": "passed",
+        "groups": 4,
+        "work_items": 12,
+        "services": 4,
+        "generated_views": 5,
+        "pending_team_configuration": [
+          "各组维护人和接口评审账号待团队登记",
+          "CODEOWNERS 仅有示例，尚未登记真实账号",
+          "远程合并保护待首次 CI 和平台管理员配置"
+        ],
+        "git_index": "checked",
+        "tracked_files_checked": 121,
+        "scope": "协作记录结构、引用、依赖、角色、真实/Mock声明和索引文件检查；不验证远程权限或实际算法效果"
+      }
+    },
+    {
+      "command": [
+        "<local-v2-python>",
+        "-B",
+        "scripts/check_docs.py"
+      ],
+      "return_code": 0,
+      "result": {
+        "result": "passed",
+        "scope": "文档包链接、归档完整性、图纸与Schema及已存运行视图核对；未重跑业务或真实模型实验",
+        "documents_checked": 49,
+        "links_checked": 700,
+        "architecture_version": "0.3",
+        "architecture_diagrams": 4,
+        "architecture_entrypoint": "docs/architecture/总体架构与模块接口图纸_v0.3_20261013.html",
+        "public_paths": 12,
+        "current_o_post_operations": 8,
+        "control_paths": 5,
+        "public_schema_definitions": 102,
+        "schemas_checked_including_control": 108,
+        "schema_references_checked": 514,
+        "control_schema_matches": [
+          "SubmitRun input",
+          "Health"
+        ],
+        "contract_snapshot_integrity": "passed",
+        "archive_snapshot_integrity": "passed"
+      }
+    }
+  ]
+}

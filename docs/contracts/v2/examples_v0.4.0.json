@@ -1,0 +1,692 @@
+{
+  "kind": "public_synthetic_samples",
+  "verified_at": "2026-11-04T10:27:01.902568+00:00",
+  "implementation_version": "0.4.0",
+  "source_commit": "c5e04a4ab2f9d80b98439e42228cc3515e0b0534",
+  "diagnosis_backend": "rules",
+  "note": "New registration samples only: no Claude request and no Docker/target execution; 0.3.1 samples retain their historical scope.",
+  "samples": [
+    {
+      "sample_id": "static_failure",
+      "evidence_kind": "real_static_and_rule_logic_no_target_execution",
+      "operation": "/api/v2/validate/static",
+      "request": {
+        "schema_version": "2.0",
+        "message_id": "msg-69a5d7cec37244cc9810628aa5c8cd6b",
+        "request_id": "request-c69902404c204f488d1e4b81af4e5e79",
+        "in_reply_to": null,
+        "call_id": "call-cb25ba187f2e472ba7a65ce70921514f",
+        "parent_call_id": null,
+        "trace_id": "sample-trace",
+        "task_id": "b-040-registration-static",
+        "run_id": "sample-run",
+        "attempt_id": "sample-attempt",
+        "producer": "O",
+        "consumer": "B",
+        "payload_type": "StaticValidationRequest",
+        "created_at": "2026-10-13T02:00:00Z",
+        "visibility": "public",
+        "payload": {
+          "task_spec": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "O",
+            "task_id": "b-040-registration-static",
+            "language": "python",
+            "runtime": {
+              "name": "python",
+              "version": "3.11"
+            },
+            "instruction": "Implement add(a, b), returning the sum. Fixed tests must remain unchanged.",
+            "constraints": [
+              "保持公开测试不变"
+            ],
+            "entry_point": "src/main.py",
+            "task_type": "function_generation",
+            "input_context": {
+              "target_file": null,
+              "prefix": null,
+              "suffix": null,
+              "cursor": null,
+              "workspace_snapshot_ref": null
+            }
+          },
+          "code_artifact": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "A",
+            "artifact_id": "sample-code",
+            "task_id": "b-040-registration-static",
+            "attempt_id": "sample-attempt",
+            "revision": "r0",
+            "parent_artifact_id": null,
+            "language": "python",
+            "files": [
+              {
+                "path": "src/main.py",
+                "content": "def add(a, b)\n    return a + b\n",
+                "sha256": "f6174ed4a0c7abd6f002ee7de4b9d210865d92ced2eab11365420b84595b436d"
+              }
+            ],
+            "content_hash": "00ba256446b9f3280e8ca04c16304be43ab4362626f569f2c8581c38e2dc18ef",
+            "dependencies": [],
+            "generation_provenance": {
+              "model_id": null,
+              "prompt_version": "fixture-prompt",
+              "decoding_config": {},
+              "finish_reason": null,
+              "truncated": null,
+              "raw_response_ref": null,
+              "prompt_hash": null,
+              "tokenizer_id": null,
+              "input_tokens": null,
+              "output_tokens": null,
+              "content_status": "unknown"
+            }
+          },
+          "build_manifest": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "A",
+            "manifest_id": "manifest-0",
+            "language": "python",
+            "runtime": {
+              "name": "python",
+              "version": "3.11"
+            },
+            "dependencies": [
+              "pytest==8.3.5"
+            ],
+            "entry_point": "src/main.py",
+            "test_command": [
+              "python",
+              "-m",
+              "pytest",
+              "tests"
+            ]
+          },
+          "validation_policy": {
+            "policy_version": "static-v2",
+            "checks": [
+              "syntax",
+              "entry_point"
+            ]
+          },
+          "budget": {
+            "budget_id": "budget-1",
+            "revision": 1,
+            "limits": {
+              "tokens": 8192,
+              "model_calls": 8,
+              "retrieval_calls": 4,
+              "execution_calls": 4,
+              "wall_time_ms": 120000
+            },
+            "used": {
+              "tokens": 0,
+              "model_calls": 0,
+              "retrieval_calls": 0,
+              "execution_calls": 0,
+              "wall_time_ms": 0
+            },
+            "reserved": {
+              "tokens": 0,
+              "model_calls": 0,
+              "retrieval_calls": 0,
+              "execution_calls": 0,
+              "wall_time_ms": 0
+            },
+            "remaining": {
+              "tokens": 8192,
+              "model_calls": 8,
+              "retrieval_calls": 4,
+              "execution_calls": 4,
+              "wall_time_ms": 120000
+            },
+            "deadline_at": "2026-11-04T10:32:01.852535Z",
+            "policy_version": "budget-v2"
+          },
+          "call_grant": {
+            "grant_id": "grant-7e2339ee690b43d3809db9663d3b4b4d",
+            "call_id": "call-cb25ba187f2e472ba7a65ce70921514f",
+            "parent_call_id": null,
+            "budget_id": "budget-1",
+            "budget_revision": 1,
+            "deadline_at": "2026-11-04T10:32:01.852535Z",
+            "max_model_calls": 4,
+            "max_retrieval_calls": 2,
+            "max_execution_calls": 1,
+            "max_rounds": 1,
+            "max_input_tokens": 6144,
+            "max_output_tokens": 1024,
+            "max_evidence_tokens": 512,
+            "tokenizer_id": "fixture-unicode-codepoint"
+          }
+        },
+        "deadline_at": "2026-11-04T10:32:01.852535Z"
+      },
+      "response": {
+        "schema_version": "2.0",
+        "request_id": "request-c69902404c204f488d1e4b81af4e5e79",
+        "call_id": "call-cb25ba187f2e472ba7a65ce70921514f",
+        "parent_call_id": null,
+        "trace_id": "sample-trace",
+        "task_id": "b-040-registration-static",
+        "run_id": "sample-run",
+        "attempt_id": "sample-attempt",
+        "visibility": "public",
+        "message_id": "msg-328ccb0e3c784dc59050f8903ac89596",
+        "in_reply_to": "msg-69a5d7cec37244cc9810628aa5c8cd6b",
+        "producer": "B",
+        "consumer": "O",
+        "payload_type": "StaticCheckReport",
+        "created_at": "2026-11-04T10:27:01.860Z",
+        "payload": {
+          "status": "completed",
+          "data": {
+            "schema_version": "2.0",
+            "created_at": "2026-11-04T10:27:01.858Z",
+            "producer": "B",
+            "report_id": "static-03588755705847fabf1307ace7150043",
+            "task_id": "b-040-registration-static",
+            "attempt_id": "sample-attempt",
+            "code_artifact_id": "sample-code",
+            "revision": "r0",
+            "code_hash": "00ba256446b9f3280e8ca04c16304be43ab4362626f569f2c8581c38e2dc18ef",
+            "status": "failed",
+            "findings": [
+              {
+                "check": "syntax",
+                "status": "failed",
+                "message": "SyntaxError: expected ':'",
+                "location": {
+                  "file": "src/main.py",
+                  "line_start": 1,
+                  "line_end": 1,
+                  "symbol": null
+                }
+              },
+              {
+                "check": "entry_point",
+                "status": "passed",
+                "message": "Build entry point identifies the supplied source file.",
+                "location": null
+              }
+            ],
+            "policy_version": "static-v2"
+          },
+          "error": null,
+          "usage": {
+            "usage_id": "usage-22da138bb2d84228bf8ec9b5d0ce229f",
+            "call_id": "call-cb25ba187f2e472ba7a65ce70921514f",
+            "parent_call_id": null,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "model_calls": 0,
+            "retrieval_calls": 0,
+            "execution_calls": 0,
+            "latency_ms": 16.0,
+            "estimated_cost_usd": null,
+            "measurement_status": "complete",
+            "measurement": "exact",
+            "aggregation": "leaf",
+            "children_usage_ids": [],
+            "notes": [
+              "Local rules only; no model or retrieval was invoked. Cost is not priced."
+            ]
+          },
+          "warnings": []
+        },
+        "extensions": {
+          "srp_b": {
+            "implementation_version": "0.4.0",
+            "operation": "/api/v2/validate/static"
+          }
+        }
+      }
+    },
+    {
+      "sample_id": "static_feedback_rules",
+      "evidence_kind": "real_static_and_rule_logic_no_target_execution",
+      "operation": "/api/v2/diagnose",
+      "request": {
+        "schema_version": "2.0",
+        "message_id": "msg-554a590d49744141bef94257133573cb",
+        "request_id": "request-6fcb0bed8368470dbc64962053ecfa82",
+        "in_reply_to": null,
+        "call_id": "call-805083ced1084a5ab6113a0a64f32855",
+        "parent_call_id": null,
+        "trace_id": "sample-trace",
+        "task_id": "b-040-registration-static",
+        "run_id": "sample-run",
+        "attempt_id": "sample-attempt",
+        "producer": "O",
+        "consumer": "B",
+        "payload_type": "DiagnosticRequest",
+        "created_at": "2026-10-13T02:00:00Z",
+        "visibility": "public",
+        "payload": {
+          "task_spec": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "O",
+            "task_id": "b-040-registration-static",
+            "language": "python",
+            "runtime": {
+              "name": "python",
+              "version": "3.11"
+            },
+            "instruction": "Implement add(a, b), returning the sum. Fixed tests must remain unchanged.",
+            "constraints": [
+              "保持公开测试不变"
+            ],
+            "entry_point": "src/main.py",
+            "task_type": "function_generation",
+            "input_context": {
+              "target_file": null,
+              "prefix": null,
+              "suffix": null,
+              "cursor": null,
+              "workspace_snapshot_ref": null
+            }
+          },
+          "code_artifact": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "A",
+            "artifact_id": "sample-code",
+            "task_id": "b-040-registration-static",
+            "attempt_id": "sample-attempt",
+            "revision": "r0",
+            "parent_artifact_id": null,
+            "language": "python",
+            "files": [
+              {
+                "path": "src/main.py",
+                "content": "def add(a, b)\n    return a + b\n",
+                "sha256": "f6174ed4a0c7abd6f002ee7de4b9d210865d92ced2eab11365420b84595b436d"
+              }
+            ],
+            "content_hash": "00ba256446b9f3280e8ca04c16304be43ab4362626f569f2c8581c38e2dc18ef",
+            "dependencies": [],
+            "generation_provenance": {
+              "model_id": null,
+              "prompt_version": "fixture-prompt",
+              "decoding_config": {},
+              "finish_reason": null,
+              "truncated": null,
+              "raw_response_ref": null,
+              "prompt_hash": null,
+              "tokenizer_id": null,
+              "input_tokens": null,
+              "output_tokens": null,
+              "content_status": "unknown"
+            }
+          },
+          "test_artifact": {
+            "schema_version": "2.0",
+            "created_at": "2026-10-13T02:00:00Z",
+            "producer": "dataset-adapter",
+            "artifact_id": "sample-tests",
+            "task_id": "b-040-registration-static",
+            "kind": "public",
+            "revision": "t0",
+            "files": [
+              {
+                "path": "tests/test_main.py",
+                "content": "from src.main import add\n\ndef test_add():\n    assert add(2, 3) == 5\n",
+                "sha256": "ffaac4fb1b938f8016dc7d3aafb8d64e767b85cb5d63739423119f16ea7a3099"
+              }
+            ],
+            "test_hash": "5729e7d3ee8a426edef6071d2e04a9d6bdfd896c5aa741b2d8e3de2bc31b6031"
+          },
+          "input_mode": "static_feedback",
+          "failure_source": {
+            "kind": "static",
+            "static_report": {
+              "schema_version": "2.0",
+              "created_at": "2026-11-04T10:27:01.858Z",
+              "producer": "B",
+              "report_id": "static-03588755705847fabf1307ace7150043",
+              "task_id": "b-040-registration-static",
+              "attempt_id": "sample-attempt",
+              "code_artifact_id": "sample-code",
+              "revision": "r0",
+              "code_hash": "00ba256446b9f3280e8ca04c16304be43ab4362626f569f2c8581c38e2dc18ef",
+              "status": "failed",
+              "findings": [
+                {
+                  "check": "syntax",
+                  "status": "failed",
+                  "message": "SyntaxError: expected ':'",
+                  "location": {
+                    "file": "src/main.py",
+                    "line_start": 1,
+                    "line_end": 1,
+                    "symbol": null
+                  }
+                },
+                {
+                  "check": "entry_point",
+                  "status": "passed",
+                  "message": "Build entry point identifies the supplied source file.",
+                  "location": null
+                }
+              ],
+              "policy_version": "static-v2"
+            }
+          },
+          "execution_context": {
+            "context_id": "exec-context-0",
+            "build_manifest": {
+              "schema_version": "2.0",
+              "created_at": "2026-10-13T02:00:00Z",
+              "producer": "A",
+              "manifest_id": "manifest-0",
+              "language": "python",
+              "runtime": {
+                "name": "python",
+                "version": "3.11"
+              },
+              "dependencies": [
+                "pytest==8.3.5"
+              ],
+              "entry_point": "src/main.py",
+              "test_command": [
+                "python",
+                "-m",
+                "pytest",
+                "tests"
+              ]
+            },
+            "execution_policy": {
+              "policy_id": "runner-policy-1",
+              "timeout_ms": 5000,
+              "memory_mb": 256,
+              "cpu_limit": 1,
+              "max_processes": 16,
+              "network_policy": "disabled",
+              "root_read_only": true,
+              "allowed_write_paths": [
+                "tmp"
+              ]
+            },
+            "execution_config_hash": "a9c855c8f0b4905690af2bf178b5795e83d40d8b288e934ec0fd65a4e2b0b8d5",
+            "requested_runtime": {
+              "name": "python",
+              "version": "3.11"
+            },
+            "actual_runtime": {
+              "name": "python",
+              "version": "3.11"
+            },
+            "package_versions": [],
+            "image_digest": null,
+            "dependency_lock_ref": null,
+            "isolation_guarantees": {},
+            "measurement_status": "unknown"
+          },
+          "history_view": {
+            "history_id": "history-0",
+            "task_id": "b-040-registration-static",
+            "run_id": "sample-run",
+            "visibility": "public",
+            "source_refs": [],
+            "attempt_summaries": [],
+            "truncation": {
+              "truncated": false,
+              "omitted_attempt_ids": [],
+              "reason": null
+            }
+          },
+          "prior_diagnosis_ref": null,
+          "budget": {
+            "budget_id": "budget-1",
+            "revision": 1,
+            "limits": {
+              "tokens": 8192,
+              "model_calls": 8,
+              "retrieval_calls": 4,
+              "execution_calls": 4,
+              "wall_time_ms": 120000
+            },
+            "used": {
+              "tokens": 0,
+              "model_calls": 0,
+              "retrieval_calls": 0,
+              "execution_calls": 0,
+              "wall_time_ms": 0
+            },
+            "reserved": {
+              "tokens": 0,
+              "model_calls": 0,
+              "retrieval_calls": 0,
+              "execution_calls": 0,
+              "wall_time_ms": 0
+            },
+            "remaining": {
+              "tokens": 8192,
+              "model_calls": 8,
+              "retrieval_calls": 4,
+              "execution_calls": 4,
+              "wall_time_ms": 120000
+            },
+            "deadline_at": "2026-11-04T10:32:01.867207Z",
+            "policy_version": "budget-v2"
+          },
+          "call_grant": {
+            "grant_id": "grant-eb68ebe088d04015830f623df5baa5ba",
+            "call_id": "call-805083ced1084a5ab6113a0a64f32855",
+            "parent_call_id": null,
+            "budget_id": "budget-1",
+            "budget_revision": 1,
+            "deadline_at": "2026-11-04T10:32:01.867207Z",
+            "max_model_calls": 4,
+            "max_retrieval_calls": 2,
+            "max_execution_calls": 1,
+            "max_rounds": 1,
+            "max_input_tokens": 6144,
+            "max_output_tokens": 1024,
+            "max_evidence_tokens": 512,
+            "tokenizer_id": "fixture-unicode-codepoint"
+          }
+        },
+        "deadline_at": "2026-11-04T10:32:01.867207Z"
+      },
+      "response": {
+        "schema_version": "2.0",
+        "request_id": "request-6fcb0bed8368470dbc64962053ecfa82",
+        "call_id": "call-805083ced1084a5ab6113a0a64f32855",
+        "parent_call_id": null,
+        "trace_id": "sample-trace",
+        "task_id": "b-040-registration-static",
+        "run_id": "sample-run",
+        "attempt_id": "sample-attempt",
+        "visibility": "public",
+        "message_id": "msg-953a4cf032ae4615b5724749db4cea9a",
+        "in_reply_to": "msg-554a590d49744141bef94257133573cb",
+        "producer": "B",
+        "consumer": "O",
+        "payload_type": "DiagnosticResult",
+        "created_at": "2026-11-04T10:27:01.877Z",
+        "payload": {
+          "status": "completed",
+          "data": {
+            "failure_source": {
+              "kind": "static",
+              "static_report": {
+                "schema_version": "2.0",
+                "created_at": "2026-11-04T10:27:01.858Z",
+                "producer": "B",
+                "report_id": "static-03588755705847fabf1307ace7150043",
+                "task_id": "b-040-registration-static",
+                "attempt_id": "sample-attempt",
+                "code_artifact_id": "sample-code",
+                "revision": "r0",
+                "code_hash": "00ba256446b9f3280e8ca04c16304be43ab4362626f569f2c8581c38e2dc18ef",
+                "status": "failed",
+                "findings": [
+                  {
+                    "check": "syntax",
+                    "status": "failed",
+                    "message": "SyntaxError: expected ':'",
+                    "location": {
+                      "file": "src/main.py",
+                      "line_start": 1,
+                      "line_end": 1,
+                      "symbol": null
+                    }
+                  },
+                  {
+                    "check": "entry_point",
+                    "status": "passed",
+                    "message": "Build entry point identifies the supplied source file.",
+                    "location": null
+                  }
+                ],
+                "policy_version": "static-v2"
+              }
+            },
+            "diagnosis_report": {
+              "schema_version": "2.0",
+              "created_at": "2026-11-04T10:27:01.875Z",
+              "producer": "B",
+              "diagnosis_id": "diagnosis-8e615b4f7045437e8b27de3428215ac5",
+              "task_id": "b-040-registration-static",
+              "code_artifact_id": "sample-code",
+              "revision": "r0",
+              "execution_result_id": null,
+              "test_hash": "5729e7d3ee8a426edef6071d2e04a9d6bdfd896c5aa741b2d8e3de2bc31b6031",
+              "failure_class": "syntax_error",
+              "raw_failure_class": "SYNTAX_ERROR",
+              "failure_stage": "static",
+              "root_cause": "规则层检测到 Python 语法错误。",
+              "confidence": 0.95,
+              "evidence_refs": [
+                {
+                  "kind": "source_location",
+                  "artifact_id": "static-03588755705847fabf1307ace7150043",
+                  "pointer": "/findings/0",
+                  "summary": "SyntaxError: expected ':'"
+                }
+              ],
+              "suggestions": [
+                "Use the supplied code, fixed tests and recorded evidence to produce a new candidate."
+              ],
+              "retrieval_hint": "not_needed",
+              "next_action": "repair",
+              "prior_diagnosis_id": null,
+              "failure_source": {
+                "kind": "static",
+                "static_report": {
+                  "schema_version": "2.0",
+                  "created_at": "2026-11-04T10:27:01.858Z",
+                  "producer": "B",
+                  "report_id": "static-03588755705847fabf1307ace7150043",
+                  "task_id": "b-040-registration-static",
+                  "attempt_id": "sample-attempt",
+                  "code_artifact_id": "sample-code",
+                  "revision": "r0",
+                  "code_hash": "00ba256446b9f3280e8ca04c16304be43ab4362626f569f2c8581c38e2dc18ef",
+                  "status": "failed",
+                  "findings": [
+                    {
+                      "check": "syntax",
+                      "status": "failed",
+                      "message": "SyntaxError: expected ':'",
+                      "location": {
+                        "file": "src/main.py",
+                        "line_start": 1,
+                        "line_end": 1,
+                        "symbol": null
+                      }
+                    },
+                    {
+                      "check": "entry_point",
+                      "status": "passed",
+                      "message": "Build entry point identifies the supplied source file.",
+                      "location": null
+                    }
+                  ],
+                  "policy_version": "static-v2"
+                }
+              },
+              "failure_domain": "code",
+              "hypotheses": [
+                {
+                  "hypothesis_id": "hypothesis-038a5661a30043318b0b345b11955b1c",
+                  "statement": "规则层检测到 Python 语法错误。",
+                  "confidence": 0.95,
+                  "evidence_refs": [
+                    {
+                      "kind": "source_location",
+                      "artifact_id": "static-03588755705847fabf1307ace7150043",
+                      "pointer": "/findings/0",
+                      "summary": "SyntaxError: expected ':'"
+                    }
+                  ],
+                  "locations": [
+                    {
+                      "file": "src/main.py",
+                      "line_start": 1,
+                      "line_end": 1,
+                      "symbol": null
+                    }
+                  ]
+                }
+              ],
+              "locations": [
+                {
+                  "file": "src/main.py",
+                  "line_start": 1,
+                  "line_end": 1,
+                  "symbol": null
+                }
+              ],
+              "context_gap": [],
+              "local_context_sufficiency": "sufficient",
+              "query_hints": [],
+              "failure_signature": "6987556d01ca9f37094a744c5cab18367ea3d3c0f34149e4ddd0557893913f94",
+              "extensions": {
+                "srp_b": {
+                  "algorithm": "existing-rule-extractor-v1",
+                  "model_calls": 0,
+                  "retrieval_hint_is_advisory": true
+                }
+              }
+            },
+            "retrieval_hint": "not_needed",
+            "next_action": "repair"
+          },
+          "error": null,
+          "usage": {
+            "usage_id": "usage-7e8436efcc5541a6b7db9cffc664cdb0",
+            "call_id": "call-805083ced1084a5ab6113a0a64f32855",
+            "parent_call_id": null,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "model_calls": 0,
+            "retrieval_calls": 0,
+            "execution_calls": 0,
+            "latency_ms": 15.0,
+            "estimated_cost_usd": null,
+            "measurement_status": "complete",
+            "measurement": "exact",
+            "aggregation": "leaf",
+            "children_usage_ids": [],
+            "notes": [
+              "Local rules only; no model or retrieval was invoked. Cost is not priced."
+            ]
+          },
+          "warnings": []
+        },
+        "extensions": {
+          "srp_b": {
+            "implementation_version": "0.4.0",
+            "operation": "/api/v2/diagnose"
+          }
+        }
+      }
+    }
+  ]
+}

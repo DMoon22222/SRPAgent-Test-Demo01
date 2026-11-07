@@ -1,0 +1,50 @@
+{
+  "verified_at": "2026-10-26T07:00:33.857Z",
+  "result": "passed",
+  "counts": {
+    "tests": 105,
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "passed": 105
+  },
+  "scope": "Existing 95 adapter/P2 tests plus 10 delivery integrity/archive tests; synthetic backends, no new Docker execution",
+  "junit_sha256": "7959704e339ae42cc60c30a27fe84fe0d43af968c3aff794a5602df8e692c0e0",
+  "command": [
+    "<local-v2-python>",
+    "-B",
+    "-m",
+    "pytest",
+    "tests/test_local_v2.py",
+    "tests/test_local_v2_samples.py",
+    "tests/test_local_v2_p2.py",
+    "tests/test_local_v2_p2_lineage.py",
+    "tests/test_local_v2_p2_boundaries.py",
+    "tests/test_local_v2_p2_protected.py",
+    "tests/test_local_v2_p2_delivery.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--tb=short",
+    "--basetemp",
+    "<new-short-private-temp>",
+    "--junitxml",
+    ".interop/p2-delivery-tests.xml"
+  ],
+  "test_source_hashes": {
+    "test_local_v2.py": "42f292802a27a2ae8c60a8ce2ce3f7860b4c31beb559fa19765b84769be97940",
+    "test_local_v2_samples.py": "94ed7ba737256bc8079dfda1e453839d1f167b39f61ea376cfd2db8f5f5b74d4",
+    "test_local_v2_p2.py": "6c93015014499e98cd7f6ef401b820b8f513a0e074be3306d8457dfe3433e58c",
+    "test_local_v2_p2_lineage.py": "6c9525df1fe895c97e9c616237ea5f25efd481893da7fffee076422b87aa28f2",
+    "test_local_v2_p2_boundaries.py": "cc4c93b4db41556dbe08225ebac6ecedad79ec317db6181c8ac5069bb3d9c6a8",
+    "test_local_v2_p2_protected.py": "69ea88a916da694ce24ac12da834f1220deeb538b81cecfbd7f445f06441a008",
+    "test_local_v2_p2_delivery.py": "b07d0db6b392cea9c14ec842f9e404d5cbb5d36a0ff54c09cc013de0ef655be7"
+  },
+  "delivery_tool_hashes": {
+    "check_p2_delivery.py": "ac2813d4ed69bfa4856c0cd659e20a035435604403db6f31f0db60c569450628",
+    "package_p2_delivery.py": "3feb45f04f3ebfc8dfeb94e60e8a284786fb21c9b0a89e6c298f04624afe35f0",
+    "smoke_p2_consumer.py": "cb1cfc758d4562e111894ad77580d34fd7b2b15e71b54cd74681ee224c830aad"
+  },
+  "formal_p2_acceptance": "not_claimed",
+  "raw_records": "Private JUnit and pytest temporary directories"
+}

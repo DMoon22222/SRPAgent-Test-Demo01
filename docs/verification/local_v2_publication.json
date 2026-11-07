@@ -1,0 +1,21 @@
+{
+  "verified_at": "2026-10-23T16:24:59.010Z",
+  "result": "passed",
+  "scope": "Fixed Git commit byte-for-byte binding to the previously executed P1 validation; no test rerun is claimed",
+  "implementation_version": "0.3.1",
+  "source_git_commit": "c1f52e8ed321616a8e364c1d43c22568c27fe17c",
+  "validation_git_base_commit": "eb13d3b86c58497f671d1c4e313c5953c713d1a6",
+  "source_snapshot_sha256": "57492c8b2de0821cf0ce3c5e6582ceecb7f07032bd361f8c17e40933f04383bb",
+  "verified_source_files": 15,
+  "validation_record": "docs/verification/local_v2_validation.json",
+  "validation_record_sha256": "60f5d6dc64fb120c1ce148b366e7b1149db6368c3d6da36cf15279b6ccee71a4",
+  "test_record": "docs/verification/local_v2_tests.json",
+  "test_record_sha256": "d0b247a6e62512c1f99a20da1f579da22816376c79f39dff1339ee4f96ff8bd7",
+  "publication_target": {
+    "repository": "https://github.com/DMoon22222/SRPAgent-Test-Demo01",
+    "branch": "b/local-v2-adapter",
+    "pull_request": "https://github.com/DMoon22222/SRPAgent-Test-Demo01/pull/1"
+  },
+  "common_registry": "not_updated_in_this_task",
+  "o_receipt": "not_received"
+}

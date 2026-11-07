@@ -1,0 +1,51 @@
+{
+  "verified_at": "2026-10-26T05:38:53.306Z",
+  "result": "passed",
+  "counts": {
+    "tests": 95,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 95
+  },
+  "scope": "89 existing adapter/P2 tests plus 6 protected-view scenarios; unit backend synthetic, real Docker verification separate",
+  "junit_sha256": "2cf4954c75a13cef3514b4d63766665361c173eb81d010a2f613b3b1c9199113",
+  "command": [
+    "<local-v2-python>",
+    "-B",
+    "-m",
+    "pytest",
+    "tests/test_local_v2.py",
+    "tests/test_local_v2_samples.py",
+    "tests/test_local_v2_p2.py",
+    "tests/test_local_v2_p2_lineage.py",
+    "tests/test_local_v2_p2_boundaries.py",
+    "tests/test_local_v2_p2_protected.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--tb=short",
+    "--basetemp",
+    "<new-short-private-temp>",
+    "--junitxml",
+    ".interop/p2-protected-tests.xml"
+  ],
+  "test_source_hashes": {
+    "test_local_v2.py": "42f292802a27a2ae8c60a8ce2ce3f7860b4c31beb559fa19765b84769be97940",
+    "test_local_v2_samples.py": "94ed7ba737256bc8079dfda1e453839d1f167b39f61ea376cfd2db8f5f5b74d4",
+    "test_local_v2_p2.py": "6c93015014499e98cd7f6ef401b820b8f513a0e074be3306d8457dfe3433e58c",
+    "test_local_v2_p2_lineage.py": "6c9525df1fe895c97e9c616237ea5f25efd481893da7fffee076422b87aa28f2",
+    "test_local_v2_p2_boundaries.py": "cc4c93b4db41556dbe08225ebac6ecedad79ec317db6181c8ac5069bb3d9c6a8",
+    "test_local_v2_p2_protected.py": "69ea88a916da694ce24ac12da834f1220deeb538b81cecfbd7f445f06441a008"
+  },
+  "driver_overlay_hashes": {
+    "driver": "144f28428ae10db4fc56ccbf5bc5dac5e7f3e846244b5495b6927767bff86a4b",
+    "tests": "69ea88a916da694ce24ac12da834f1220deeb538b81cecfbd7f445f06441a008",
+    "bootstrap_driver": "dcd723adaeb76336f519a763fcbaaa293f20ee2574c9b861f185b873ad5535a2",
+    "boundary_driver": "94ec16f36854512296602a43bbab45594a4372019727bd3d0f50419b2f70e631",
+    "config": "4f41e60fd8b5f11ee0c8a53cfad7fa4bb6490631e5911a26d1ee8c992e231dcd",
+    "manifest": "11ab65b3a6d4192ddfa89eeaf6e444deb9a24c5dccc279ee0c817aec6aa1075c"
+  },
+  "formal_p2_acceptance": "not_claimed",
+  "raw_records": "Private JUnit and pytest temporary directories"
+}

@@ -1,0 +1,199 @@
+{
+  "record_version": "1.0",
+  "synced_date": "2026-11-07",
+  "timezone": "Asia/Shanghai",
+  "scope": "B documentation and public registration material sync; no new runtime verification or acceptance",
+  "source_repository": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop.git",
+  "source_branch": "b/local-v2-handoff",
+  "source_commit": "5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014",
+  "b_implementation_commit": "c5e04a4ab2f9d80b98439e42228cc3515e0b0534",
+  "source_changed_files": 19,
+  "files": [
+    {
+      "source_path": "collaboration/STATUS.md",
+      "source_sha256": "aaee01f74f47e91808746d73eb47512796e2fb113e1865491abd7668f7e9ed31",
+      "source_url": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop/blob/5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014/collaboration/STATUS.md",
+      "handling": "upstream_reference",
+      "note": "Framework-owned registry/view/index/check record; retained at the fixed upstream commit. B registration and work-item states are summarized in registration_snapshot."
+    },
+    {
+      "source_path": "collaboration/groups/B.json",
+      "source_sha256": "538fac40456acade625448b1d9bb33305dee1a54e14333e8cea87002ab142fb5",
+      "source_url": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop/blob/5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014/collaboration/groups/B.json",
+      "handling": "upstream_reference",
+      "note": "Framework-owned registry/view/index/check record; retained at the fixed upstream commit. B registration and work-item states are summarized in registration_snapshot."
+    },
+    {
+      "source_path": "collaboration/groups/B.md",
+      "source_sha256": "c8ae4283ee9eeb4d37a3ee01f7c9f3dfab03c7e55aeeccdfc7b527baaf5f34c4",
+      "source_url": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop/blob/5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014/collaboration/groups/B.md",
+      "handling": "upstream_reference",
+      "note": "Framework-owned registry/view/index/check record; retained at the fixed upstream commit. B registration and work-item states are summarized in registration_snapshot."
+    },
+    {
+      "source_path": "collaboration/status.json",
+      "source_sha256": "f2ad3c239f86fb9e53c31bd5516886eb9f210c56820fd107e776828d7d415323",
+      "source_url": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop/blob/5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014/collaboration/status.json",
+      "handling": "upstream_reference",
+      "note": "Framework-owned registry/view/index/check record; retained at the fixed upstream commit. B registration and work-item states are summarized in registration_snapshot."
+    },
+    {
+      "source_path": "collaboration/work_items.json",
+      "source_sha256": "2a70aeb9418a2912061c5ab9a75306ee8954bd386c2690aba9e5a57111997652",
+      "source_url": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop/blob/5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014/collaboration/work_items.json",
+      "handling": "upstream_reference",
+      "note": "Framework-owned registry/view/index/check record; retained at the fixed upstream commit. B registration and work-item states are summarized in registration_snapshot."
+    },
+    {
+      "source_path": "config.b-local.claude.example.json",
+      "source_sha256": "18711f9cb1e20b5f55ea9271f1e10cd09688c04cbf0e14f369b75c918b5576e8",
+      "source_url": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop/blob/5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014/config.b-local.claude.example.json",
+      "handling": "reused_equivalent_json",
+      "target_path": "docs/integration/config.b-local.claude.example.json",
+      "target_sha256": "73ba6cf505d2a41834d15986288adf1d26e98825f2e6e37c5af21f6f790d97fc"
+    },
+    {
+      "source_path": "config.b-local.v0.4.0.example.json",
+      "source_sha256": "3ac72151b6cb56d59b4e50195b95b422a02e42a95b8cd26967eaa1608a37739d",
+      "source_url": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop/blob/5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014/config.b-local.v0.4.0.example.json",
+      "handling": "copied_identical",
+      "target_path": "docs/integration/config.b-local.v0.4.0.example.json",
+      "target_sha256": "3ac72151b6cb56d59b4e50195b95b422a02e42a95b8cd26967eaa1608a37739d"
+    },
+    {
+      "source_path": "integration/services.json",
+      "source_sha256": "ae85eb1ae8e06f204b01f152b63f5bf9e1e8d6eb5b2c127046efe16092d65eab",
+      "source_url": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop/blob/5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014/integration/services.json",
+      "handling": "upstream_reference",
+      "note": "Framework-owned registry/view/index/check record; retained at the fixed upstream commit. B registration and work-item states are summarized in registration_snapshot."
+    },
+    {
+      "source_path": "modules/b/README.md",
+      "source_sha256": "28f5f897d998d581bd1cf36699ef8d5997bb081406e0674f8a380d5ca67dd7c5",
+      "source_url": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop/blob/5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014/modules/b/README.md",
+      "handling": "upstream_reference",
+      "note": "Framework-owned registry/view/index/check record; retained at the fixed upstream commit. B registration and work-item states are summarized in registration_snapshot."
+    },
+    {
+      "source_path": "modules/b/capabilities_v0.4.0.json",
+      "source_sha256": "4574898d1a1c2ce06f0e203c321a0944127c2e12eb16134f06607ca0944066c6",
+      "source_url": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop/blob/5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014/modules/b/capabilities_v0.4.0.json",
+      "handling": "copied_identical",
+      "target_path": "docs/contracts/v2/capabilities_v0.4.0.json",
+      "target_sha256": "4574898d1a1c2ce06f0e203c321a0944127c2e12eb16134f06607ca0944066c6"
+    },
+    {
+      "source_path": "modules/b/examples_v0.4.0.json",
+      "source_sha256": "5779cb308b4eacb868e4e8ea0b3de396875fb53fc00e50d6f96fdcd88d8fb0d8",
+      "source_url": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop/blob/5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014/modules/b/examples_v0.4.0.json",
+      "handling": "copied_identical",
+      "target_path": "docs/contracts/v2/examples_v0.4.0.json",
+      "target_sha256": "5779cb308b4eacb868e4e8ea0b3de396875fb53fc00e50d6f96fdcd88d8fb0d8"
+    },
+    {
+      "source_path": "modules/b/handoff_v0.4.0.md",
+      "source_sha256": "fcaef3e545e7dba2d8553ed55961fbc73cd63bebd46777b1117a671046ee9641",
+      "source_url": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop/blob/5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014/modules/b/handoff_v0.4.0.md",
+      "handling": "adapted_document_links",
+      "target_path": "docs/local_v2_handoff_v0.4.0.md",
+      "target_sha256": "679ebdff2058ac537623d69cbf074e03e24292fe7d796723b3245cc8a0443b06"
+    },
+    {
+      "source_path": "modules/b/m1_readiness_20261105.md",
+      "source_sha256": "bdcbdf963a599d51fc96ff815118219f45a2115433e2e00a381c0abc42c82232",
+      "source_url": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop/blob/5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014/modules/b/m1_readiness_20261105.md",
+      "handling": "adapted_document_links",
+      "target_path": "docs/m1_readiness_20261105.md",
+      "target_sha256": "a6e9c237e38112fab80e66439e8aa3ec6bb62dd82807ce940987954bed5e1346"
+    },
+    {
+      "source_path": "modules/b/receiver_checklist_v0.4.0.md",
+      "source_sha256": "f20d9a6e7b636966c1d74ac48f3cb6734221ea3ccc4fb8dafa120747a2aebb3c",
+      "source_url": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop/blob/5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014/modules/b/receiver_checklist_v0.4.0.md",
+      "handling": "adapted_document_links",
+      "target_path": "docs/integration/receiver_checklist_v0.4.0.md",
+      "target_sha256": "3aa57aa86d4be6ec2931359ec5c7ebb79e9b1469083c53f7d576605229964fde"
+    },
+    {
+      "source_path": "verification/b_claude_registration_checks_v0.4.0.json",
+      "source_sha256": "61c8280db816c73aab289c93d62d3ade31266c9880f08a4bca0fe114fb404616",
+      "source_url": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop/blob/5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014/verification/b_claude_registration_checks_v0.4.0.json",
+      "handling": "copied_identical",
+      "target_path": "docs/verification/claude_registration_checks_v0.4.0.json",
+      "target_sha256": "61c8280db816c73aab289c93d62d3ade31266c9880f08a4bca0fe114fb404616"
+    },
+    {
+      "source_path": "verification/b_claude_registration_samples_v0.4.0.json",
+      "source_sha256": "9266c02ca6695a3556fe89e3787eb098ffc9a95197c5646b50b1008b822329f9",
+      "source_url": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop/blob/5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014/verification/b_claude_registration_samples_v0.4.0.json",
+      "handling": "copied_identical",
+      "target_path": "docs/verification/claude_registration_samples_v0.4.0.json",
+      "target_sha256": "9266c02ca6695a3556fe89e3787eb098ffc9a95197c5646b50b1008b822329f9"
+    },
+    {
+      "source_path": "verification/b_claude_sdk_publication_v0.4.0.json",
+      "source_sha256": "901b39ca3fc542189f611e863d46fd84c19c125621afd20a68269ad1af9d9d0e",
+      "source_url": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop/blob/5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014/verification/b_claude_sdk_publication_v0.4.0.json",
+      "handling": "reused_identical",
+      "target_path": "docs/verification/claude_sdk_publication.json",
+      "target_sha256": "901b39ca3fc542189f611e863d46fd84c19c125621afd20a68269ad1af9d9d0e"
+    },
+    {
+      "source_path": "verification/b_claude_sdk_validation_v0.4.0.json",
+      "source_sha256": "91e3c701ccea31edb8a6e756c3623f62ae594730052c9f724779e29c7b829060",
+      "source_url": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop/blob/5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014/verification/b_claude_sdk_validation_v0.4.0.json",
+      "handling": "reused_identical",
+      "target_path": "docs/verification/claude_sdk_validation.json",
+      "target_sha256": "91e3c701ccea31edb8a6e756c3623f62ae594730052c9f724779e29c7b829060"
+    },
+    {
+      "source_path": "verification/docs_check.json",
+      "source_sha256": "db47470e8510f7e4578b84b3ccf6d809741203c479c1eb33792d8124a58b5b2b",
+      "source_url": "https://github.com/H1Unter3/Collaborative_Reliable_CodeGen_Loop/blob/5ecb03c3c6a6ab0878657cd9ba3bd8ee71990014/verification/docs_check.json",
+      "handling": "upstream_reference",
+      "note": "Framework-owned registry/view/index/check record; retained at the fixed upstream commit. B registration and work-item states are summarized in registration_snapshot."
+    }
+  ],
+  "registration_snapshot": {
+    "status_as_of": "2026-11-04",
+    "implementation_state": "prototype_ready",
+    "integration_state": "mixed_validation",
+    "delivery_version": "0.4.0",
+    "source_revision": "c5e04a4ab2f9d80b98439e42228cc3515e0b0534",
+    "local_entrypoint": "srp_b:create_module",
+    "work_item_states": {
+      "REPO-001": "done",
+      "A-001": "planned",
+      "B-001": "done",
+      "C-001": "planned",
+      "O-001": "planned",
+      "TEST-001": "planned",
+      "REMOTE-001": "in_progress",
+      "EXP-001": "planned",
+      "INTA-001": "planned",
+      "INTB-001": "planned",
+      "INTC-001": "planned",
+      "MILESTONE-001": "planned"
+    },
+    "o_receipt": "not_received",
+    "formal_p2_acceptance": "blocked",
+    "p3_m1_completed": false
+  },
+  "new_model_calls": 0,
+  "new_target_executions": 0,
+  "historical_source_records_modified": false,
+  "sync_validation": {
+    "date": "2026-11-07",
+    "result": "passed",
+    "scope": "Source-object/hash checks, local document links, public JSON Schema and config declarations only",
+    "source_git_objects_checked": 19,
+    "local_material_hashes_checked": 11,
+    "markdown_files_checked": 5,
+    "local_links_checked": 67,
+    "schema_objects_checked": 5,
+    "sample_hash_matches_historical_record": true,
+    "config_factories": "B real; A/C Mock",
+    "model_requests": 0,
+    "target_executions": 0
+  }
+}

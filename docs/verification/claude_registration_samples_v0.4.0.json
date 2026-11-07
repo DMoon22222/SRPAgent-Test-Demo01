@@ -1,0 +1,15 @@
+{
+  "record_version": "1.0",
+  "verified_at": "2026-11-04T10:27:01.903635+00:00",
+  "result": "passed",
+  "scope": "0.4.0 capability, real AST static failure and rule diagnosis registration samples; no model or Docker",
+  "implementation_commit": "c5e04a4ab2f9d80b98439e42228cc3515e0b0534",
+  "schema_version": "2.0",
+  "samples": 2,
+  "capability_ref": "modules/b/capabilities_v0.4.0.json",
+  "sample_ref": "modules/b/examples_v0.4.0.json",
+  "sample_sha256": "5779cb308b4eacb868e4e8ea0b3de396875fb53fc00e50d6f96fdcd88d8fb0d8",
+  "real_provider_requests": 0,
+  "real_docker_executions": 0,
+  "o_receipt": "not_received"
+}

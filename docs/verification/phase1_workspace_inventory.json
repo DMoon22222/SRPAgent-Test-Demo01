@@ -1,0 +1,43 @@
+{
+  "record_version": "1.0",
+  "started_at": "2026-11-07T07:06:42.839200+00:00",
+  "branch": "b/local-v2-adapter",
+  "head": "b4a1684fc44a088ca7dab1cf0ff572bad225ca7c",
+  "tracked_diff_at_start": [],
+  "pre_existing_untracked": [
+    ".pico/",
+    "Test.py",
+    "docs/b_group_research_and_delivery_plan.md",
+    "docs/group_meeting_brief_20261010.md"
+  ],
+  "historical_hashes": {
+    ".gitattributes": "2cb27e3d94c12acdac8b4b9269a47d1892125cc76adfb282212524c66346e0f0",
+    "README.md": "026e802b24889dd3ebdf76705dba622856b8d53964a5f5404665f00f0db63ce5",
+    "python_service/app/analyzer/error_signal_extractor.py": "baa4fd07cf93e469c5a414fe1fbe848d4625e9f9bddf9ac276b62b1f466a21e7",
+    "python_service/scripts/pre_integration_docker_smoke.py": "17dbfb3e146610e50d21156ac8716e74170c54e6d6e3b8f23bac67ec3e5d6ab9",
+    "python_service/requirements-hardening.txt": "b889115bb5366e43d99cd297e1cafab5d4ca5fa451d69b03eee0474734722c05",
+    "python_service/tests/test_pre_integration_diagnosis.py": "3755aadb76eccba87b5cbebdd689bee2ef5428012850e375028901aa9cd12f02",
+    "python_service/tests/property/conftest.py": "53ead5fffcca6ad8fd838bb1dbd54374ef9036ce7b7a86bc88ea747cf2d4e9b3",
+    "python_service/tests/property/test_local_v2_properties.py": "6d302ed82576cda9a79d7ed54d6042c0191e6feb769a5d737e4d2a649d659d96",
+    "evals/README.md": "7d1e23917787560ef943ed6f5f62039b50ababa8ebaa392bfd48cc3b51b75ea1",
+    "evals/dataset/diagnosis_cases.jsonl": "bdcb97bc95c775e6561ca9f1e7eb8bb7ac35f1a7b2105c6288a1a24bf72411e2",
+    "evals/runners/run_diagnosis_eval.py": "e2c0dbb02c0a5bc01dbcb7cd60d2125ebb8bf527a3b81e1d230c245c98220697",
+    "evals/reports/diagnosis_eval_baseline.json": "af32881bccb2e0b322070dda9aefaab1f6371dea0032e780a44ba9a1f77c01b9",
+    "evals/reports/diagnosis_eval_after_explanations.json": "383cd6e3c906db42dec995c206e7dc821469a09fddc3101f6cfd8c968bafdabf",
+    "evals/reports/diagnosis_eval.json": "d8f515b3c5a2bdb13143e1a5af0fe24e7e97bba762b1daca07f9c4fdf404aad4",
+    "docs/verification/pre_integration_docker_smoke_initial.json": "db29c31717176db1e78c471f8afbc26b08fa3b97a0dbefa50b1bfa8338ba62a6",
+    "docs/verification/pre_integration_docker_smoke.json": "2acb927171bb4abe3aa0b293608f4f8d42e490fa4caab11e0986d1e76563a434",
+    "docs/verification/diagnosis_benchmark_20261107.md": "fd5bbca15917be73ba9211bd74d69b1a15ba0c66a433c61db95f9b00cb6b1501",
+    "docs/verification/pre_integration_hardening_20261107.json": "a9e46324aade4b21ae2fce06cb6e5982a984cc86f27095f6c5107ea28f39c031",
+    "docs/pre_integration_hardening_20261107.md": "8a4080e651ff135d2408034aa22d6584530758929cbce7b1f9b752f25dbaae25",
+    "docs/group_meeting_update_20261107.md": "c3bdc17e648837ad2991e7bb934e6bcd2508dbaaf190211c40ff51aed1af69f8",
+    "docs/b_group_role_and_implemented_features.md": "20157adfd95025859c0bced99489cfd0937f031523c7c3f84239758d5c000275",
+    "docs/pre_integration_publication_20261107.md": "ee684dc3698560b064f68cd9b843bf620ac0b0ef3c4ac3a11f17a26ffe1418b7",
+    "docs/verification/pre_integration_publication_20261107.json": "2791a2ff4971bf3d16b3ee502766416ed958419c149193594b310a2adcd4fb46"
+  },
+  "protected_user_file_hashes": {
+    "Test.py": "065a8cbd66927fb1d136b5aedf7282d9551380219f869a284f4431eb6c34e357",
+    "docs/b_group_research_and_delivery_plan.md": "46a9b2a3cea54901ce008e538b2face53011b242aba61a29073f8a53c994054a",
+    "docs/group_meeting_brief_20261010.md": "febb2ef784bc1fc174a7fd777d36d642d247da720cbf2904e35b8d92de14b29d"
+  }
+}

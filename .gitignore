@@ -57,3 +57,10 @@ evaluation/**/*.py[cod]
 
 ### VS Code ###
 .vscode/
+
+### Local module packaging and private replay/fact records ###
+python_service/.venv-local-v2/
+python_service/*.egg-info/
+python_service/dist/
+python_service/build/
+**/__pycache__/

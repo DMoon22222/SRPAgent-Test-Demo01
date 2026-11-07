@@ -1,0 +1,34 @@
+{
+  "verified_at": "2026-10-23T16:05:09.470Z",
+  "result": "passed",
+  "implementation_version": "0.3.1",
+  "wheel_sha256": "950887b755b347cfccfec77a4d6f4c9d0428e62041934cad180d88e3dec844c2",
+  "wheel_filename": "srp_b_local-0.3.1-py3-none-any.whl",
+  "file_count": 50,
+  "python_packages": [
+    "app",
+    "app/adapters",
+    "app/adapters/a2a",
+    "app/adapters/mcp",
+    "app/analyzer",
+    "app/api",
+    "app/clients",
+    "app/contracts",
+    "app/repository",
+    "app/sandbox",
+    "app/services",
+    "app/tasks",
+    "srp_b"
+  ],
+  "checks": [
+    "wheel-installed public factory",
+    "capabilities schema",
+    "real AST static failure",
+    "rule diagnosis from supplied static report",
+    "shared rules imported from wheel",
+    "FastAPI/A2A/MCP not imported",
+    "no environment or journal files packaged"
+  ],
+  "packaging_decision": "Retain app* to preserve legacy package imports; shared rule extraction can be refactored after P1.",
+  "scope": "Wheel imported with isolated Python (-I) outside source cwd, using the minimal local-v2 venv dependencies and installed shared framework."
+}

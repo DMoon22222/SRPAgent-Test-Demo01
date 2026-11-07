@@ -1,0 +1,43 @@
+{
+  "service_name": "B",
+  "schema_version": "2.0",
+  "schema_versions": [
+    "2.0"
+  ],
+  "operations": [
+    "/api/v2/validate/static",
+    "/api/v2/execute",
+    "/api/v2/diagnose"
+  ],
+  "supported_languages": [
+    "python"
+  ],
+  "supported_runtimes": [],
+  "max_payload_bytes": 2097152,
+  "supports_async": false,
+  "supported_diagnosis_modes": [
+    "static_feedback",
+    "feedback_only"
+  ],
+  "supported_routing_phases": [],
+  "context_profiles": [],
+  "artifact_resolver_keys": [
+    "local-store"
+  ],
+  "execution_guarantees": {
+    "backend": "docker",
+    "host_target_execution": false,
+    "unsupported_policies": "rejected",
+    "runtime": "observed per execution"
+  },
+  "extensions": {
+    "srp_b": {
+      "implementation_version": "0.3.1",
+      "diagnosis": "rule_based",
+      "model_calls": 0,
+      "configured_image": "srp-b-python:0.3.0",
+      "completed_replay": "durable",
+      "pending_replay": "outcome_unknown"
+    }
+  }
+}
