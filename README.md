@@ -4,6 +4,8 @@
 
 当前开发候选为 **`srp-b-local 0.4.0`**，新增 [Claude 官方 SDK 可选诊断后端](docs/claude_sdk_integration.md)。已发布的 P1/P2 固定版本仍为 0.3.1，历史证据与本次新功能验证分开记录。项目对应架构 v0.3、共同框架 v0.2.1、公共 `schema_version=2.0`。公开工厂入口为 **`srp_b:create_module`**，由 O 通过同进程 LocalTransport 调用；`/api/v2/*` 是逻辑能力标识。原 0.3.1 交付见 [P1 报告](docs/p1_delivery_review_20261024.md)和[本地 v2 交付](docs/local_v2_handoff.md)。
 
+共同框架最近的 B 0.4.0 登记资料已同步，入口见 [同步说明](docs/framework_sync_20261107.md)、[当前交付](docs/local_v2_handoff_v0.4.0.md)、[O 接收核对单](docs/integration/receiver_checklist_v0.4.0.md)及 [M1 原时点缺口报告](docs/m1_readiness_20261105.md)。同步保留原验证日期和待接收状态。
+
 ## 主要功能
 
 | 能力 | 逻辑操作 | 主要输出与行为 |

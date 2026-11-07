@@ -21,3 +21,10 @@ docs/verification/claude_sdk*.json -text
 # Keep P2 input/overlay/evidence byte hashes stable across Windows checkouts.
 docs/integration/*.json -text
 docs/verification/p2/*.json -text
+
+# Preserve imported framework registration evidence byte hashes.
+docs/verification/claude_registration*.json -text
+docs/framework_sync_20261107.md text eol=lf
+docs/integration/receiver_checklist_v0.4.0.md text eol=lf
+docs/local_v2_handoff_v0.4.0.md text eol=lf
+docs/m1_readiness_20261105.md text eol=lf

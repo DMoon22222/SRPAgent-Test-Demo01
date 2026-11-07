@@ -1,0 +1,32 @@
+{
+  "schema_version": "2.0",
+  "transport": "local",
+  "modules": {
+    "A": {
+      "factory": "reliable_codegen.mocks:create_mock_module",
+      "options": {
+        "service": "A",
+        "scenario": "repair_no_rag"
+      }
+    },
+    "B": {
+      "factory": "srp_b:create_module",
+      "options": {
+        "state_dir": ".interop/b-0.4.0/b-state",
+        "image": "srp-b-python:0.3.0",
+        "diagnosis_backend": "rules"
+      }
+    },
+    "C": {
+      "factory": "reliable_codegen.mocks:create_mock_module",
+      "options": {
+        "service": "C",
+        "scenario": "repair_no_rag"
+      }
+    }
+  },
+  "output_dir": ".interop/b-0.4.0/o-runs",
+  "timeout_seconds": 15,
+  "max_repairs": 2,
+  "routing_mode": "adaptive_rag"
+}
