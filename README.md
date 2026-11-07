@@ -10,6 +10,8 @@
 
 2026-11-07 的 B 组轻量加固结果见 [开发成果报告](docs/pre_integration_hardening_20261107.md)、[诊断评测](docs/verification/diagnosis_benchmark_20261107.md)和[组会汇报单页](docs/group_meeting_update_20261107.md)。其中真实 Docker 快速检查、固定事实评测与离线回归分别统计，尚未代表 O 正式接收。
 
+上述验证快照的当前提交与推送状态见 [轻量加固发布绑定](docs/pre_integration_publication_20261107.md)，历史验证日期和结果保持原样。
+
 ## 主要功能
 
 | 能力 | 逻辑操作 | 主要输出与行为 |
